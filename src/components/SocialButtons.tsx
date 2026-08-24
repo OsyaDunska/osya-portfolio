@@ -15,7 +15,8 @@ export default function SocialButtons({ className = "" }: { className?: string }
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       {buttons.map(({ href, label, icon, w, h, offsetY }) => (
-        
+        <a
+          
           key={label}
           href={href}
           target="_blank"
