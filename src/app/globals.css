@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171716;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-inter-tight: var(--font-inter-tight);
+  --font-cormorant: var(--font-cormorant);
+  --font-alex-brush: var(--font-alex-brush);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}
+
+/* iOS/Figma-style smooth corner ("corner smoothing"), used instead of border-radius
+   on case cards, photos, etc. See the clipPath def in layout.tsx. */
+.squircle {
+  clip-path: url(#squircle-clip);
+  border-radius: 20px; /* fallback for browsers without SVG clip-path support */
+}
