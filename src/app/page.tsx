@@ -84,7 +84,7 @@ export default function Home() {
           />
           <Link
             href="/work/mentora"
-            className="relative aspect-square squircle overflow-hidden bg-[#e9e9e9] block"
+                        className="relative aspect-square squircle overflow-hidden bg-[#e9e9e9] block"
           >
             <Image src={mentoraHero} alt="Mentora preview" fill className="object-cover" />
           </Link>
@@ -148,3 +148,8 @@ export default function Home() {
         style={{ fontFamily: "var(--font-cormorant)" }}
       >
         Made with love by{" "}
+        <span className="underline">Osya Dunska</span>
+      </p>
+    </main>
+  );
+}
