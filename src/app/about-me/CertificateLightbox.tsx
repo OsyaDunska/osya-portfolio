@@ -12,8 +12,9 @@ const CERTIFICATES = [
   { id: 3, src: "/certificates/ui-ux-po-lyudsky.jpg", alt: "Certificate 3" },
 ];
 
-const crossIconDefault = "https://www.figma.com/api/mcp/asset/77955efc-7f74-4aef-86d5-2d15bff4ef54.svg";
-const crossIconHover = "https://www.figma.com/api/mcp/asset/c1a0bf3f-e6dc-405f-bae9-779e5b13fa1c.svg";
+// Exported from Figma and kept in the repo — the MCP asset URLs expire.
+const crossIconDefault = "/icons/close.svg";
+const crossIconHover = "/icons/close-hover.svg";
 
 export default function CertificateLightbox() {
   const [openId, setOpenId] = useState<number | null>(null);

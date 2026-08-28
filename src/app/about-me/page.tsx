@@ -3,12 +3,12 @@ import Image from "next/image";
 import SocialButtons from "@/components/SocialButtons";
 import CertificateLightbox from "./CertificateLightbox";
 
-const backArrowIcon =
-  "https://www.figma.com/api/mcp/asset/0b6ddc9a-dfe6-493a-9041-5da6f3b2b65e.svg";
-const heartsVector =
-  "https://www.figma.com/api/mcp/asset/049008cc-9dc3-4f12-abd0-eebe40a585dc.svg";
-const osyaScript = "https://www.figma.com/api/mcp/asset/dfe98281-cc72-486a-8d37-43bf3dd4172c.svg";
-const littleMeScript = "https://www.figma.com/api/mcp/asset/fc78fe0b-0b86-499a-8be0-45a2b6598d02.svg";
+// Exported from Figma and kept in the repo, not linked from figma.com: those
+// MCP asset URLs expire seven days after they are issued.
+const backArrowIcon = "/icons/back-arrow.svg";
+const heartsVector = "/graphics/hearts.svg";
+const osyaScript = "/graphics/osya-script.svg";
+const littleMeScript = "/graphics/little-me-script.svg";
 const portraitPhoto = "/photos/osya-portrait.png";
 const littleMePhoto = "/photos/little-me.png";
 

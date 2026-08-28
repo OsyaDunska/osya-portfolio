@@ -1,9 +1,12 @@
 import Image from "next/image";
 import { socialLinks } from "@/lib/links";
 
-const linkedinIcon = "https://www.figma.com/api/mcp/asset/4db6bb36-0ca5-47d1-b19b-0135f6bdc145.svg";
-const telegramIcon = "https://www.figma.com/api/mcp/asset/4a3fd38e-9da8-49ab-abe7-666bdc756efb.svg";
-const whatsappIcon = "https://www.figma.com/api/mcp/asset/62480547-d7b6-46a3-be65-dd11f928ab9f.svg";
+// Exported from Figma and kept in the repo. The MCP asset URLs these came
+// from expire seven days after they are issued, which would have taken the
+// icons off both pages that use this component with no change to the code.
+const linkedinIcon = "/icons/linkedin.svg";
+const telegramIcon = "/icons/telegram.svg";
+const whatsappIcon = "/icons/whatsapp.svg";
 
 export default function SocialButtons({ className = "" }: { className?: string }) {
   const buttons = [
