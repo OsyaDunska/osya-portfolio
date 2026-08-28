@@ -2,16 +2,57 @@ import Link from "next/link";
 import Image from "next/image";
 import SocialButtons from "@/components/SocialButtons";
 
-const mentoraHero = "/mockups/mentora-hero.png";
+// The Mentora cover is two layers in Figma (6647:11889 "Cover Saas-case"), and
+// its hover moves them in opposite directions — so it cannot be one flattened
+// image. Both files are byte-identical to the sources in that component.
+const mentoraCoverBack = "/mockups/mentora-cover-back.png";
+const mentoraCoverMonitor = "/mockups/mentora-cover-monitor.png";
 const musicAppHero = "/mockups/music-app-hero.png";
 const auraHero = "/mockups/aura-hero.png";
 
-const arrowIcon = "https://www.figma.com/api/mcp/asset/a0386daa-201d-4dec-92d6-4ce4741e2d4e.svg";
+// Figma 6643:2620 / 6643:2626 — the card's 56px button, Default and Variant2.
+//
+// Read side by side the two variants are one animation, not two pictures:
+//   circle  r 0.5 -> r 28, white     the disc grows out of the centre
+//   arrow   white -> #171716
+//   arrow   rotated -90 degrees      confirmed by rasterising both and
+//                                    comparing: -90 differs by 0.15 of an
+//                                    alpha level, every other angle by 4-5
+// Tailwind v4 drives -rotate-90 through the standalone `rotate` property, not
+// `transform`, and the two do not transition together: a transition on
+// `transform` leaves the rotation snapping. Hence transition-[rotate,color]
+// here, and transition-transform on the disc, which v4 expands to cover
+// transform, translate, scale and rotate.
+//
+// So this is one path plus three CSS transitions rather than a pair of icons,
+// and the arrow is inline rather than fetched — the previous version pointed
+// at a figma.com/api/mcp/asset URL, which expires after seven days and would
+// have taken the arrows off the live site on its own.
+const CARD_ARROW =
+  "M32.9541 22.2432C33.3959 22.2432 33.7539 22.6011 33.7539 23.043V31.543C33.7538 31.9847 33.3959 " +
+  "32.3428 32.9541 32.3428C32.5124 32.3427 32.1544 31.9847 32.1543 31.543V24.9893L31.8125 " +
+  "25.3301L23.6201 33.5225C23.3077 33.8349 22.8017 33.8348 22.4893 33.5225C22.1768 33.21 22.1768 " +
+  "32.704 22.4893 32.3916L30.6963 24.1846L31.0371 23.8428H24.4541C24.0124 23.8427 23.6544 23.4846 " +
+  "23.6543 23.043C23.6543 22.6012 24.0123 22.2432 24.4541 22.2432H32.9541ZM33.2754 32.4883C33.2425 " +
+  "32.4995 33.2092 32.5098 33.1748 32.5176C33.2092 32.5098 33.2425 32.4995 33.2754 32.4883ZM32.3184 " +
+  "32.3145C32.3604 32.3491 32.4057 32.3797 32.4531 32.4072C32.4057 32.3797 32.3604 32.3491 32.3184 " +
+  "32.3145ZM33.5898 32.3145C33.5478 32.3491 33.5025 32.3797 33.4551 32.4072C33.5025 32.3797 33.5478 " +
+  "32.3491 33.5898 32.3145ZM33.875 31.9326C33.8624 31.9624 33.8483 31.9913 33.833 32.0195C33.8483 " +
+  "31.9913 33.8624 31.9624 33.875 31.9326Z";
 
 function ArrowButton() {
   return (
-    <span className="absolute top-6 right-6 flex items-center justify-center w-14 h-14 rounded-[28px] bg-[#171716]">
-      <Image src={arrowIcon} alt="" width={24} height={24} />
+    <span
+      aria-hidden
+      className="absolute top-6 right-6 size-14 overflow-hidden rounded-full bg-[#171716]"
+    >
+      <span className="absolute inset-0 scale-0 rounded-full bg-white transition-transform duration-[250ms] ease-out group-hover:scale-100 motion-reduce:transition-none" />
+      <svg
+        viewBox="0 0 56 56"
+        className="relative size-full text-white transition-[rotate,color] duration-[250ms] ease-out group-hover:-rotate-90 group-hover:text-[#171716] motion-reduce:transition-none"
+      >
+        <path d={CARD_ARROW} fill="currentColor" />
+      </svg>
     </span>
   );
 }
@@ -24,7 +65,7 @@ function CaseTextCard({
 }: {
   title: string;
   year: string;
-  description: string;
+  description: React.ReactNode;
   href: string;
 }) {
   return (
@@ -32,12 +73,15 @@ function CaseTextCard({
       href={href}
       className="group relative aspect-square squircle bg-[#292621] overflow-hidden block"
     >
-      <div className="absolute left-8 right-8 top-[100px] flex flex-col gap-6">
+      {/* Figma 6643:2655 — left 32, w 426 inside the 512 card, gap 24.
+          right-[54px] rather than a fixed width so the block still flexes when
+          the card is narrower than 512: 512 - 32 - 54 = 426 at design size. */}
+      <div className="absolute left-8 right-[54px] top-[100px] flex flex-col gap-6">
         <div className="flex items-center gap-2">
           <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>
             {title}
           </span>
-          <span className="text-white/60 text-sm" style={{ letterSpacing: "-0.48px" }}>
+          <span className="text-white/60 text-base" style={{ letterSpacing: "-0.48px" }}>
             / {year}
           </span>
         </div>
@@ -86,26 +130,83 @@ export default function Home() {
             title="Mentora"
             year="2026"
             href="/work/mentora"
-            description="Idea to create a learning platform that keeps students consistent and motivated. The goal was to design a clear course structure, adaptive scheduling, and visible progress— so learners always know where they are and what's next."
+            // Figma I6643:2671;6643:2659 carries a newline after "to design",
+            // so the text node comes back as two runs rather than one.
+            description={
+              <>
+                Idea to create a learning platform that keeps students consistent and
+                motivated. The goal was to design
+                <br />
+                a clear course structure, adaptive scheduling, and visible progress — so
+                learners always know where they are and what&apos;s next.
+              </>
+            }
           />
+          {/* Figma 6647:11889 "Cover Saas-case", Default -> Variant2.
+              Figma's own code for Variant2 reports a monitor box that does not
+              agree with the node's geometry, so the move was measured off the
+              two rendered variants instead: a sub-pixel read of the bezel puts
+              it at 666.8 tall at rest and 734.6 on hover, a uniform 1.1017,
+              which agrees with the node geometry's own 1.0996 — so 1.1, about
+              a point at 836/-57.3 in card coordinates. The desk behind runs the other
+              way, 872x467.57 -> 708x379, a uniform 0.8113 about 434.7/609.4.
+              Each origin is written against its own layer's box, because that
+              is what transform-origin resolves against; positions are Figma's
+              boxes over the 512 card, so the pair holds together at any width.
+                 The desk is a clipped frame with a taller image inside it, not
+              a bare image — the crop is part of the composition. */}
           <Link
             href="/work/mentora"
-            className="relative aspect-square squircle overflow-hidden bg-[#e9e9e9] block"
+            className="group relative aspect-square squircle overflow-hidden bg-[#e9e9e9] block"
           >
-            <Image src={mentoraHero} alt="Mentora preview" fill className="object-cover" />
+            {/* 6647:11883 "Image (Papers Combined)" */}
+            <div
+              aria-hidden
+              className="absolute left-[-35.156%] top-[20.703%] h-[91.323%] w-[170.313%] overflow-hidden origin-[70.5%_107.66%] transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[0.8113] motion-reduce:transition-none"
+            >
+              <Image
+                src={mentoraCoverBack}
+                alt=""
+                width={1202}
+                height={1011}
+                // shown at 903px on a 512 card; the optimiser picked a variant
+                // off the layout width, which is softer than the source
+                unoptimized
+                className="absolute left-[-4.37%] top-[-48.95%] h-[162.38%] w-[103.52%] max-w-none"
+              />
+            </div>
+            {/* 6647:11885 "Scene _2 4" */}
+            <Image
+              src={mentoraCoverMonitor}
+              alt="Mentora preview"
+              width={3680}
+              height={2760}
+              // the optimiser re-encodes at quality 75, which softens the small
+              // type in the calendar UI; the source is already large enough
+              unoptimized
+              className="absolute left-[-42.236%] top-[-10.830%] h-[121.659%] w-[162.212%] max-w-none origin-[126.7%_-0.3%] transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.1] motion-reduce:transition-none"
+            />
           </Link>
 
           {/* Row 2: Music App phone-in-hand + Music App text */}
+          {/* Figma 6643:2644, Default -> Variant2. Here it is one box, so the
+              move is exact: the mockup goes 507.94 -> 574.692 wide, a uniform
+              1.1314, and its centre shifts 189/318 -> 172/328. Solving those
+              together puts the scale origin at 321.5/241.1, i.e. 62.8%/47.1%.
+              The resting 0.96 was already here, so the hover is 0.96 x 1.1314. */}
           <Link
             href="/work/music-app"
-            className="relative aspect-square squircle overflow-hidden bg-[#f7f7f7] block"
+            className="group relative aspect-square squircle overflow-hidden bg-[#f7f7f7] block"
           >
             <Image
               src={musicAppHero}
+              // the card is 512 from md up, full width below. Without this the
+              // browser sized off the viewport and picked a ~529px file for a
+              // ~480px slot — nothing was retina.
+              sizes="(min-width: 768px) 512px, 100vw"
               alt="Music App preview"
               fill
-              className="object-cover"
-              style={{ transform: "scale(0.96)" }}
+              className="origin-[62.8%_47.1%] scale-[0.96] object-cover transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.0862] motion-reduce:transition-none"
             />
           </Link>
           <CaseTextCard
@@ -117,8 +218,12 @@ export default function Home() {
 
           {/* Row 3: Aura text + Coming soon (hover on description reveals pill on cover) */}
           <div className="group contents">
+            {/* Aura is its own component set in Figma (6643:12017): no arrow,
+                and the whole hover is the badge below fading in. The card
+                ground stays #292621 in both variants — an earlier revision
+                darkened it to #171716 and that is gone. */}
             <div className="relative aspect-square squircle bg-[#292621] overflow-hidden">
-              <div className="absolute left-8 right-8 top-[100px] flex flex-col gap-6">
+              <div className="absolute left-8 right-[54px] top-[100px] flex flex-col gap-6">
                 <div className="flex items-center gap-2">
                   <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>Aura</span>
                   <span className="text-white/60 text-base" style={{ letterSpacing: "-0.48px" }}>/ 2026</span>
@@ -130,16 +235,30 @@ export default function Home() {
                   rhythm that respects the user&apos;s pace.
                 </p>
               </div>
-              <ArrowButton />
+              {/* Figma 6643:11989 — left 32, top 32, h 40, px 12, radius 12.
+                  #5d5a54, a step lighter than the card, which is what makes it
+                  read against the unchanged ground; it is the only thing that
+                  moves on hover here.
+                  No arrow button on this card — rendering the node in Figma
+                  leaves that corner as flat background, unlike Mentora's. */}
+              <span
+                data-corner-smooth
+                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#5d5a54] px-3 text-[14px] font-semibold text-white opacity-0 transition-opacity duration-[250ms] group-hover:opacity-100 motion-reduce:transition-none"
+              >
+                # Coming soon
+              </span>
             </div>
             <div className="relative aspect-square squircle overflow-hidden bg-[#f7f7f7]">
-              <Image src={auraHero} alt="" fill className="object-cover" />
-              <span
-                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center h-14 px-10 rounded-full bg-[#f9f9f9] text-[#292621] text-[17px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                style={{ top: "calc(50% + 50px)", letterSpacing: "-0.79px" }}
-              >
-                Coming soon
-              </span>
+              <Image
+                src={auraHero}
+                alt=""
+                // the card is 512 from md up, full width below. Without this the
+                // browser sized off the viewport and picked a ~529px file for a
+                // ~480px slot — nothing was retina.
+                sizes="(min-width: 768px) 512px, 100vw"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
         </div>

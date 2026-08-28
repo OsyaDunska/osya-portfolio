@@ -20,9 +20,12 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
-/* iOS/Figma-style smooth corner ("corner smoothing"), used instead of border-radius
-   on case cards, photos, etc. See the clipPath def in layout.tsx. */
+/* The 20px corner Figma puts on every card on this page. Corner smoothing is
+   off — SquircleCorners is where that call is written down, and why.
+     This used to be an objectBoundingBox clip-path whose corner was 6.5% of the
+   box, so it cut 33.3px on a 512 card, 22.9 on a 352 one and 19.5 on a 300 —
+   never the 20 Figma asks for, since the cards here are fluid. A plain radius is
+   exact at every width, and `overflow: hidden` clips the covers to it. */
 .squircle {
-  clip-path: url(#squircle-clip);
-  border-radius: 20px; /* fallback for browsers without SVG clip-path support */
+  border-radius: 20px;
 }
