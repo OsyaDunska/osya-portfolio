@@ -1,0 +1,19 @@
+<svg width="1724.28" height="1423.28" viewBox="-235.64 -235.64 1724.28 1423.28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Music App">
+<g id="Vector 3" filter="url(#filter0_f_6252_11793)">
+<path d="M686.852 259.038C616.986 212.692 557.949 283.502 557.949 283.502L415.547 175.963C415.547 175.963 286.899 165.481 216.018 201.537C102.806 259.125 257.27 374.232 257.27 374.232C257.27 374.232 264.846 485.491 298.522 546.928C362.933 664.438 618.681 774.57 618.681 774.57C618.681 774.57 897.948 797.151 1005.5 711.697C1057.72 670.201 1077 638.334 1078.39 596.129C1081.8 493.019 666.896 570.683 666.896 570.683C666.896 570.683 660.235 550.18 608.293 533.703C556.351 517.227 475.657 500.744 513.972 452.309C543.723 414.699 602.71 409.935 661.971 386.184C765.22 344.803 722.219 331.613 722.219 331.613C722.219 331.613 745.549 297.975 686.852 259.038Z" fill="url(#paint0_linear_6252_11793)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_6252_11793" x="-235.64" y="-235.64" width="1724.28" height="1423.28" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="87.2731" result="effect1_foregroundBlur_6252_11793"/>
+</filter>
+<linearGradient id="paint0_linear_6252_11793" x1="552.275" y1="118.831" x2="766.641" y2="789.341" gradientUnits="userSpaceOnUse">
+<stop stop-color="#01163F"/>
+<stop offset="0.0001" stop-color="#000105"/>
+<stop offset="1" stop-color="#01163F" stop-opacity="0.6"/>
+</linearGradient>
+</defs>
+</svg>

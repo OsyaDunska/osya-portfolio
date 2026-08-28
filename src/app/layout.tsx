@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Cormorant_Garamond, Alex_Brush } from "next/font/google";
+import { Inter, Inter_Tight, Cormorant_Garamond, Alex_Brush, Mulish } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,6 +26,14 @@ const alexBrush = Alex_Brush({
   weight: ["400"],
 });
 
+// The Music App case is set in Mulish, and its Typography & Colors section is
+// literally a specimen of it — so it has to be the real face, not a stand-in.
+const mulish = Mulish({
+  variable: "--font-mulish",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
 export const metadata: Metadata = {
   title: "Osya Dunska — Product Designer",
   description:
@@ -36,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${cormorant.variable} ${alexBrush.variable} h-full antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${cormorant.variable} ${alexBrush.variable} ${mulish.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white text-[#171716]">
         {/* Squircle clip-path definition (used by .squircle class for iOS/Figma-style corner smoothing) */}
