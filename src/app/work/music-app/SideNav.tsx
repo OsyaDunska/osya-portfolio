@@ -9,7 +9,10 @@ const SECTIONS = [
   { id: "ui-card-elements", label: "UI Card Elements" },
   { id: "typography-colors", label: "Typography & Colors" },
   { id: "efficiency-consistency", label: "Efficiency & Consistency" },
-  { id: "summary", label: "Summary" },
+  // The closing block is "The Takeaway" on the page; the menu calls it Summary.
+  // It pointed at #summary, an id that has never existed, and getElementById
+  // returning null meant the click silently did nothing.
+  { id: "takeaway", label: "Summary" },
 ] as const;
 
 // Static block (not sticky) — part of the first-screen layout, scrolls away
@@ -36,10 +39,10 @@ export default function SideNav() {
             <a
               href={`#${id}`}
               onClick={(e) => {
+                const target = document.getElementById(id);
+                if (!target) return; // let the browser handle a missing anchor
                 e.preventDefault();
-                document
-                  .getElementById(id)
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
               className="block text-[16px] leading-6 text-white/50 transition-colors hover:text-white/80"
               style={{ fontFamily: "var(--font-inter-tight)" }}

@@ -8,6 +8,7 @@ import TypographyColors from "./TypographyColors";
 import EfficiencyBlock from "./EfficiencyBlock";
 import TakeawayBlock from "./TakeawayBlock";
 import UserPersonas from "./UserPersonas";
+import ScrollToTop from "./ScrollToTop";
 import { fadeGradient, fadeGradientSolid, fadeSideMask } from "./fadeStyles";
 
 // Figma "Glass" material (Light 60°/60%, Refraction 4, Depth 20, Dispersion 27,
@@ -730,6 +731,10 @@ export default function MusicAppCase() {
           </section>
         </div>
       </div>
+
+      {/* Sits outside the 1440 frame on purpose: it is pinned to the viewport,
+          not to the page's centred column. */}
+      <ScrollToTop />
     </div>
   );
 }
