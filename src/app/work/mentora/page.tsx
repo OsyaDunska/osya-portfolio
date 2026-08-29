@@ -11,6 +11,7 @@ import Insights from "./Insights";
 import Glows from "./Glows";
 import Wireframes from "./Wireframes";
 import MazeTest from "./MazeTest";
+import LazyAutoplayVideo from "../music-app/LazyAutoplayVideo";
 
 // Mentora SaaS case study — Figma frame 6657:12417, 1440x21041 on #171716.
 // Built one section at a time. Sections overlap in places (the menu runs down
@@ -195,9 +196,9 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 14778 is where the UI Design ramp ends; the canvas grows as
+        {/* 16424 is where the design system pair ends; the canvas grows as
             sections land. */}
-        <div className="relative" style={{ height: 14778 }}>
+        <div className="relative" style={{ height: 16424 }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -934,6 +935,129 @@ export default function MentoraCase() {
               className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
               style={{ top: 14536, height: 242, background: uiDesignFade }}
             />
+          </section>
+
+          {/* --- Section 17, Design System ---------------------------------
+              6657:13032 — the same label band as the moodboard at y 14988, then
+              6657:13035 at y 15164, 1352x408.
+                The block is her own 2x export rather than swatches in markup,
+              which is how she wants it: the palette stays in Figma instead of
+              being copied into the project, where it would be a second source
+              of truth for every token. It is only 0.10MB — 81.5% of it is
+              transparent — and the block is a fixed 1352 inside the canvas, so
+              2x is exactly right here with none of the scaling the UI Design
+              band needed.
+                Worth knowing: the hex values live in the picture, so they are
+              not selectable or searchable on the page. That is the trade she
+              chose. */}
+          <Anchor id="design-system" top={14988} />
+          <section aria-label="Design System">
+            <div
+              className="absolute flex items-center justify-center overflow-hidden bg-[#292621]"
+              style={{ left: 44, top: 14988, width: 1352, height: 96, borderRadius: 24 }}
+            >
+              <h2
+                className="whitespace-nowrap text-[24px] text-white"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 500,
+                  lineHeight: 1.5,
+                  letterSpacing: "-0.264px",
+                }}
+              >
+                Design System
+              </h2>
+            </div>
+
+            <Image
+              src="/mockups/mentora/design-system-tokens.webp"
+              alt="Colour tokens: text, surface and border, primary, status, brand and overlay, each swatch labelled with its name and hex value"
+              width={2704}
+              height={816}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 44, top: 15164, width: 1352, height: 408 }}
+            />
+          </section>
+
+          {/* --- Section 18, Built once ------------------------------------
+              6657:13531 — a written card at 44/15772 and a picture card beside
+              it at 728, both 668x652 at radius 20.
+                The right one is a video in the file — the library being walked
+              through in Figma. It could not be pulled out of Figma (the MCP
+              hands over images and SVGs, and export_video renders animated
+              timelines, not a video fill), so it is her own recording, cropped
+              and scaled to the card: 2378x2146 down to 1336x1304, which is
+              exactly twice the card, using the crop Figma itself applies —
+              91.5% of the width at an 1.8% offset, from the fill's
+              videoTransform. 135MB to 9.5.
+                Figma's 2x still of the same card sits under it. The video
+              carries no src until it is near the viewport, so without this the
+              card would be blank white on the way down; once the video loads it
+              covers the still. The still is also what stays if a browser
+              refuses to autoplay.
+                Corners come back opaque on the still, so this card takes its
+              radius in CSS. */}
+          <section aria-label="Design system in use">
+            <div
+              className="absolute overflow-hidden bg-[#292621]"
+              style={{ left: 44, top: 15772, width: 668, height: 652, borderRadius: 20 }}
+            >
+              <div className="absolute" style={{ left: 32, top: 104, width: 604 }}>
+                <h3
+                  className="whitespace-nowrap text-[24px] text-white"
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 500,
+                    lineHeight: 1.5,
+                    letterSpacing: "-0.264px",
+                  }}
+                >
+                  Built once, scaled everywhere
+                </h3>
+                {/* 6657:13535 — 554.346 wide, five 24 lines, with a break after
+                    "no hardcoding." that Figma makes by hand. */}
+                <p
+                  className="absolute text-[16px] text-white/50"
+                  style={{
+                    left: 0,
+                    top: 60,
+                    width: 554.346,
+                    fontFamily: "var(--font-inter)",
+                    lineHeight: "24px",
+                    letterSpacing: "-0.176px",
+                  }}
+                >
+                  I turned the validated flow into a token-based design system:
+                  color, typography, spacing, and radius as Figma variables, no
+                  hardcoding.{" "}
+                  <br />
+                  Every component in the library pulls from those tokens, so one
+                  change propagates across the whole product. I built the design
+                  system with the AI assistant Claude.
+                </p>
+              </div>
+            </div>
+
+            <div
+              className="absolute overflow-hidden bg-white"
+              style={{ left: 728, top: 15772, width: 668, height: 652, borderRadius: 20 }}
+            >
+              <Image
+                src="/mockups/mentora/design-system-library-poster.webp"
+                alt="The Mentora design system library in Figma: colour styles, typography, spacing and radius tables, and the component set"
+                width={1336}
+                height={1304}
+                unoptimized
+                className="absolute max-w-none"
+                style={{ left: 0, top: 0, width: 668, height: 652 }}
+              />
+              <LazyAutoplayVideo
+                src="/videos/mentora-design-system-library.mp4"
+                className="absolute size-full"
+                style={{ left: 0, top: 0, objectFit: "cover" }}
+              />
+            </div>
           </section>
 
           {/* --- Section 1, Header / Nav ------------------------------------ */}
