@@ -126,6 +126,32 @@ const HERO_H = `calc(${HERO_W} * 783.89 / 1174.43)`;
 // past the design width — 1201 — plus 20 so the two never quite touch.
 const HERO_TRAVEL = `calc(${HERO_W} * 0.3289 - 279.43px)`;
 
+// 6657:13361 "Frame 2147237555" — 1440x242 at y 14536, the ramp under the UI
+// Design band. Figma's own stops.
+const uiDesignFade =
+  "linear-gradient(-0.739450253939566deg, rgb(23, 23, 22) 3.2505%, " +
+  "rgba(23, 23, 22, 0.992) 13.923%, rgba(23, 23, 22, 0.968) 22.081%, " +
+  "rgba(23, 23, 22, 0.93) 28.156%, rgba(23, 23, 22, 0.879) 32.582%, " +
+  "rgba(23, 23, 22, 0.819) 35.791%, rgba(23, 23, 22, 0.749) 38.215%, " +
+  "rgba(23, 23, 22, 0.672) 40.288%, rgba(23, 23, 22, 0.589) 42.442%, " +
+  "rgba(23, 23, 22, 0.503) 45.109%, rgba(23, 23, 22, 0.415) 48.723%, " +
+  "rgba(23, 23, 22, 0.326) 53.716%, rgba(23, 23, 22, 0.238) 60.52%, " +
+  "rgba(23, 23, 22, 0.154) 69.569%, rgba(23, 23, 22, 0.074) 81.295%, " +
+  "rgba(23, 23, 22, 0) 96.131%)";
+
+// The UI Design band. Figma has it 1691.0968 wide at x -129.91, bleeding off
+// both sides of the 1440 frame, so it grows with the window rather than being
+// masked: 100vw plus 8.72 covers the window exactly while keeping the 4.36 the
+// node sits left of centre, and below the design width max() holds Figma's own
+// size. Capped at 2669, which is where its bottom would reach the Design System
+// band below.
+//   It hangs from its vertical centre, 14352.415, so growth splits between top
+// and bottom. That doubles the room before it collides, and costs nothing above
+// it: the band's top rows are empty except for the rightmost 8%, well clear of
+// the heading and paragraph on the left.
+const UI_BAND_W = "clamp(1691.0968px, calc(100vw + 8.72px), 2669px)";
+const UI_BAND_H = `calc(${UI_BAND_W} * 1949 / 4096)`;
+
 // A section here is only a grouping: every child is placed absolutely on the
 // canvas, so the section element itself has no height and sits at y 0. An id on
 // it would send every menu link to the top of the page, which is what they all
@@ -169,9 +195,9 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 13621 is where the moodboard ends; the canvas grows as sections
-            land. */}
-        <div className="relative" style={{ height: 13621 }}>
+        {/* 14778 is where the UI Design ramp ends; the canvas grows as
+            sections land. */}
+        <div className="relative" style={{ height: 14778 }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -814,6 +840,99 @@ export default function MentoraCase() {
               unoptimized
               className="absolute max-w-none"
               style={{ left: 44, top: 13121, width: 1352, height: 500 }}
+            />
+          </section>
+
+          {/* --- Section 16, UI Design -------------------------------------
+              6657:13016 at 13811, then the screen band and its ramp.
+                The band is 6657:13360, and it is the one place so far where
+              Figma's own export could not be used: the node is 1691.1 wide
+              against a 1440 frame, and every export of it — mine and hers —
+              comes back clipped to 1440, losing the 129.91 and 121.19 it bleeds
+              off each side. What is used instead is the fill's source bitmap,
+              4096x1949, whose aspect is 2.1016 against the node box's 2.1016
+              and whose transform is the identity, so it drops into the box
+              whole with nothing cropped, and used at its own 4096x1949
+              rather than resampled to the node's 2x. That was tried first and
+              was wrong once the band began growing: at a 2000 window the band
+              is 2008.7 wide and wants 4017 physical pixels at DPR 2, so a 3382
+              file was stretched 1.19x and read soft. 4096 covers it, and its
+              aspect is the node's exactly. Past about 2200 even this
+              stretches, and 4096 is all there is to have: Figma caps stored
+              images at 4096 on the long side, so both her export and this one
+              come off the same bitmap.
+                The picture itself is not what runs out, though. Its spectrum
+              still carries a tenth of its reference energy at 90% of the
+              sampling limit, so the original held more before Figma capped it —
+              and halving and restoring the file costs 47% of its high
+              frequencies, so the 4096 is real detail rather than an upscale.
+                She may swap this mockup for a different one; she is not happy
+              with how it looks. If that happens the only route to more than
+              4096 is assembling the band outside Figma from the original
+              screens, since a fresh import would be capped again.
+                Its top and bottom fade out on their own (edge alpha 1 and
+              27), so only the sides are cuts — and rather than feathering them,
+              the band grows with the window so they stay off screen. */}
+          <Anchor id="ui-design" top={13811} />
+          <section aria-label="UI Design">
+            <h2
+              className="absolute whitespace-nowrap text-[24px] text-white"
+              style={{
+                left: 194,
+                top: 13811,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
+            >
+              UI Design
+            </h2>
+
+            {/* 6657:13018. Figma reports the box as 391.164 but lays the text
+                out narrower, the same disagreement this file has at 6657:13444:
+                its four lines are 351/360/340/373, and solving for the width
+                that produces them gives [372.5, 380.3), which 391.164 is not
+                in. 376 sits in the middle of it. Left-aligned, so this only
+                decides where it wraps. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 13871,
+                width: 376,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              Building on the soft gray and white shades from the moodboard, the
+              interface utilizes a clean and neutral palette with accent colors
+              strategically placed to draw attention to key elements like CTAs
+            </p>
+
+            <Image
+              src="/mockups/mentora/ui-design-band.webp"
+              alt="A strip of Mentora interface screens showing the palette in use"
+              width={4096}
+              height={1949}
+              unoptimized
+              className="pointer-events-none absolute max-w-none select-none"
+              style={{
+                left: "calc(50% - 4.36px)",
+                transform: "translateX(-50%)",
+                top: `calc(14352.415px - ${UI_BAND_H} / 2)`,
+                width: UI_BAND_W,
+                height: UI_BAND_H,
+              }}
+            />
+
+            {/* 6657:13361 — painted over the band, and full-bleed for the same
+                reason as the others: pinned to 1440 it would end on a seam. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
+              style={{ top: 14536, height: 242, background: uiDesignFade }}
             />
           </section>
 
