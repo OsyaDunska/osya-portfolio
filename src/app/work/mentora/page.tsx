@@ -169,9 +169,9 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 11642 is where the maze section ends; the canvas grows as sections
+        {/* 13621 is where the moodboard ends; the canvas grows as sections
             land. */}
-        <div className="relative" style={{ height: 11642 }}>
+        <div className="relative" style={{ height: 13621 }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -713,6 +713,108 @@ export default function MentoraCase() {
           <Anchor id="maze-test" top={10976} />
           <section aria-label="Usability testing">
             <MazeTest />
+          </section>
+
+          {/* --- Section 14, Program page ----------------------------------
+              6657:12524 — the same 150 inset as the rest, at y 11812, and then
+              6657:13362, the MacBook shot at 126/12064, 1188x725. The image is
+              centred in the frame by its own numbers (126 either side), so it
+              never meets an edge and needs nothing done to it.
+                No ramp under this one, unlike the hero and the tablet: the
+              file has none, and the picture does not need it. Its top row
+              composites to 26.5 against the page's 23 — the crop is tight to
+              the lid but lands on the ground colour, so there is no cut to
+              cover. */}
+          <section aria-label="Program page">
+            <h2
+              className="absolute whitespace-nowrap text-[24px] text-white"
+              style={{
+                left: 194,
+                top: 11812,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
+            >
+              Program page, in context
+            </h2>
+
+            {/* 6657:12526 — 387.496 wide, three 24 lines, with a break after
+                "now" that Figma has by hand. It has to be written out: solving
+                for a box width that would produce these three lines on its own
+                comes back empty — line two is 335.9 wide, but line one plus the
+                word after it is only 335.0, so any box that holds the second
+                would have kept "shown" on the first. The other two lines do
+                wrap on their own at 387.496 and are left to. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 11872,
+                width: 387.496,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              The same flow that was tested — now{" "}
+              <br />
+              shown as a complete screen, with navigation, progress, and course
+              info working together.
+            </p>
+
+            <Image
+              src="/mockups/mentora/program-page-macbook.webp"
+              alt="The Mentora program page on a MacBook"
+              width={2376}
+              height={1450}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 126, top: 12064, width: 1188, height: 725 }}
+            />
+          </section>
+
+          {/* --- Section 15, Moodboard -------------------------------------
+              6657:13019 — a 1352x96 label band at y 12969, then a 4x2 grid of
+              326x242 cards at y 13121, 16 apart both ways.
+                The grid is one image rather than eight. Each card is several
+              stacked image fills in the file, so they are flattened anyway, and
+              Figma's export bakes the gaps and the cards' 16 corners in the
+              page's own colour — every gap pixel is exactly rgb(23,23,22), one
+              value, no variation — so the whole thing drops onto the page
+              seamlessly and needs no radius of its own.
+                Lossless, at 0.97MB against 0.34 for q95. These are photographs,
+              where lossy usually earns its keep, but q95 still moved 12% of the
+              pixels by more than two levels. */}
+          <Anchor id="moodboard" top={12969} />
+          <section aria-label="Moodboard">
+            <div
+              className="absolute flex items-center justify-center overflow-hidden bg-[#292621]"
+              style={{ left: 44, top: 12969, width: 1352, height: 96, borderRadius: 24 }}
+            >
+              <h2
+                className="whitespace-nowrap text-[24px] text-white"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 500,
+                  lineHeight: 1.5,
+                  letterSpacing: "-0.264px",
+                }}
+              >
+                Moodboard
+              </h2>
+            </div>
+
+            <Image
+              src="/mockups/mentora/moodboard.webp"
+              alt="Moodboard: eight reference images for the visual direction"
+              width={2704}
+              height={1000}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 44, top: 13121, width: 1352, height: 500 }}
+            />
           </section>
 
           {/* --- Section 1, Header / Nav ------------------------------------ */}
