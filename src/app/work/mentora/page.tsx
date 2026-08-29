@@ -78,6 +78,54 @@ const tabletFade =
 const MOCKUP_W = "clamp(1440px, calc(1440px + (100vw - 1440px) * 0.35), 1728px)";
 const MOCKUP_H = `calc(${MOCKUP_W} * 1087 / 1440)`;
 
+// --- Hero, right edge: three versions, and why this one -------------------
+//
+// The mockup runs off the right of the frame in the design, and on a screen
+// wider than the canvas something has to give. Three ways have been tried; the
+// third is what is here. Keep this list current if it changes again.
+//
+//   d3c908a  the original. The mockup stays on the canvas at left 286 and a
+//            feathered mask hides its cut past 1481. Simple, but the artwork
+//            drifts inward from the screen edge as the window grows.
+//
+//   tag hero-alt-heading-rides-mockup (7adae2a)
+//            the mockup follows the window edge at every width, flush, no mask
+//            at all — and the heading travels with it, held at 0.117869 of the
+//            width in from the mockup's right edge and 0.743586 of the height
+//            up from its bottom. Restore with:
+//                git show hero-alt-heading-rides-mockup:src/app/work/mentora/page.tsx
+//            That commit was amended off the branch, so the tag is the only
+//            thing keeping it from being collected. Do not delete it.
+//
+//   here     the heading stays put in the 1440 column, and the mockup travels
+//            only as far as the heading lets it, then the mask covers the rest.
+//
+// The choice between the last two is a straight trade and neither is free:
+//
+//                                heading                mockup at 2560
+//   rides the mockup    leaves the 1440 column     flush to the screen edge
+//   stays in the column  in the column, aligned     394 short of the edge
+//                        with "Mentora / 2026"
+//
+// It is a trade because the design lays the heading over a transparent stretch
+// of the artwork. Anchor the heading to the canvas and let the mockup run, and
+// that stretch slides out from under it: the artwork behind the text goes from
+// 0% brighter than 110 at 1440 to 41% at 1800 and 97% at 2560 — white type on
+// the laptop's own white screen. So either they move together, or the mockup
+// stops where the heading needs it to.
+
+// The hero mockup's size. 1174.43 is Figma's; past the canvas it grows at 35% of
+// the window's growth, the same rate as the tablet mockup, and stops at 1291.87
+// — 1.10, which is where its top would start to reach the header label.
+const HERO_W =
+  "clamp(1174.43px, calc(1174.43px + (100vw - 1440px) * 0.35), 1291.87px)";
+const HERO_H = `calc(${HERO_W} * 783.89 / 1174.43)`;
+// How far right of the canvas the mockup may travel before its bright artwork
+// would reach the heading. 0.671 of the width is where that artwork ends at the
+// heading's height, measured off the file; the constant is the heading's own x
+// past the design width — 1201 — plus 20 so the two never quite touch.
+const HERO_TRAVEL = `calc(${HERO_W} * 0.3289 - 279.43px)`;
+
 // A section here is only a grouping: every child is placed absolutely on the
 // canvas, so the section element itself has no height and sits at y 0. An id on
 // it would send every menu link to the top of the page, which is what they all
@@ -130,12 +178,37 @@ export default function MentoraCase() {
           {/* --- Section 2, Hero -------------------------------------------
               Painted before the header text so the type stays on top of it. */}
 
-          {/* 6657:13438 — 1174.43x783.89 at x 286, y 149, on the 1440 canvas
-              like the rest of the content. It runs 20.43 past the frame, which
-              is deliberate in the design: at 1440 that overhang lands on the
-              edge of the screen and reads as the artwork carrying on past it.
-              Past 1481 the cut comes back on screen, which `hero-rock-feather`
-              handles — see globals.css for why that width and not 1441.
+          {/* 6657:13438 — 1174.43x783.89 at x 286, y 149 in the file, running
+              20.43 past the 1440 frame so the artwork reads as carrying on off
+              the edge of the screen.
+                It follows the window rather than the canvas, the same
+              treatment as the tablet mockup further down, and grows at 35% of
+              the window's growth — but only up to a point, and the point is set
+              by the heading beside it.
+                The design lays that heading over the artwork, on a transparent
+              stretch of it, and the heading does not travel: it stays in the
+              1440 column, at 1201 past the design width so its right edge lines
+              up with "Mentora / 2026". Measuring the file, the artwork's last
+              bright pixel at the heading's height is at 0.671 of the width, so
+              the transparent stretch is the remaining 0.329. The mockup may
+              move right until its bright part comes within 20 of the heading
+              and no further. Past that it holds still and only the growth
+              continues.
+                That works out to overhanging the screen edge as the design does
+              all the way to 1771, and falling behind it above that — 394 short
+              at 2560. Where it does fall behind, `hero-rock-feather` in
+              globals.css softens the cut the artwork ends on.
+                It hangs from its BOTTOM, pinned at 932.89, because that edge is
+              a hard cut — the bottom row is 97% opaque and runs up to 196
+              against the page's 23 — and the ramp below only covers it from
+              933.8 down. Nine tenths of a pixel of margin, so it cannot move.
+              Growing therefore lifts the top, and the cap is set by the header
+              label at y 37.5-56.5: at 1.10 the box top is 70.6 and still clear
+              of it, at 1.15 it is 31.4 and no longer is. Room to spare on
+              sharpness — the file is 1803 CSS wide against the 1174 it is drawn
+              at, so it has 1.54x the pixels it needs.
+                This replaces a feathered mask on the right edge; that version
+              is commit d3c908a, one revert away.
                 Served as the PNG: the optimizer's WebP re-encode bands across
               the dark rock and softens the UI type on the screen. */}
           <Image
@@ -146,7 +219,12 @@ export default function MentoraCase() {
             priority
             unoptimized
             className="hero-rock-feather absolute max-w-none"
-            style={{ left: 286, top: 149, width: 1174.43, height: 783.89 }}
+            style={{
+              right: `calc(-20.43px - min(max(0px, (100vw - 1440px) / 2), ${HERO_TRAVEL}))`,
+              top: `calc(932.89px - ${HERO_H})`,
+              width: HERO_W,
+              height: HERO_H,
+            }}
           />
 
           {/* 6657:13439 — the ramp that takes the bottom of the mockup into the
@@ -169,11 +247,15 @@ export default function MentoraCase() {
               line, which is 35.2 a line and 105.6 for the three, so the box
               needs no trim correction here. Figma writes it as one layer with
               `lowercase` and per-span `capitalize`, which is how "from scratch"
-              stays lowercase; the breaks are the layer's own. */}
+              stays lowercase; the breaks are the layer's own.
+                This stays on the canvas and never travels, so it is inside
+              the 1440 column at any width. Its x lives in globals.css, because
+              past the design width it shifts from Figma's 1127 to 1201 to line
+              its right edge up with "Mentora / 2026" above it. The mockup is
+              what yields around it — see its own note. */}
           <p
-            className="absolute text-white"
+            className="hero-heading absolute text-white"
             style={{
-              left: 1127,
               top: 350,
               width: 195,
               fontFamily: "var(--font-inter)",
