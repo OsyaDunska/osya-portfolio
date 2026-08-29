@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import SquircleCorners from "@/components/SquircleCorners";
-import { Inter, Inter_Tight, Cormorant_Garamond, Alex_Brush, Mulish } from "next/font/google";
+import {
+  Inter,
+  Inter_Tight,
+  Cormorant_Garamond,
+  Alex_Brush,
+  Mulish,
+  Libre_Baskerville,
+} from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,6 +36,17 @@ const alexBrush = Alex_Brush({
 
 // The Music App case is set in Mulish, and its Typography & Colors section is
 // literally a specimen of it — so it has to be the real face, not a stand-in.
+// The Mentora case numbers its personas in Libre Baskerville italic. Figma calls
+// the style "Medium Italic", but the family only ships 400 and 700 and the
+// italic only at 400 — so 400 is the real face behind that label, and asking for
+// a 500 would only get a synthesised slant.
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-libre-baskerville",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
 const mulish = Mulish({
   variable: "--font-mulish",
   subsets: ["latin"],
@@ -45,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${cormorant.variable} ${alexBrush.variable} ${mulish.variable} h-full antialiased`}
+      className={`${inter.variable} ${interTight.variable} ${cormorant.variable} ${alexBrush.variable} ${mulish.variable} ${libreBaskerville.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white text-[#171716]">
         <SquircleCorners />

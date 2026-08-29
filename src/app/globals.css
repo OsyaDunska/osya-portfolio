@@ -29,3 +29,36 @@ body {
 .squircle {
   border-radius: 20px;
 }
+
+/* The Mentora hero mockup ends on a hard vertical cut through the rock — the
+   artwork simply stops there. At the 1440 design width that cut sits 20px past
+   the edge of the screen, which is what the design intends, so nothing is
+   masked and the rock reaches the edge solid.
+     The canvas is centred, so as the window grows the cut walks inward at half
+   the rate: the gap between it and the screen edge is 50vw - 740.43px, which
+   only opens past 1481. That is where this starts, not at 1441 — between the
+   two the artwork still reaches the edge on its own and feathering it there
+   would erase rock for nothing.
+     The ramp starts at 86% of the image. The laptop ends at 67.3% of its width,
+   measured off the file's alpha, so only rock is ever touched. The stops ease
+   out rather than falling off linearly, which keeps it from reading as a wipe. */
+@media (min-width: 1481px) {
+  .hero-rock-feather {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 86%,
+      rgba(0, 0, 0, 0.75) 92%,
+      rgba(0, 0, 0, 0.4) 96%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 86%,
+      rgba(0, 0, 0, 0.75) 92%,
+      rgba(0, 0, 0, 0.4) 96%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+}

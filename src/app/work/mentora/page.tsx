@@ -1,8 +1,664 @@
+import Link from "next/link";
+import Image from "next/image";
+import CaseNav from "./CaseNav";
+import InterviewCard from "./InterviewCard";
+import BoardVideoCard from "./BoardVideoCard";
+import ResearchBoards from "./ResearchBoards";
+import SurveyCharts from "./SurveyCharts";
+import BenchmarkingBoard from "./BenchmarkingBoard";
+import UserPersonas from "./UserPersonas";
+import Insights from "./Insights";
+import Glows from "./Glows";
+import Wireframes from "./Wireframes";
+import MazeTest from "./MazeTest";
+
+// Mentora SaaS case study — Figma frame 6657:12417, 1440x21041 on #171716.
+// Built one section at a time. Sections overlap in places (the menu runs down
+// the left while the hero mockup already starts beside it), so rather than
+// stacking section boxes, everything is placed at its own frame coordinate on
+// one canvas — the same numbers the design panel shows.
+
+// Figma 6657:13438's fill, resized to exactly 2x its 1174.43x783.89 box. The
+// export she saved is a different crop — 2308x1568, an aspect of 1.4719 against
+// the node's 1.4982 — so it would have had to stretch to fit.
+//   Lossless WebP, not PNG: 28% of the image is transparent, so it needs an
+// alpha channel, and at 2.9MB the PNG was a lot to put on a first screen. WebP
+// in lossless mode carries the same pixels — checked, every channel and the
+// alpha match the PNG exactly — for 1.74MB. Lossy would have been 0.76 at q100,
+// but that is no longer the same image.
+const heroMockup = "/mockups/mentora/hero-macbook.webp";
+
+// 6657:13447 and 6657:13463, the two 668x370 frames under About project. Each
+// is a screenshot with vector overlays on top, so what is used here is Figma's
+// own flattened render of the frame at 2x — 1336x740, exactly twice the box.
+// Lossless WebP again: 0.37 and 0.41MB, pixel-identical to the PNG exports.
+const aboutLeft = "/mockups/mentora/about-left.webp";
+const aboutRight = "/mockups/mentora/about-right.webp";
+
+// 6657:13439 "Frame 2147237389" — 1440x343 at y 631, the ramp that takes the
+// bottom of the mockup into the page. Figma's own stops, verbatim.
+const heroFade =
+  "linear-gradient(-0.49202249119846897deg, rgb(23, 23, 22) 11.709%, " +
+  "rgba(23, 23, 22, 0.992) 21.637%, rgba(23, 23, 22, 0.968) 29.226%, " +
+  "rgba(23, 23, 22, 0.93) 34.878%, rgba(23, 23, 22, 0.879) 38.995%, " +
+  "rgba(23, 23, 22, 0.819) 41.98%, rgba(23, 23, 22, 0.749) 44.235%, " +
+  "rgba(23, 23, 22, 0.672) 46.163%, rgba(23, 23, 22, 0.589) 48.167%, " +
+  "rgba(23, 23, 22, 0.503) 50.648%, rgba(23, 23, 22, 0.415) 54.01%, " +
+  "rgba(23, 23, 22, 0.326) 58.655%, rgba(23, 23, 22, 0.238) 64.985%, " +
+  "rgba(23, 23, 22, 0.154) 73.403%, rgba(23, 23, 22, 0.074) 84.311%, " +
+  "rgba(23, 23, 22, 0) 98.112%)";
+
+// 6657:13539 "Frame 2147238155" — 1440x193 at y 10282, the ramp that takes the
+// bottom of the tablet mockup into the page. Figma's stops, but straightened:
+// the file tilts this gradient 2.2deg and that tilt is what made a hard line
+// appear along the right side.
+//   A CSS gradient's stops are positions along its own axis, so a tilt walks the
+// boundary sideways across the box — and the wider the box, the further. The
+// mockup is cut off at y 10469 and this ramp exists to bury that cut, but with
+// the tilt its cover at that line fell away to the right: 0.922 at 1440, 0.821
+// at 2100, 0.761 at 2560, against 1.000 down the left and centre at every
+// width. The cut is not faint either — the image's bottom row runs up to 117
+// against the page's 23 — so a quarter of a 94-level step was coming through.
+//   Straightening it holds 1.000 everywhere at any width. Keeping the tilt and
+// covering the cut instead would need the ramp about 442 tall rather than 193,
+// which changes the fade far more than dropping 2.2 degrees does.
+const tabletFade =
+  "linear-gradient(0deg, rgb(23, 23, 22) 19.342%, rgba(23, 23, 22, 0) 88.549%)";
+
+// 6657:12588, the tablet mockup. It grows on screens wider than the canvas, at
+// 35% of the window's own growth rather than 1:1 — matched to the window fast
+// enough that it does not read as pinned to an invisible 1440 line, slowly
+// enough that it does not dwarf the 1440 column of content beside it. Capped at
+// 1728 (a scale of 1.2).
+//   The cap is not arbitrary. The mockup hangs from its bottom edge, fixed at
+// 10469, so that the ramp at 10282 keeps covering where the artwork is cut off;
+// growing therefore pushes its top upward, toward the wireframes grid that ends
+// at 9354. What saves it is that the top 19.5% of the image is empty: at a scale
+// of 1.275 the first opaque pixel finally reaches 9354, so 1.2 leaves room.
+const MOCKUP_W = "clamp(1440px, calc(1440px + (100vw - 1440px) * 0.35), 1728px)";
+const MOCKUP_H = `calc(${MOCKUP_W} * 1087 / 1440)`;
+
+// A section here is only a grouping: every child is placed absolutely on the
+// canvas, so the section element itself has no height and sits at y 0. An id on
+// it would send every menu link to the top of the page, which is what they all
+// did. These markers carry the ids at the right y instead.
+//   The scroll margin keeps the target clear of the pinned back button, which
+// would otherwise sit on top of whatever was just scrolled to.
+function Anchor({ id, top }: { id: string; top: number }) {
+  return (
+    <span
+      id={id}
+      aria-hidden
+      className="absolute"
+      style={{ top, left: 0, width: 1, height: 1, scrollMarginTop: 96 }}
+    />
+  );
+}
+
 export default function MentoraCase() {
   return (
-    <main className="max-w-[900px] mx-auto px-6 py-24 text-center">
-      <h1 className="text-3xl font-semibold mb-4">Mentora — case study</h1>
-      <p className="text-black/60">This page is coming soon. We&apos;ll build it together next.</p>
-    </main>
+    <div className="min-h-screen overflow-x-clip bg-[#171716] text-white">
+      {/* The page is shorter than a viewport for now, so the backdrop is fixed
+          rather than relying on the content to fill it. */}
+      <div aria-hidden className="fixed inset-0 -z-10 bg-[#171716]" />
+
+      <div className="relative mx-auto max-w-[1440px]">
+        {/* 6657:13556, an instance of "button back case" 6643:2632 — 155x48 at
+            x 44, y 24. It is pinned rather than static: this layer spans the
+            whole page so the button scrolls with it until it reaches y 24 and
+            then holds there. `pointer-events-none` on the layer keeps the rest
+            of the page clickable through it; the button itself takes them back.
+              Hover is Figma's Variant2, a straight inversion — white pill,
+            #292621 label. The pill is a fixed 48 tall with 20 of side padding,
+            so the label centres rather than sitting on a baseline. */}
+        <div className="pointer-events-none absolute inset-0 z-30">
+          <Link
+            href="/"
+            className="pointer-events-auto sticky flex h-12 w-fit items-center justify-center rounded-[50px] bg-[#292621] px-5 text-[15px] text-white transition-colors duration-200 hover:bg-white hover:text-[#292621] motion-reduce:transition-none"
+            style={{ top: 24, marginLeft: 44, fontFamily: "var(--font-inter-tight)", fontWeight: 500 }}
+          >
+            Back to All Works
+          </Link>
+        </div>
+
+        {/* 11642 is where the maze section ends; the canvas grows as sections
+            land. */}
+        <div className="relative" style={{ height: 11642 }}>
+          {/* Background light for sections 8-9 — under everything else, as in
+              the file. */}
+          <Glows />
+          {/* --- Section 2, Hero -------------------------------------------
+              Painted before the header text so the type stays on top of it. */}
+
+          {/* 6657:13438 — 1174.43x783.89 at x 286, y 149, on the 1440 canvas
+              like the rest of the content. It runs 20.43 past the frame, which
+              is deliberate in the design: at 1440 that overhang lands on the
+              edge of the screen and reads as the artwork carrying on past it.
+              Past 1481 the cut comes back on screen, which `hero-rock-feather`
+              handles — see globals.css for why that width and not 1441.
+                Served as the PNG: the optimizer's WebP re-encode bands across
+              the dark rock and softens the UI type on the screen. */}
+          <Image
+            src={heroMockup}
+            alt="The Mentora dashboard on a MacBook resting on a rock"
+            width={2349}
+            height={1568}
+            priority
+            unoptimized
+            className="hero-rock-feather absolute max-w-none"
+            style={{ left: 286, top: 149, width: 1174.43, height: 783.89 }}
+          />
+
+          {/* 6657:13439 — the ramp that takes the bottom of the mockup into the
+              page, so it is painted over the mockup rather than under it. Below
+              it the fade would sit on #171716 laying #171716 over itself, which
+              is nothing at all.
+                Figma draws it 1440 wide because that is the whole frame, so
+              here it takes the whole window rather than the canvas: pinned to
+              1440 it stops short of the edge on any wider screen and ends on a
+              visible vertical seam. Full-bleed out of a centred canvas is the
+              50% / 100vw / -50% trio; the spill past the window is cut by the
+              page's own `overflow-x-clip`, the way the Music App glows are. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
+            style={{ top: 631, height: 343, background: heroFade }}
+          />
+
+          {/* 6657:13537 — 195x105 at x 1127, y 350. Inter Medium 32 on a 1.1
+              line, which is 35.2 a line and 105.6 for the three, so the box
+              needs no trim correction here. Figma writes it as one layer with
+              `lowercase` and per-span `capitalize`, which is how "from scratch"
+              stays lowercase; the breaks are the layer's own. */}
+          <p
+            className="absolute text-white"
+            style={{
+              left: 1127,
+              top: 350,
+              width: 195,
+              fontFamily: "var(--font-inter)",
+              fontWeight: 500,
+              fontSize: 32,
+              lineHeight: "35.2px",
+            }}
+          >
+            Building
+            <br />
+            Ed Platform
+            <br />
+            from scratch
+          </p>
+
+          {/* --- Section 3, About Project -----------------------------------
+              6657:13440, a 1352x774 frame at x 44, y 1009. Its text column is
+              inset 150, so the copy starts at x 194 on the page; the two
+              mockups below sit on the frame's own edges.
+                None of this text needs a baseline correction: Figma reports the
+              title as 36, which is 24 at 1.5, and each paragraph as 96, which is
+              four 24 lines — untrimmed boxes, laid out as a browser lays them. */}
+          <Anchor id="about-project" top={1009} />
+          <section aria-labelledby="about-project-title">
+            {/* 6657:13442 — 157x36 at x 194, y 1009. Figma writes it with
+                `lowercase` and an `uppercase` span on the A, which is just
+                "About project". */}
+            <h2
+              id="about-project-title"
+              className="absolute whitespace-nowrap text-white"
+              style={{
+                left: 194,
+                top: 1009,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: 24,
+                lineHeight: 1.5,
+              }}
+            >
+              About project
+            </h2>
+
+            {/* 6657:13443 — 484x224 at x 194, y 1069: two 96-tall paragraphs
+                32 apart. */}
+            <div
+              className="absolute flex flex-col"
+              style={{ left: 194, top: 1069, width: 484, gap: 32 }}
+            >
+              {/* 6657:13444. This one gets its own 412 rather than the 484 the
+                  column gives everything else, because the node in Figma is at
+                  odds with itself: the API reports width 484, but its
+                  absoluteRenderBounds — and its own render — are 403.3 wide, and
+                  it breaks after "for", "provides" and "collaboration". There is
+                  no manual break in it and no second text style, so the box is
+                  simply not the width the text was laid out at. Solving for the
+                  width that reproduces those four lines gives [406.8, 418.7).
+                  Left-aligned, so this only decides where it wraps.
+                    Worth knowing: if that text is ever edited in Figma it will
+                  reflow to the full 484 and want four different lines. */}
+              <p
+                className="text-[16px] text-white/50"
+                style={{ width: 412, fontFamily: "var(--font-inter)", lineHeight: "24px", letterSpacing: "-0.176px" }}
+              >
+                Mentora is an online learning SaaS platform for students, mentors,
+                and administrators. It provides intuitive tools for course
+                management, collaboration, personalized paths, AI planning, and
+                progress tracking.
+              </p>
+              <p
+                className="text-[16px] text-white/50"
+                style={{ fontFamily: "var(--font-inter)", lineHeight: "24px", letterSpacing: "-0.176px" }}
+              >
+                Design the MVP for the Student role — a focused experience that
+                lets learners manage courses, access materials, communicate with
+                mentors, and track progress. The core feature: an AI-powered
+                planner that builds a personalized study schedule
+              </p>
+            </div>
+
+            {/* 6657:13446 — the pair at y 1413, 668 wide each, 16 apart. */}
+            <Image
+              src={aboutLeft}
+              alt="The Mentora course view"
+              width={1336}
+              height={740}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 44, top: 1413, width: 668, height: 370 }}
+            />
+            <Image
+              src={aboutRight}
+              alt="The Mentora planner view"
+              width={1336}
+              height={740}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 728, top: 1413, width: 668, height: 370 }}
+            />
+          </section>
+
+          {/* --- Section 4, From research to feature priorities --------------
+              The heading block sits at x 44, y 1933 with the same 150 inset the
+              About column uses, so its copy also starts at x 194. Under it, two
+              rows of 668 squares 16 apart: the row tops are 2183 and 2875.
+                Figma writes both headings with `lowercase` and a `capitalize`
+              span on the first letter, so the layer names read title case while
+              the type renders sentence case — "From research to feature
+              priorities" is what is actually drawn. */}
+          <Anchor id="interviews" top={1933} />
+          <section aria-labelledby="interviews-title">
+            {/* 6657:12431 — 391x36 at x 194, y 1933. */}
+            <h2
+              id="interviews-title"
+              className="absolute whitespace-nowrap text-white"
+              style={{
+                left: 194,
+                top: 1933,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: 24,
+                lineHeight: 1.5,
+              }}
+            >
+              From research to feature priorities
+            </h2>
+
+            {/* 6657:12432 — 452x72 at x 194, y 1993: three 24 lines, the first
+                of them ended by the layer's own break rather than by wrapping. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 1993,
+                width: 452,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              I defined the feature scope through a series of stakeholder
+              <br />
+              and user interviews, competitor benchmarking, and feature
+              prioritization based on real user needs.
+            </p>
+
+            {/* 6657:12435 — the left card of the first row. */}
+            <div className="absolute" style={{ left: 44, top: 2183, width: 668, height: 668 }}>
+              <InterviewCard
+                title="Stakeholders&rsquo; interview"
+                body="The stakeholder interview helped clarify the platform's goals, core features, user needs, and business objectives — ensuring the product direction aligns with both user expectations and business strategy."
+                href="https://www.figma.com/board/Ps7KjtOAjd9rU8m923HJ3P/Saas?node-id=1-225"
+                left={32}
+                top={104}
+              />
+            </div>
+
+            {/* 6657:12444 — the right card of the first row, beside
+                Stakeholders'. Figma has it as a still crop of the FigJam board;
+                on the page it plays the recording of that board scrolling. No
+                link on this one — the written card beside it carries that. */}
+            <div className="absolute" style={{ left: 728, top: 2183, width: 668, height: 668 }}>
+              <BoardVideoCard />
+            </div>
+
+            {/* 6657:12481 — the left card of the second row, the stepping
+                board. */}
+            <div className="absolute" style={{ left: 44, top: 2875, width: 668, height: 668 }}>
+              <ResearchBoards />
+            </div>
+
+            {/* 6657:12482 — the right card of the second row. Figma's own href
+                on this node is 1-43, but the board it should open is 1-1333,
+                so that is what it points at. */}
+            <div className="absolute" style={{ left: 728, top: 2875, width: 668, height: 668 }}>
+              <InterviewCard
+                title="Users&rsquo; interview"
+                body="The user interviews explored how people actually experience online learning — their motivations, goals, and the challenges they face. I focused on what drives engagement, which content formats work best, and how these preferences shape different learning styles."
+                href="https://www.figma.com/board/Ps7KjtOAjd9rU8m923HJ3P/EdTech-SaaS-Platform?node-id=1-1333"
+                left={32}
+                top={104}
+              />
+            </div>
+          </section>
+
+          {/* --- Section 5, User Survey -------------------------------------
+              6657:12421, 602x187 at x 44, y 3695, with the same 150 inset, so
+              the copy starts at x 194 again. Title, then a 12 gap to the count,
+              then a 24 gap to the paragraph. */}
+          <Anchor id="survey" top={3695} />
+          <section aria-labelledby="survey-title">
+            {/* 6657:12423 — 138x36. */}
+            <h2
+              id="survey-title"
+              className="absolute whitespace-nowrap text-white"
+              style={{
+                left: 194,
+                top: 3695,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: 24,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
+            >
+              User Survey
+            </h2>
+
+            {/* 6657:12424 — 162x19 at y 3743, on `normal` leading like the
+                header's year, so its box is ascent + descent and needs no
+                nudge. */}
+            <p
+              className="absolute whitespace-nowrap text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 3743,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "normal",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              63 students surveyed
+            </p>
+
+            {/* 6657:12425 — 452x96 at y 3786, four 24 lines. Its -1.1% tracking
+                is -0.176 at this size, the same figure the other paragraphs
+                carry in px. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 3786,
+                width: 452,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              The survey validated interview findings at scale — pinpointing
+              which features matter most and how learners actually structure
+              their study time. The results directly shaped MVP priorities.
+            </p>
+
+            {/* 6657:12491 — the chart scroller, part of this section rather
+                than one of its own. */}
+            <SurveyCharts />
+          </section>
+
+          {/* --- Section 6, Competitor Benchmarking -------------------------
+              6657:12426, 650x228 at x 44, y 4642, same 150 inset. The board it
+              describes is not in yet — its node has still to be identified. */}
+          <Anchor id="benchmarking" top={4642} />
+          <section aria-labelledby="benchmarking-title">
+            {/* 6657:12427 — 295x36 at x 194, y 4642. Written out in full here,
+                unlike the two headings above it: Figma leaves this one without
+                the lowercase treatment, so it really is title case. */}
+            <h2
+              id="benchmarking-title"
+              className="absolute whitespace-nowrap text-white"
+              style={{
+                left: 194,
+                top: 4642,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: 24,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
+            >
+              Competitor Benchmarking
+            </h2>
+
+            {/* 6657:12428 — 500x168 at y 4702, seven 24 lines, none of them
+                broken by hand.
+                  The box is 499 rather than Figma's 500 on purpose. At 500 the
+                last two lines came out 45 wrong in both directions — "gaps,"
+                rode up onto line 6 — and the reason is not a manual break but
+                Figma's text engine measuring about 0.15% narrower than the
+                browser, which over a 500 line is enough to fit one more word.
+                Solving for the width that reproduces Figma's own seven lines
+                gives the window [498.7, 499.4); 499 sits in it. The text is
+                left-aligned, so the one pixel changes where it wraps and
+                nothing about where it sits. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 4702,
+                width: 499,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              I analyzed direct competitors ( Udemy, Khan Academy) and indirect
+              ones (Skillshare, Masterclass) to see how they handle similar
+              challenges. I reviewed each platform across seven parameters —
+              navigation and clarity, learning formats, progress and motivation,
+              atmosphere and tone of voice, mobile experience, community and
+              support, and course completion — to map their strengths and gaps,
+              and to find opportunities Mentora could own.
+            </p>
+
+            {/* 6657:13530 — the board itself, playing rather than still. */}
+            <BenchmarkingBoard />
+          </section>
+
+          {/* --- Section 8, User personas -----------------------------------
+              6657:13363, 1352x1001 at x 44, y 5912. Heading block on the same
+              150 inset, then the four cards at y 6213. */}
+          <Anchor id="user-personas" top={5912} />
+          <section aria-labelledby="user-personas-title">
+            {/* 6657:13365 — 452x36 at x 194, y 5912. Figma gives this heading a
+                fixed 452 box rather than letting it hug the words, unlike the
+                ones above it. */}
+            <h2
+              id="user-personas-title"
+              className="absolute text-white"
+              style={{
+                left: 194,
+                top: 5912,
+                width: 452,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                fontSize: 24,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
+            >
+              User personas
+            </h2>
+
+            {/* 6657:13366 at y 5972, five 24 lines.
+                  Width 372, not the 452 the metadata reports. Figma's own export
+                of this text node is 736x224 — 368x112 in CSS — and its longest
+                line measures 367.5, so it wraps far short of 452. The font is
+                not the difference: the same line measures 369.8 here, within
+                0.6% of Figma's. Reproducing its five breaks needs a width
+                between 369.8 and 376.9, and 372 sits in the middle of that. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 5972,
+                width: 372,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              The purpose of analyzing user personas was to maintain a strong
+              focus on the real needs of users during the development of the MVP.
+              This analysis helps to gain a deeper understanding of their goals,
+              motivations, pain points, and challenges.
+            </p>
+
+            <UserPersonas />
+          </section>
+
+          {/* --- Section 9, Key insights ------------------------------------
+              Four blocks stepping down and across the page rather than a row:
+              64/7033, 406/7379, 748/7702 and 1090/7138 — the block sits 120
+              below the personas row, which ends at 6913. The glow behind them
+              is its own layer, drawn back at the top of the canvas. */}
+          <Anchor id="key-insights" top={7033} />
+          <section aria-label="Key insights">
+            <Insights />
+          </section>
+
+          {/* --- Section 10, Wireframes -------------------------------------
+              6657:12590 — a 2x2 grid at 44/8034, cells 668x652 with 16 between:
+              the copy, the sketch, and the two wireframe screens. */}
+          <Anchor id="wireframes" top={8034} />
+          <section aria-label="Wireframes">
+            <Wireframes />
+          </section>
+
+          {/* --- Section 11, tablet mockup ----------------------------------
+              6657:12588 "Group 1597880856" — one image, 1440x1087 at y 9382, on
+              her own 2x export.
+                Its artwork is opaque right up to x 1440 (a dark forearm), which
+              in the design means it runs off the edge of the screen. So it is
+              hung off the window's right edge rather than the canvas's: the
+              offset is half the overflow, which is exactly 0 at 1440 and pushes
+              it out to the window edge above that. min() keeps it at 0 on
+              anything narrower. No mask on this one — nothing is cut off, the
+              edge it needs is simply the window's.
+                6657:12587, a 1475x945 rectangle sitting between this and the
+              ramp, is not here: it has no fills, no strokes and no effects, so
+              it draws nothing at all. */}
+          <Image
+            src="/mockups/mentora/tablet-lesson.webp"
+            alt="The Mentora lesson screen on a tablet held in two hands"
+            width={2880}
+            height={2174}
+            unoptimized
+            className="pointer-events-none absolute max-w-none select-none"
+            style={{
+              right: "min(0px, calc((1440px - 100vw) / 2))",
+              // Hung from its bottom edge at 10469, so the ramp keeps hiding the
+              // cut no matter how large it gets.
+              top: `calc(10469px - ${MOCKUP_H})`,
+              width: MOCKUP_W,
+              height: MOCKUP_H,
+            }}
+          />
+
+          {/* The ramp is painted over the mockup, and takes the whole window
+              rather than the canvas — pinned to 1440 it would end on a vertical
+              seam, the same as the hero's. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
+            style={{ top: 10282, height: 193, background: tabletFade }}
+          />
+
+          {/* --- Section 12, the pair of small cards ------------------------
+              6657:13540 — two 326 squares at y 10480, 16 apart, in the right
+              half of the grid: 728 and 1070.
+                The first is drawn rather than exported — it is one colour and
+              one vector, so it stays crisp at any zoom for almost no weight.
+              The second is Figma's own 2x render. It carries Urbanist, which
+              the site does not load and which would be a whole family for two
+              strings on one decorative card.
+                Note the two exports in this case behave oppositely: the
+              wireframe cells came back with their radius as transparent corners,
+              this one came back fully opaque, square corners and all. So this
+              one does need the radius in CSS. */}
+          <div
+            className="absolute overflow-hidden bg-[#0a7055]"
+            style={{ left: 728, top: 10480, width: 326, height: 326, borderRadius: 20 }}
+          >
+            <Image
+              src="/icons/mentora/logo-mark.svg"
+              alt="The Mentora logo"
+              width={104}
+              height={104}
+              unoptimized
+              className="absolute"
+              style={{ left: 107, top: 111, width: 104, height: 104 }}
+            />
+          </div>
+          <Image
+            src="/mockups/mentora/progress-card.webp"
+            alt="A course progress dial reading 65 percent, 18 of 30 lessons completed"
+            width={652}
+            height={652}
+            unoptimized
+            className="absolute max-w-none"
+            style={{ left: 1070, top: 10480, width: 326, height: 326, borderRadius: 20 }}
+          />
+
+          {/* --- Section 13, Maze test -------------------------------------
+              6657:12527 — heading and paragraph inset 150, then two 668x414
+              cards at y 11228. */}
+          <Anchor id="maze-test" top={10976} />
+          <section aria-label="Usability testing">
+            <MazeTest />
+          </section>
+
+          {/* --- Section 1, Header / Nav ------------------------------------ */}
+
+          {/* 6657:13479 — 118x19 at x 1278, y 37.5. Its line height is `normal`,
+              which for Inter at 16 is 19.4: ascent + descent, so Figma's box top
+              and the browser's line box agree here and the y needs no nudge. */}
+          <p
+            className="absolute whitespace-nowrap text-[16px] text-[#888]"
+            style={{ left: 1278, top: 37.5, fontFamily: "var(--font-inter)", lineHeight: "normal" }}
+          >
+            Mentora / 2026
+          </p>
+
+          {/* 6657:13437 — the menu, at x 44, y 149, and no baseline correction.
+                Figma reports this box as 364, which is exactly its 14 lines at
+              26 — an untrimmed stack of line boxes, laid out the way a browser
+              lays them out, so the first baseline already lands in the same
+              place and the top maps straight across. It briefly carried a
+              -3.32 nudge borrowed from the Music App side menu; that one is
+              trimmed to cap height (Figma calls it 258 where the browser makes
+              264) and needs the correction, this one does not. The heading and
+              the year say the same: 105 against 105.6, 19 against 19.5. */}
+          <div className="absolute" style={{ left: 44, top: 149 }}>
+            <CaseNav />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
