@@ -1304,38 +1304,42 @@ export default function MentoraCase() {
                 className="absolute max-w-none"
                 style={{ left: 0, top: 0, width: "100%", height: "100%" }}
               />
-              {/* 6657:13538. Figma's gradient is not vertical — its matrix
-                  tilts it 3.92 degrees — and its handles sit inside the box
-                  rather than on its edges.
-                    The stops in between are written out because the two ends
-                  differ in colour as well as in alpha, #171716 to a warmer
-                  #201E1A, and Figma interpolates those straight while CSS
-                  interpolates premultiplied, which would hold the colour at
-                  #171716 the whole way and lose about two levels in the middle.
-                    The box is 60 taller than the file's 282 and starts 60
-                  higher, and the stops are the ones that keep the ramp
-                  identical in page coordinates. Figma's own 282 box cuts the
-                  ramp before it reaches nothing: along its top edge the veil is
-                  already 0.183 opaque at the right and 0.086 at three quarters
-                  across, reaching zero only by 0.527 — and with no fade above
-                  that edge, it reads as a hard line across the picture.
-                  Extending the box until the ramp finishes inside it removes
-                  the edge without moving the fade. */}
-              <div
-                aria-hidden
-                className="absolute"
-                style={{
-                  left: 0,
-                  top: "70.9259%",
-                  width: "100%",
-                  height: "31.6667%",
-                  background:
-                    "linear-gradient(356.077deg, rgba(23, 23, 22, 1) 16.58%," +
-                    " rgba(25, 25, 23, 0.75) 31.08%, rgba(28, 26, 24, 0.5) 45.57%," +
-                    " rgba(30, 28, 25, 0.25) 60.07%, rgba(32, 30, 26, 0) 74.57%)",
-                }}
-              />
             </div>
+            {/* 6657:13538, the ramp that takes the bottom of the photograph
+                down into the section below.
+                  It sits outside the scene box, not in it, because the scene is
+                1440 at the canvas and grows to 1584 — so a veil the scene's
+                width left the page bare beyond its edges, and on a wide screen
+                its two sides and its top read as a rectangle drawn over the
+                picture. Full-bleed removes that: the width is the window, the
+                height still follows the scene so the ramp keeps tracking the
+                photograph as it scales.
+                  Figma tilts this gradient 3.59deg. That tilt cannot survive an
+                unknown width — a CSS gradient's stops run along its own axis,
+                so a tilt walks the boundary sideways, further the wider the box,
+                and past 1440 it would walk the ramp's end clean off the top
+                edge. Straightened to vertical, with the stops taken off Figma's
+                own centre line: there the veil turns opaque at y 20008.9 and
+                reaches nothing at 19775.0, and those two are what the
+                percentages below reproduce.
+                  The stops in between are written out because Figma's two ends
+                differ in colour as well as in alpha, #171716 to a warmer
+                #201E1A, and Figma interpolates that straight while CSS
+                interpolates premultiplied — which would hold #171716 the whole
+                way and lose about two levels in the middle. */}
+            <div
+              aria-hidden
+              className="absolute left-1/2 -translate-x-1/2"
+              style={{
+                width: "max(100vw, 1440px)",
+                top: `calc(18946.05px + ${SCENE_H} * 0.709259)`,
+                height: `calc(${SCENE_H} * 0.316667)`,
+                background:
+                  "linear-gradient(to top, rgb(23, 23, 22) 13.2%," +
+                  " rgba(25, 25, 23, 0.75) 30.3%, rgba(28, 27, 24, 0.5) 47.4%," +
+                  " rgba(30, 28, 25, 0.25) 64.49%, rgba(32, 30, 26, 0) 81.59%)",
+              }}
+            />
           </section>
 
           {/* --- Section 21, Spacing Scale ----------------------------------
