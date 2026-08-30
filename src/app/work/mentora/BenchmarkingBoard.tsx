@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LazyAutoplayVideo from "../music-app/LazyAutoplayVideo";
+import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 
 // Figma 6657:13530 "Frame 2147237949" — 1440x772 at x 0, y 4990. In the file it
 // is a still of the FigJam benchmarking board; here it is the recording of that

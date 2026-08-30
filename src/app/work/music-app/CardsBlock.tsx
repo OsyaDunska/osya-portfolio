@@ -1,5 +1,5 @@
 import Image from "next/image";
-import LazyAutoplayVideo from "./LazyAutoplayVideo";
+import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 import { squircleClip, squirclePath } from "./squircle";
 
 // Figma 6460:23040 "Group 1597880835" — the card set, x 80 y 8342, 1280x664.

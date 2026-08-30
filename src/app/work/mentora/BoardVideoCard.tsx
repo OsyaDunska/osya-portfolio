@@ -8,11 +8,7 @@
 // Not a link. On this row only the written cards carry one — Stakeholders' to
 // its board, Users' to its own — and the two media cards beside them are just
 // media.
-//
-// LazyAutoplayVideo is imported from the Music App case rather than copied. It
-// belongs in src/components — but moving it means editing that case, which is
-// off limits right now, and importing leaves it untouched.
-import LazyAutoplayVideo from "../music-app/LazyAutoplayVideo";
+import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 
 const VIDEO = "/videos/mentora-stakeholders-interview.mp4";
 

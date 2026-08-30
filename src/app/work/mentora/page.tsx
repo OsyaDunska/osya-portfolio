@@ -13,7 +13,7 @@ import Insights from "./Insights";
 import Glows from "./Glows";
 import Wireframes from "./Wireframes";
 import MazeTest from "./MazeTest";
-import LazyAutoplayVideo from "../music-app/LazyAutoplayVideo";
+import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 
 // Mentora SaaS case study — Figma frame 6657:12417, 1440x21041 on #171716.
 // Built one section at a time. Sections overlap in places (the menu runs down
