@@ -5,3 +5,7 @@ node_modules
 
 # build artefacts
 tsconfig.tsbuildinfo
+
+# local tooling
+.claude/
+dev-wrapper.sh

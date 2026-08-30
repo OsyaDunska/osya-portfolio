@@ -115,6 +115,23 @@ const MOCKUP_H = `calc(${MOCKUP_W} * 1087 / 1440)`;
 // the laptop's own white screen. So either they move together, or the mockup
 // stops where the heading needs it to.
 
+// The tablet scene's size. 1440 is Figma's, the full width of the canvas; past
+// it the scene grows at 35% of the window's growth — the same rate as the hero
+// and the tablet ramp — and stops at 1584, which is 1.10, the same ceiling the
+// hero takes.
+//   It grows DOWNWARD: its top is pinned at 18946.05 and the extra height falls
+// past its bottom. Growing upward is what it cannot do — the spacing ruler is
+// fixed at 18921 and is drawn over the scene, so a scene that rose would put the
+// ruler across the tablet itself. At 1440 the two already overlap by 84, but
+// there the frame is empty and dark.
+const SCENE_W =
+  "clamp(1440px, calc(1440px + (100vw - 1440px) * 0.35), 1584px)";
+const SCENE_H = `calc(${SCENE_W} * 0.75)`;
+// How far right of the canvas the scene may travel. While it is growing this is
+// exactly half the window's growth, so the scene's right edge sits on the real
+// screen's right edge; once the width caps, so does the travel, at 205.71.
+const SCENE_TRAVEL = `calc((${SCENE_W} - 1440px) / 0.7)`;
+
 // The hero mockup's size. 1174.43 is Figma's; past the canvas it grows at 35% of
 // the window's growth, the same rate as the tablet mockup, and stops at 1291.87
 // — 1.10, which is where its top would start to reach the header label.
@@ -128,8 +145,57 @@ const HERO_H = `calc(${HERO_W} * 783.89 / 1174.43)`;
 const HERO_TRAVEL = `calc(${HERO_W} * 0.3289 - 279.43px)`;
 
 // 6715:21010, 6715:22357 and 6715:22743 — the three screens under UI Design.
-// x/y are where each picture goes, its node's own corner less the bleed its
-// shadow adds to the export.
+// This is her first export of them: square corners, and a bleed around each
+// frame that the export carries even though the drop shadows on these nodes are
+// switched off. So each picture is hung by its own bleed — 18.25, 19.75 and
+// 44.75 a side — rather than at the node's corner.
+//
+// A rounded set sits beside these, unused, as *-rounded.webp. It is her second
+// export, which is exactly the node with no bleed and carries the file's 10
+// radius, plus the 0.8 corner smoothing cut into its alpha here — Figma writes
+// no smoothing into a PNG, so the export alone does not have it. To switch,
+// point the three src at the -rounded files and use the node's own geometry:
+//
+//   program   44/14047   664x706
+//   material  732/14099  664x602
+//   note      238/14827  964x770
+//
+// Worth knowing before spending time on that: at a radius of 10 the smoothed
+// outline sits inside the plain round one by a fraction of a pixel. Measured,
+// the corner runs [19, 11, 7, 5, 4, 3, 1, 1] against a circle's [20, 11, 8, 6,
+// 4, 3, 1, 0]. Correct rather than visible.
+// 6657:13302 — seven swatches on a 368x56 row, each sitting on the row's
+// baseline: the y is 56 minus the size, and the x gaps are a constant 24. The
+// label is centred in the swatch and drops to 6px on the three smallest, where
+// 10 would not fit.
+const SPACING_SWATCHES = [
+  { n: 8, x: 0, bg: "#E88330", fs: 6 },
+  { n: 16, x: 32, bg: "#4DA873", fs: 6 },
+  { n: 24, x: 72, bg: "#4996D6", fs: 6 },
+  { n: 32, x: 120, bg: "#E5A559", fs: 10 },
+  { n: 40, x: 176, bg: "#B1C51D", fs: 10 },
+  { n: 48, x: 240, bg: "#E964A4", fs: 10 },
+  { n: 56, x: 312, bg: "#9B7BDC", fs: 10 },
+];
+
+// 6657:13173 and 6657:13197 — the same thirteen icons twice, 344x248 each and
+// 16 apart, the second one 264 below the first. Both put the 216x128 grid at
+// 64/60, which centres it in the card.
+const ICON_CARDS = [
+  {
+    top: 17863,
+    bg: "#ffffff",
+    grid: "/mockups/mentora/icons/icon-grid-light.svg",
+    alt: "The Mentora icon set drawn dark on a white card",
+  },
+  {
+    top: 18127,
+    bg: "#292621",
+    grid: "/mockups/mentora/icons/icon-grid-dark.svg",
+    alt: "The same icon set drawn white on a dark card",
+  },
+];
+
 const UI_SCREENS = [
   { src: "/mockups/mentora/ui-program-page.webp", alt: "The Mentora program page", x: 25.75, y: 14028.75, w: 700.5, h: 742.5 },
   { src: "/mockups/mentora/ui-material-page.webp", alt: "The Mentora material page", x: 712.25, y: 14079.25, w: 703.5, h: 641.5 },
@@ -179,9 +245,9 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 17339.8 is where the token block ends at its new anchor; the
-            canvas grows as sections land. */}
-        <div className="relative" style={{ height: 17339.8 }}>
+        {/* 20165.25 is where the tablet scene's light stops once the scene
+            is at its widest; the canvas grows as sections land. */}
+        <div className="relative" style={{ height: 20165.25 }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -832,12 +898,9 @@ export default function MentoraCase() {
               place of the wide hand mockup that used to sit here: "Program
               page" 664x706 at 44/14047, "Material page" 664x602 at 732/14099,
               and "Note Page" 964x770 at 238/14827.
-                Each is her own 2x export and each comes back larger than its
-              node by the same amount on every side, which is the screen's drop
-              shadow travelling with it — 18.25, 19.75 and 44.75 respectively —
-              so each is hung by its own bleed rather than at the node's own
-              corner. Corners come back transparent, so the shadow composites
-              onto the page and none of them needs a radius here.
+                Each is her own 2x export, hung by the bleed the export
+              carries rather than at the node's corner. See UI_SCREENS for the
+              rounded set parked beside these and how to switch to it.
                 The band that used to be here is gone from the file, and its
               ramp with it. Both were moved out of the frame in Figma rather
               than deleted, which is how they turned up at x 3652 and 3976. */}
@@ -903,71 +966,60 @@ export default function MentoraCase() {
               the order the file now has them in. Commit c882432 is where they
               stood before. */}
 
-          {/* --- Section 17, Design System ---------------------------------
-              6657:13032 — the same label band as the moodboard at y 14988, then
-              6657:13035 at y 15164, 1352x408.
-                The block is her own 2x export rather than swatches in markup,
-              which is how she wants it: the palette stays in Figma instead of
-              being copied into the project, where it would be a second source
-              of truth for every token. It is only 0.10MB — 81.5% of it is
-              transparent — and the block is a fixed 1352 inside the canvas, so
-              2x is exactly right here with none of the scaling the UI Design
-              band needed.
-                Worth knowing: the hex values live in the picture, so they are
-              not selectable or searchable on the page. That is the trade she
-              chose. */}
-          <Anchor id="design-system" top={16779.8} />
+          {/* --- Section 17-18, Design System ------------------------------
+              The file reworked this twice and landed back near where it
+              started. What it has now: a plain "Design System" heading and one
+              short line at 194/15747 and 194/15807 — no label band any more,
+              and the block of colour swatches is gone from the file entirely —
+              then 6733:16794, two 668x652 cards at 15975, the copy in the left
+              and the recording in the right.
+                Both cards take a plain border-radius of 20. The file also
+              gives them cornerSmoothing 0.6 and that was tried here, clipped to
+              the smoothed path; it is not what she wants, and it cannot be
+              checked against the file anyway — Figma drops the smoothing from
+              its PNG and SVG exports, and its own render of the node comes back
+              with square corners, so there is nothing to compare against.
+                The recording is the first one again — the fill still points at
+              its hash — cropped with the numbers from that fill's
+              videoTransform, 91.5% of the width at an 1.8% offset, and scaled
+              to 1336x1304, twice the card. Her second recording is parked
+              beside it as -v2.mp4: it is 2434x1420 against the first's
+              2378x2146, so it cannot use this crop and would need its own. */}
+          <Anchor id="design-system" top={15747} />
           <section aria-label="Design System">
-            <div
-              className="absolute flex items-center justify-center overflow-hidden bg-[#292621]"
-              style={{ left: 44, top: 16779.8, width: 1352, height: 96, borderRadius: 24 }}
+            <h2
+              className="absolute whitespace-nowrap text-[24px] text-white"
+              style={{
+                left: 194,
+                top: 15747,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: 1.5,
+                letterSpacing: "-0.264px",
+              }}
             >
-              <h2
-                className="whitespace-nowrap text-[24px] text-white"
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 500,
-                  lineHeight: 1.5,
-                  letterSpacing: "-0.264px",
-                }}
-              >
-                Design System
-              </h2>
-            </div>
+              Design System
+            </h2>
 
-            <Image
-              src="/mockups/mentora/design-system-tokens.webp"
-              alt="Colour tokens: text, surface and border, primary, status, brand and overlay, each swatch labelled with its name and hex value"
-              width={2704}
-              height={816}
-              unoptimized
-              className="absolute max-w-none"
-              style={{ left: 44, top: 16931.8, width: 1352, height: 408 }}
-            />
-          </section>
+            {/* 6721:27189 — 290.68 wide, two 24 lines. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 15807,
+                width: 290.68,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              A single source of truth for every screen in the product.
+            </p>
 
-          {/* --- Section 18, Built once ------------------------------------
-              6657:13531 — a written card at 44/15772 and a picture card beside
-              it at 728, both 668x652 at radius 20.
-                The right one is a video in the file — the library being walked
-              through in Figma. It could not be pulled out of Figma (the MCP
-              hands over images and SVGs, and export_video renders animated
-              timelines, not a video fill), so it is her own recording, cropped
-              and scaled to the card: 2378x2146 down to 1336x1304, which is
-              exactly twice the card, using the crop Figma itself applies —
-              91.5% of the width at an 1.8% offset, from the fill's
-              videoTransform. 135MB to 9.5.
-                Figma's 2x still of the same card sits under it. The video
-              carries no src until it is near the viewport, so without this the
-              card would be blank white on the way down; once the video loads it
-              covers the still. The still is also what stays if a browser
-              refuses to autoplay.
-                Corners come back opaque on the still, so this card takes its
-              radius in CSS. */}
-          <section aria-label="Design system in use">
+            {/* 6733:16795 — the written card. */}
             <div
               className="absolute overflow-hidden bg-[#292621]"
-              style={{ left: 44, top: 15747.62, width: 668, height: 652, borderRadius: 20 }}
+              style={{ left: 44, top: 15975, width: 668, height: 652, borderRadius: 20 }}
             >
               <div className="absolute" style={{ left: 32, top: 104, width: 604 }}>
                 <h3
@@ -981,14 +1033,21 @@ export default function MentoraCase() {
                 >
                   Built once, scaled everywhere
                 </h3>
-                {/* 6657:13535 — 554.346 wide, five 24 lines, with a break after
-                    "no hardcoding." that Figma makes by hand. */}
+                {/* 6733:16798. The sentence about Claude that used to close
+                    this is gone from the file.
+                      The box is 534, not the 604 the node reports — the same
+                    disagreement this file has at 6657:13444 and 6657:13018.
+                    Figma's own four lines are 494.5/496/518.5/279, and solving
+                    for the width that produces them gives [521.4, 546.4), which
+                    604 is not in. At 604 the text ran to 589 and the last line
+                    fell to a single word. Left-aligned, so this only decides
+                    where it wraps. */}
                 <p
                   className="absolute text-[16px] text-white/50"
                   style={{
                     left: 0,
                     top: 60,
-                    width: 554.346,
+                    width: 534,
                     fontFamily: "var(--font-inter)",
                     lineHeight: "24px",
                     letterSpacing: "-0.176px",
@@ -996,18 +1055,19 @@ export default function MentoraCase() {
                 >
                   I turned the validated flow into a token-based design system:
                   color, typography, spacing, and radius as Figma variables, no
-                  hardcoding.{" "}
-                  <br />
-                  Every component in the library pulls from those tokens, so one
-                  change propagates across the whole product. I built the design
-                  system with the AI assistant Claude.
+                  hardcoding. Every component in the library pulls from those
+                  tokens, so one change propagates across the whole product.
                 </p>
               </div>
             </div>
 
+            {/* 6733:16799 — the recording. Its still sits under it: the video
+                holds its src until it is near the viewport, so without this the
+                card would be blank white on the way down, and the still is also
+                what stays if a browser refuses to autoplay. */}
             <div
               className="absolute overflow-hidden bg-white"
-              style={{ left: 728, top: 15747.62, width: 668, height: 652, borderRadius: 20 }}
+              style={{ left: 728, top: 15975, width: 668, height: 652, borderRadius: 20 }}
             >
               <Image
                 src="/mockups/mentora/design-system-library-poster.webp"
@@ -1024,6 +1084,340 @@ export default function MentoraCase() {
                 style={{ left: 0, top: 0, objectFit: "cover" }}
               />
             </div>
+          </section>
+
+          {/* --- Section 19, Typography ------------------------------------
+              6657:13218 — one card, 1440x886 at y 16777, holding the Urbanist
+              specimen: the heading and its paragraph, the Aa on its grid, the
+              alphabet and numerals, and the three type-scale rows.
+                Her own 2x export, and the whole card rather than the artwork
+              alone. The 56 radius is baked into it as transparent corners, so
+              it takes none here.
+                The trade is the same one the token block made: the heading and
+              paragraph live in the picture, so they are not selectable or
+              searchable on the page. The file's 0.6 corner smoothing is not in
+              the export either — Figma writes none into a PNG — so this corner
+              is a plain 56 round. */}
+          <section aria-label="Typography">
+            <Image
+              src="/mockups/mentora/typography-urbanist.webp"
+              alt="Urbanist type specimen: the Aa on a baseline grid, the alphabet and numerals, and the heading and body scales"
+              width={2880}
+              height={1772}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 0, top: 16777, width: 1440, height: 886 }}
+            />
+          </section>
+
+          {/* --- Section 20, Icons ------------------------------------------
+              6657:13164 and 6657:13172 — a copy block on the left and a column
+              of two 344x248 cards on the right, the same icon set shown dark on
+              white and white on #292621.
+                The left frame is 612 wide at x 44 with 150 of left padding, so
+              its content starts at 194, where every other heading on this page
+              starts. Inside it Figma stacks a 98x36 row (the word, a 12 gap,
+              and a 24 icon centred against the 36 line) and then the paragraph
+              24 below it.
+                The 26 icons are Figma's own SVG of each 216x128 grid rather
+              than 26 traced paths, so they stay vector and each card is one
+              request. Figma bakes three ancestor grounds into every such
+              export — the #AFAFAF page ground, the 1440x22044 frame, and the
+              card the node sits in — and all three are stripped; what is left
+              is only the icons. The two 24x24 rects still in the files are
+              inside <clipPath> and draw nothing.
+                The cards carry Figma's 32 radius without its 0.6 corner
+              smoothing, the same call as the design system cards above. */}
+          <section aria-label="Icons">
+            <h2
+              className="absolute whitespace-nowrap text-[24px] text-white"
+              style={{
+                left: 194,
+                top: 17863,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: "36px",
+                // 6657:13167 is the one heading on this page Figma sets at 0
+                // tracking rather than -1.1%.
+                letterSpacing: 0,
+              }}
+            >
+              Icons
+            </h2>
+            <Image
+              src="/mockups/mentora/icons/icons-heading.svg"
+              alt=""
+              aria-hidden
+              width={24}
+              height={24}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 268, top: 17869, width: 24, height: 24 }}
+            />
+
+            {/* 6657:13171 — 410.83 wide, four 24 lines. Solving for the width
+                that reproduces Figma's own breaks gives [393.7, 419.8), which
+                410.83 is inside, so the box is the file's and the lines are the
+                browser's. */}
+            <p
+              className="absolute text-[16px] text-white/50"
+              style={{
+                left: 194,
+                top: 17923,
+                width: 410.83,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              A consistent line-icon system — same stroke weight, same visual
+              language — ties every screen together, from navigation to media
+              controls, without competing with the content.
+            </p>
+
+            {ICON_CARDS.map((c) => (
+              <div
+                key={c.grid}
+                className="absolute"
+                style={{
+                  left: 802,
+                  top: c.top,
+                  width: 344,
+                  height: 248,
+                  background: c.bg,
+                  borderRadius: 32,
+                }}
+              >
+                <Image
+                  src={c.grid}
+                  alt={c.alt}
+                  width={216}
+                  height={128}
+                  unoptimized
+                  className="absolute max-w-none"
+                  style={{ left: 64, top: 60, width: 216, height: 128 }}
+                />
+              </div>
+            ))}
+          </section>
+
+          {/* --- Section 22, The tablet scene -------------------------------
+              6657:12419, 6657:12420 and 6657:13538 — a blurred light, the
+              photographed tablet over it, and a fade that takes the bottom of
+              the photograph down into the solid section below.
+                It is written before the spacing block rather than after it
+              because that is the file's own stacking: the light is child 35 and
+              the photograph 36, while the spacing heading is 39 and the ruler
+              group 41. The light's box reaches up to 18828 and the ruler group
+              starts at 18812, so they do overlap and the order is visible.
+                The photograph is the file's own image at 3680x2760 in a
+              1440x1080 box — 2.56x, better than the 2x the rest of this page
+              runs at — and 63% of it is transparent: it is a cut-out of the
+              hands and the tablet, which is why the light behind it shows
+              through at all.
+                The light is Figma's render of the ellipse rather than a CSS
+              gradient. Its export is 1226 square against a 888.4 node: the
+              168.3 layer blur is carried in the bounds, 168.8 a side, so it
+              hangs 168.8 up and left of the node. It came back opaque with the
+              page ground baked in, and its border is exactly #171716, so it
+              composites onto the page with no seam. The lift is small and warm
+              — +12/+10/+6 at the peak, not neutral — so it is stored as colour
+              rather than as white with an alpha, and it is smoothed and
+              8x8-ordered-dithered the same way the glows further up are: 15
+              levels of red spread over 600px is where contour rings come
+              from. */}
+          <section aria-label="The Mentora planner on a tablet">
+            {/* One box the size of the scene, so the light and the fade ride
+                with it: everything inside is a percentage of Figma's 1440x1080,
+                which makes all three scale and move together. */}
+            <div
+              className="absolute"
+              style={{
+                right: `calc(0px - min(max(0px, (100vw - 1440px) / 2), ${SCENE_TRAVEL}))`,
+                top: 18946.05,
+                width: SCENE_W,
+                height: SCENE_H,
+              }}
+            >
+              <Image
+                src="/mockups/mentora/scene-glow.webp"
+                alt=""
+                aria-hidden
+                width={1226}
+                height={1226}
+                unoptimized
+                className="absolute max-w-none"
+                style={{
+                  left: "6.875%",
+                  top: "-10.8917%",
+                  width: "85.1389%",
+                  height: "113.5185%",
+                }}
+              />
+              <Image
+                src="/mockups/mentora/scene-tablet.webp"
+                alt="Two hands holding a tablet showing the Mentora month calendar"
+                width={3680}
+                height={2760}
+                unoptimized
+                className="absolute max-w-none"
+                style={{ left: 0, top: 0, width: "100%", height: "100%" }}
+              />
+              {/* 6657:13538. Figma's gradient is not vertical — its matrix
+                  tilts it 3.92 degrees — and its handles sit inside the box
+                  rather than on its edges.
+                    The stops in between are written out because the two ends
+                  differ in colour as well as in alpha, #171716 to a warmer
+                  #201E1A, and Figma interpolates those straight while CSS
+                  interpolates premultiplied, which would hold the colour at
+                  #171716 the whole way and lose about two levels in the middle.
+                    The box is 60 taller than the file's 282 and starts 60
+                  higher, and the stops are the ones that keep the ramp
+                  identical in page coordinates. Figma's own 282 box cuts the
+                  ramp before it reaches nothing: along its top edge the veil is
+                  already 0.183 opaque at the right and 0.086 at three quarters
+                  across, reaching zero only by 0.527 — and with no fade above
+                  that edge, it reads as a hard line across the picture.
+                  Extending the box until the ramp finishes inside it removes
+                  the edge without moving the fade. */}
+              <div
+                aria-hidden
+                className="absolute"
+                style={{
+                  left: 0,
+                  top: "70.9259%",
+                  width: "100%",
+                  height: "31.6667%",
+                  background:
+                    "linear-gradient(356.077deg, rgba(23, 23, 22, 1) 16.58%," +
+                    " rgba(25, 25, 23, 0.75) 31.08%, rgba(28, 26, 24, 0.5) 45.57%," +
+                    " rgba(30, 28, 25, 0.25) 60.07%, rgba(32, 30, 26, 0) 74.57%)",
+                }}
+              />
+            </div>
+          </section>
+
+          {/* --- Section 21, Spacing Scale ----------------------------------
+              6657:13298 and 6657:13495 — a centred heading block over a ruler
+              that runs nearly the full width of the frame.
+                The heading block is 433 wide at x 503, so it is centred on the
+              1440 canvas rather than sitting on the 194 gutter the sections
+              above use. Everything in it is centred too, which is why the
+              heading is given its own 368 box rather than a left edge: our
+              "Spacing Scale in Cell Format" measures 327.1 against Figma's 326,
+              and centring absorbs the 1.1 instead of shifting the whole line.
+                The ruler is Figma's SVG of 6657:13496, text outlined — 24
+              numbers as paths, so they stay crisp and need no font. Its canvas
+              is 1263 where the node is 1261.88: the 1 stroke bleeds half a pixel
+              each side and Figma rounds the box up. It hangs at 88.13, the x its
+              render bounds report, not the node's own 88.63.
+                The two ends dissolve into the page. In the file that is a pair
+              of frames filled with a #171716-to-transparent gradient, one
+              flipped in x and the other in y; here they are just the two
+              gradients, laid over the ruler. Their handles sit a little outside
+              the box: reading the ramp off Figma's own render of the block and
+              normalising it gives full ground at -1% and nothing left at
+              105.8%, so the stops are written out rather than left at 0 and
+              100, which ended the fade about 5 levels early. They are not full-bleed — the
+              ruler stops well short of the frame edge and the fades are sized
+              to reach it — and they are not the same width: 257 on the left
+              against 174 on the right.
+                The numbers themselves sit at 80% white, not full white; only
+              the 104 that the red tick marks is opaque, and the baseline and
+              tick marks stay at 60%. All three are in the SVG, so none of it is
+              set here. */}
+          <section aria-label="Spacing Scale">
+            {/* 6657:13300 — a 368 box at 535.5, the text centred in it. */}
+            <div
+              className="absolute text-center text-[24px] text-white"
+              style={{
+                left: 535.5,
+                top: 18571,
+                width: 368,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: "36px",
+                letterSpacing: 0,
+              }}
+            >
+              <h2>Spacing Scale in Cell Format</h2>
+            </div>
+
+            {SPACING_SWATCHES.map((sw) => (
+              <div
+                key={sw.n}
+                className="absolute flex items-center justify-center text-white"
+                style={{
+                  left: 535.5 + sw.x,
+                  // The row's own top is 18659; each swatch sits on its floor.
+                  top: 18659 + (56 - sw.n),
+                  width: sw.n,
+                  height: sw.n,
+                  background: sw.bg,
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 500,
+                  fontSize: sw.fs,
+                  lineHeight: 1,
+                }}
+              >
+                {sw.n}
+              </div>
+            ))}
+
+            {/* 6657:13317 — 433 wide, three centred 24 lines. The width that
+                reproduces Figma's own breaks is [419, 441), and 433 is inside
+                it, so the box is the file's and the lines are the browser's. */}
+            <p
+              className="absolute text-center text-[16px] text-white/50"
+              style={{
+                left: 503,
+                top: 18771,
+                width: 433,
+                fontFamily: "var(--font-inter)",
+                lineHeight: "24px",
+                letterSpacing: "-0.176px",
+              }}
+            >
+              A modular spacing scale — from 8px to 56px — keeps rhythm
+              consistent across cards, lists, and page sections, so density
+              feels intentional rather than accidental.
+            </p>
+
+            <Image
+              src="/mockups/mentora/spacing-ruler.svg"
+              alt="A spacing ruler from 8 to 192 in steps of 8, with 104 marked in red"
+              width={1263}
+              height={31}
+              unoptimized
+              className="absolute max-w-none"
+              style={{ left: 88.13, top: 18921.45, width: 1263, height: 31 }}
+            />
+
+            {/* 6657:13529 and 6657:13528 — over the ruler, so after it. */}
+            <div
+              aria-hidden
+              className="absolute"
+              style={{
+                left: 35,
+                top: 18812.55,
+                width: 257,
+                height: 218,
+                background:
+                  "linear-gradient(to right, #171716 -1%, rgba(23, 23, 22, 0) 105.8%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute"
+              style={{
+                left: 1233,
+                top: 18812.55,
+                width: 174,
+                height: 218,
+                background:
+                  "linear-gradient(to left, #171716 -1%, rgba(23, 23, 22, 0) 105.8%)",
+              }}
+            />
           </section>
 
 
@@ -1056,3 +1450,93 @@ export default function MentoraCase() {
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// The previous section 18, kept rather than deleted while the new one is on
+// trial. It is here as line comments and not as a JSX comment on purpose: the
+// block contains */ of its own, which would close a /* ... */ wrapper early
+// and break the build.
+//
+// It was a 668 written card beside a 668 video card, both at y 15772. The file
+// has since split them: the copy stands alone at 15747 and the video is a
+// 1440-wide card at 16047 that fits the recording instead of cropping it.
+//
+// {/* --- Section 18, Built once ------------------------------------
+// 6657:13531 — a written card at 44/15772 and a picture card beside
+// it at 728, both 668x652 at radius 20.
+// The right one is a video in the file — the library being walked
+// through in Figma. It could not be pulled out of Figma (the MCP
+// hands over images and SVGs, and export_video renders animated
+// timelines, not a video fill), so it is her own recording, cropped
+// and scaled to the card: 2378x2146 down to 1336x1304, which is
+// exactly twice the card, using the crop Figma itself applies —
+// 91.5% of the width at an 1.8% offset, from the fill's
+// videoTransform. 135MB to 9.5.
+// Figma's 2x still of the same card sits under it. The video
+// carries no src until it is near the viewport, so without this the
+// card would be blank white on the way down; once the video loads it
+// covers the still. The still is also what stays if a browser
+// refuses to autoplay.
+// Corners come back opaque on the still, so this card takes its
+// radius in CSS. */}
+// <section aria-label="Design system in use">
+// <div
+// className="absolute overflow-hidden bg-[#292621]"
+// style={{ left: 44, top: 15747.62, width: 668, height: 652, borderRadius: 20 }}
+// >
+// <div className="absolute" style={{ left: 32, top: 104, width: 604 }}>
+// <h3
+// className="whitespace-nowrap text-[24px] text-white"
+// style={{
+// fontFamily: "var(--font-inter)",
+// fontWeight: 500,
+// lineHeight: 1.5,
+// letterSpacing: "-0.264px",
+// }}
+// >
+// Built once, scaled everywhere
+// </h3>
+// {/* 6657:13535 — 554.346 wide, five 24 lines, with a break after
+// "no hardcoding." that Figma makes by hand. */}
+// <p
+// className="absolute text-[16px] text-white/50"
+// style={{
+// left: 0,
+// top: 60,
+// width: 554.346,
+// fontFamily: "var(--font-inter)",
+// lineHeight: "24px",
+// letterSpacing: "-0.176px",
+// }}
+// >
+// I turned the validated flow into a token-based design system:
+// color, typography, spacing, and radius as Figma variables, no
+// hardcoding.{" "}
+// <br />
+// Every component in the library pulls from those tokens, so one
+// change propagates across the whole product. I built the design
+// system with the AI assistant Claude.
+// </p>
+// </div>
+// </div>
+//
+// <div
+// className="absolute overflow-hidden bg-white"
+// style={{ left: 728, top: 15747.62, width: 668, height: 652, borderRadius: 20 }}
+// >
+// <Image
+// src="/mockups/mentora/design-system-library-poster.webp"
+// alt="The Mentora design system library in Figma: colour styles, typography, spacing and radius tables, and the component set"
+// width={1336}
+// height={1304}
+// unoptimized
+// className="absolute max-w-none"
+// style={{ left: 0, top: 0, width: 668, height: 652 }}
+// />
+// <LazyAutoplayVideo
+// src="/videos/mentora-design-system-library.mp4"
+// className="absolute size-full"
+// style={{ left: 0, top: 0, objectFit: "cover" }}
+// />
+// </div>
+// </section>
