@@ -220,7 +220,7 @@ const TOOLS: {
   parts?: { src: string; box: { left: number; top: number; width: number; height: number } }[];
 }[] = [
   { alt: "Claude", src: "/mockups/mentora/tools/claude.svg", width: 148.211, height: 32 },
-  { alt: "Figma", src: "/mockups/mentora/tools/tool-figma.svg", width: 100, height: 24 },
+  { alt: "Maze", src: "/mockups/mentora/tools/tool-maze.svg", width: 100, height: 24 },
   {
     alt: "GitHub",
     parts: [
@@ -234,7 +234,7 @@ const TOOLS: {
       },
     ],
   },
-  { alt: "Cursor", src: "/mockups/mentora/tools/tool-cursor.svg", width: 86, height: 32 },
+  { alt: "Figma", src: "/mockups/mentora/tools/tool-figma.svg", width: 86, height: 32 },
   { alt: "ChatGPT", src: "/mockups/mentora/tools/chatgpt.svg", width: 146, height: 34 },
   { alt: "Vercel", src: "/mockups/mentora/tools/vercel.svg", width: 119.301, height: 24 },
 ];
@@ -251,8 +251,12 @@ function Anchor({ id, top }: { id: string; top: number }) {
 }
 
 export default function MentoraCase() {
+  // overflow-clip on both axes: "Thanks" is set with a line height smaller
+  // than its own content area, so ~96px of empty line box hangs below the
+  // baseline and would otherwise be scrollable page. Clipping here ends the
+  // page on the word, and keeps the horizontal clip the glows already needed.
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#171716] text-white">
+    <div className="min-h-screen overflow-clip bg-[#171716] text-white">
       {/* The page is shorter than a viewport for now, so the backdrop is fixed
           rather than relying on the content to fill it. */}
       <div aria-hidden className="fixed inset-0 -z-10 bg-[#171716]" />
@@ -276,9 +280,14 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 21107.05 is the bottom of the Tools / Thanks frame (20054.05 + 1053),
-            the last section in the case. */}
-        <div className="relative" style={{ height: 21107.05 }}>
+        <div
+          className="relative"
+          style={{
+            // The page ends on the "Thanks" baseline — 20614.05 plus its cap
+            // height, which is 0.727 of the type and so 20.19vw once the word
+            // starts scaling. No empty frame below it.
+            height: "max(20904.85px, calc(20614.05px + 20.194vw))",
+          }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -1512,19 +1521,24 @@ export default function MentoraCase() {
               ))}
             </div>
 
-            {/* 6657:13355 — "Thanks" at 400, trimmed to cap height, which is why
-                Figma calls the box 291 rather than the 520 the line box takes.
-                Cap sits 114.6 below the line box top at this size, so the
-                negative margin pulls it back to Figma's y 20704.05. */}
+            {/* 6657:13355 — "Thanks" is centred in the frame: 1343 wide inside
+                1440 leaves the 48 Figma reports on each side. Centring it here
+                too means the margins stay proportional as the type grows, with
+                no viewport arithmetic — the canvas is centred in the viewport,
+                so its middle is the screen's middle.
+                  400 on a 1440 frame is 27.78vw, which is what makes the word
+                scale with the screen; below 1440 it holds the Figma size.
+                  line-height 0.727 is the cap height Figma trims the box to, so
+                the box *is* the cap box: the glyphs sit on the given y with no
+                nudge, and nothing hangs below the baseline to stretch the page. */}
             <p
               aria-hidden
-              className="absolute whitespace-nowrap text-[400px] font-semibold text-[#1d1d1c]"
+              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap font-semibold text-[#1d1d1c]"
               style={{
-                left: 48,
-                top: 20704.05,
-                marginTop: -114.6,
+                top: 20614.05,
+                fontSize: "max(400px, 27.7778vw)",
                 fontFamily: "var(--font-inter-tight)",
-                lineHeight: 1.3,
+                lineHeight: 0.727,
               }}
             >
               Thanks
@@ -1533,7 +1547,17 @@ export default function MentoraCase() {
             {/* 6657:13356 — asterisk over two lines, 353.74 wide, centred. */}
             <div
               className="absolute flex flex-col items-center"
-              style={{ left: 543.129, top: 20867.05, width: 353.742, gap: 24 }}
+              style={{
+                left: 543.129,
+                // Anchored to the foot of the page, not to a share of the word:
+                // Figma leaves 32 between this block and the bottom edge, and
+                // the page ends on the "Thanks" baseline. So it sits its own 96
+                // plus that 32 above the baseline, and the gap holds at 32 on
+                // any screen instead of opening up as the word scales.
+                top: "max(20777.05px, calc(20614.05px + 20.194vw - 128px))",
+                width: 353.742,
+                gap: 24,
+              }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- local SVG */}
               <img
