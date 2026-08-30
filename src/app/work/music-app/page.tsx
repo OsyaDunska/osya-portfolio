@@ -9,6 +9,8 @@ import EfficiencyBlock from "./EfficiencyBlock";
 import TakeawayBlock from "./TakeawayBlock";
 import UserPersonas from "./UserPersonas";
 import ScrollToTop from "@/components/ScrollToTop";
+import ComingSoon from "./ComingSoon";
+import { SHOW_MUSIC_APP_CASE } from "@/lib/featureFlags";
 import { fadeGradient, fadeGradientSolid, fadeSideMask } from "./fadeStyles";
 
 // Figma "Glass" material (Light 60°/60%, Refraction 4, Depth 20, Dispersion 27,
@@ -102,6 +104,10 @@ const STATS = [
 // glows spill past the 1440px frame and fade out at the real screen edge
 // instead of being cut at the frame's boundary.
 export default function MusicAppCase() {
+  // Development renders the case; a production build renders the placeholder.
+  // See SHOW_MUSIC_APP_CASE. Nothing below this line has been touched.
+  if (!SHOW_MUSIC_APP_CASE) return <ComingSoon />;
+
   return (
     <div className="min-h-screen overflow-x-clip bg-[#000105] text-white">
       {/* The glows are absolutely positioned and nothing clips them vertically,
