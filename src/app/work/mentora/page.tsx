@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import CaseNav from "./CaseNav";
+import ScrollToTop from "@/components/ScrollToTop";
+import { MENTORA_SKIN } from "@/components/scrollToTopSkins";
 import InterviewCard from "./InterviewCard";
 import BoardVideoCard from "./BoardVideoCard";
 import ResearchBoards from "./ResearchBoards";
@@ -1596,6 +1598,11 @@ export default function MentoraCase() {
           </div>
         </div>
       </div>
+
+      {/* 6779:25369 — same button and behaviour as the Music App case, with
+          the two colours the other way round: dark by default, going white
+          under the cursor. */}
+      <ScrollToTop base={MENTORA_SKIN.base} hover={MENTORA_SKIN.hover} />
     </div>
   );
 }

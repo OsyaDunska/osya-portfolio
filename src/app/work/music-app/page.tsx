@@ -8,7 +8,7 @@ import TypographyColors from "./TypographyColors";
 import EfficiencyBlock from "./EfficiencyBlock";
 import TakeawayBlock from "./TakeawayBlock";
 import UserPersonas from "./UserPersonas";
-import ScrollToTop from "./ScrollToTop";
+import ScrollToTop from "@/components/ScrollToTop";
 import { fadeGradient, fadeGradientSolid, fadeSideMask } from "./fadeStyles";
 
 // Figma "Glass" material (Light 60°/60%, Refraction 4, Depth 20, Dispersion 27,

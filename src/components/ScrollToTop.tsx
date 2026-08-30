@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+
+import { MUSIC_APP_SKIN, type Skin } from "./scrollToTopSkins";
 
 /**
- * Figma 6641:2544 "ButtonUp" — 56px circle, 16 of padding around a 24 arrow.
- * Default is white with a #171716 arrow, Variant2 is #2A60E0 with a white one,
- * and Variant2 is the hover state here.
+ * "ButtonUp" — 56px circle, 16 of padding around a 24 arrow, pinned to the
+ * page and appearing once you are a viewport down. Music App and Mentora use
+ * the same button and the same behaviour; only the two colour pairs differ,
+ * and the arrow path is identical, so they share this component.
  *
  * The two variants export as the same path with a different `fill`, so this is
  * one inline SVG painted with `currentColor`: the swap is then a plain CSS
@@ -36,7 +39,10 @@ const ARROW_PATH =
  */
 const OFFSET = "clamp(20px, 9.2vw - 12.48px, 120px)";
 
-export default function ScrollToTop() {
+export default function ScrollToTop({
+  base = MUSIC_APP_SKIN.base,
+  hover = MUSIC_APP_SKIN.hover,
+}: { base?: Skin; hover?: Skin }) {
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
@@ -67,10 +73,22 @@ export default function ScrollToTop() {
       // the viewport with only one other fixed element, the page's dark
       // backdrop at -z-10, and with the back link — which lives in the opposite
       // corner, so neither covers the other.
-      className={`fixed z-40 flex size-14 items-center justify-center rounded-full bg-white text-[#171716] transition-[opacity,transform,background-color,color] duration-300 hover:bg-[#2a60e0] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2a60e0] motion-reduce:transition-none ${
+      // Colours come in as props so each case can pass its own pair, which
+      // Tailwind cannot compile into `hover:bg-[…]` — so the swap runs off CSS
+      // variables instead.
+      className={`fixed z-40 flex size-14 items-center justify-center rounded-full bg-(--bg) text-(--arrow) transition-[opacity,transform,background-color,color] duration-300 hover:bg-(--bg-hover) hover:text-(--arrow-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--bg-hover) motion-reduce:transition-none ${
         shown ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
       }`}
-      style={{ bottom: OFFSET, right: OFFSET }}
+      style={
+        {
+          bottom: OFFSET,
+          right: OFFSET,
+          "--bg": base.bg,
+          "--arrow": base.arrow,
+          "--bg-hover": hover.bg,
+          "--arrow-hover": hover.arrow,
+        } as CSSProperties
+      }
     >
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path d={ARROW_PATH} fill="currentColor" />
