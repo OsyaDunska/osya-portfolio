@@ -1295,6 +1295,12 @@ export default function MentoraCase() {
                   height: "113.5185%",
                 }}
               />
+              {/* "Scene _2 1" was tried here in place of this and taken back
+                  out; it is still on disk as scene-tablet-v2.webp, lossless at
+                  2880x2160, if it is ever wanted again. It is the same frame at
+                  2x rather than 2.56x, and it carries the same hard alpha edge
+                  along the forearms, so it fixed nothing that this one does
+                  not. */}
               <Image
                 src="/mockups/mentora/scene-tablet.webp"
                 alt="Two hands holding a tablet showing the Mentora month calendar"
