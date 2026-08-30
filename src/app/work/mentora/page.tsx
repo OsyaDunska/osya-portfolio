@@ -1102,27 +1102,61 @@ export default function MentoraCase() {
               </div>
             </div>
 
-            {/* 6733:16799 — the recording. Its still sits under it: the video
-                holds its src until it is near the viewport, so without this the
-                card would be blank white on the way down, and the still is also
-                what stays if a browser refuses to autoplay. */}
+            {/* 6733:16799 — the recording, playing itself on a loop the way
+                a gif would: it starts when the card comes near the viewport and
+                never stops or waits for a click.
+                  This is the 20:46 take from 30 August: 1336x1300, 23s, which
+                is 2x the card to the pixel. It arrived as a .mov and was
+                repacked into an .mp4 container with no re-encode, so the H.264
+                stream is the recording's own, frame for frame.
+                  It is the take that begins and ends on the light theme, which
+                is what makes `loop` bearable: the one before it opened light
+                and closed dark, so every twenty seconds the card jumped from
+                dark straight back to light with no reveal between. Cutting that
+                one to a single 6.0s cycle did close the seam, and it played
+                worse — so the fix moved into the recording instead, and this is
+                it. The two ends still differ a little (mean 15.7 of 255, spread
+                evenly rather than in one place: both sit close to a transition
+                and are still settling), but a settle is not a jump.
+                  Its still is the recording's own first frame, so nothing
+                changes at the moment playback takes over. It rides on the
+                video's own `poster` rather than an <Image> beneath it, which is
+                what stops the corners going grey on the dark frames; the note
+                in LazyAutoplayVideo has the reason.
+                  The ground is the page's own colour, not white. Only the
+                corner arc ever shows it, and white there would light up that
+                arc on every dark frame — the same seam by another route.
+                  The last two columns of every frame are #3A3836, a strip the
+                capture picked up down the right edge, and at the two right
+                corners that strip is what read as grey. object-fit: cover very
+                nearly takes it: it crops 1.03 to a side and the strip is 1.00
+                wide, a margin thin enough that the scaler smears the grey back
+                inward. So the crop is written out instead of inferred — the
+                video is laid out 670 wide against the card's 668 and pinned
+                left, which puts source x 1332..1336 outside the clip and keeps
+                x 0 exactly on the left edge. Height carries the honest scale
+                (652/1300); the width's is 0.007% off it, which no eye resolves.
+                  The poster keeps the strip rather than being trimmed to
+                1334 — same intrinsic size as the video means the same crop
+                lands on both, and no half-pixel drift when the first frame
+                takes over.
+                  The earlier takes are gone: five of them piled up over one
+                evening, none worth 70MB of repo for a card that plays one. The
+                -v6 in the name is what is left of that queue, kept only so the
+                URL stays put. */}
             <div
-              className="absolute overflow-hidden bg-white"
+              className="absolute overflow-hidden bg-[#171716]"
               style={{ left: 728, top: 15975, width: 668, height: 652, borderRadius: 20 }}
             >
-              <Image
-                src="/mockups/mentora/design-system-library-poster.webp"
-                alt="The Mentora design system library in Figma: colour styles, typography, spacing and radius tables, and the component set"
-                width={1336}
-                height={1304}
-                unoptimized
-                className="absolute max-w-none"
-                style={{ left: 0, top: 0, width: 668, height: 652 }}
-              />
               <LazyAutoplayVideo
-                src="/videos/mentora-design-system-library.mp4"
-                className="absolute size-full"
-                style={{ left: 0, top: 0, objectFit: "cover" }}
+                src="/videos/mentora-design-system-library-v6.mp4"
+                poster="/mockups/mentora/design-system-library-poster-v6.webp"
+                className="absolute max-w-none"
+                style={{ left: 0, top: 0, width: 670, height: 652, objectFit: "fill" }}
+                // 12.0MB at 4.2Mbit/s. The default 300 is a third of a second
+                // of reading before the card lands, nowhere near enough to have
+                // it buffered by then; this starts the fetch two screens out.
+                marginPx={2400}
               />
             </div>
           </section>
