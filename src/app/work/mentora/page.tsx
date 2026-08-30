@@ -208,6 +208,37 @@ const UI_SCREENS = [
 // did. These markers carry the ids at the right y instead.
 //   The scroll margin keeps the target clear of the pinned back button, which
 // would otherwise sit on top of whatever was just scrolled to.
+// 6657:13319 — the six logo cards. Every logo keeps the exact box Figma gives
+// it, so each sits at its own optical size rather than being scaled to a
+// common width. GitHub is the odd one out: it exports as a separate mark and
+// wordmark, positioned here from the insets Figma reports on the 147x42 board.
+const TOOLS: {
+  alt: string;
+  src?: string;
+  width?: number;
+  height?: number;
+  parts?: { src: string; box: { left: number; top: number; width: number; height: number } }[];
+}[] = [
+  { alt: "Claude", src: "/mockups/mentora/tools/claude.svg", width: 148.211, height: 32 },
+  { alt: "Figma", src: "/mockups/mentora/tools/tool-figma.svg", width: 100, height: 24 },
+  {
+    alt: "GitHub",
+    parts: [
+      {
+        src: "/mockups/mentora/tools/github-mark.svg",
+        box: { left: 5.32, top: 5.29, width: 32.156, height: 31.393 },
+      },
+      {
+        src: "/mockups/mentora/tools/github-wordmark.svg",
+        box: { left: 43.7, top: 9.24, width: 97.686, height: 23.934 },
+      },
+    ],
+  },
+  { alt: "Cursor", src: "/mockups/mentora/tools/tool-cursor.svg", width: 86, height: 32 },
+  { alt: "ChatGPT", src: "/mockups/mentora/tools/chatgpt.svg", width: 146, height: 34 },
+  { alt: "Vercel", src: "/mockups/mentora/tools/vercel.svg", width: 119.301, height: 24 },
+];
+
 function Anchor({ id, top }: { id: string; top: number }) {
   return (
     <span
@@ -245,9 +276,9 @@ export default function MentoraCase() {
           </Link>
         </div>
 
-        {/* 20165.25 is where the tablet scene's light stops once the scene
-            is at its widest; the canvas grows as sections land. */}
-        <div className="relative" style={{ height: 20165.25 }}>
+        {/* 21107.05 is the bottom of the Tools / Thanks frame (20054.05 + 1053),
+            the last section in the case. */}
+        <div className="relative" style={{ height: 21107.05 }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
           <Glows />
@@ -1418,6 +1449,109 @@ export default function MentoraCase() {
                   "linear-gradient(to left, #171716 -1%, rgba(23, 23, 22, 0) 105.8%)",
               }}
             />
+          </section>
+
+
+          {/* --- Section 10, Tools / Thanks ---------------------------------- */}
+
+          {/* 6657:13318 — 1440x1053 at y 20054.05. Its own fill is #171716, the
+              same as the page, so the frame itself needs no background. */}
+          <Anchor id="tools" top={20218} />
+          <section aria-label="Tools I used">
+            {/* 6657:13354 — Figma centres this on y 20236 (182 into the frame);
+                the 36-tall box therefore starts at 20218. */}
+            <h2
+              className="absolute whitespace-nowrap text-[24px] text-white"
+              style={{
+                left: 651.5,
+                top: 20218,
+                fontFamily: "var(--font-inter)",
+                fontWeight: 500,
+                lineHeight: 1.5,
+              }}
+            >
+              Tools I used
+            </h2>
+
+            {/* 6657:13319 — six 200x200 cards, 8 apart, spanning 1240 from x 100. */}
+            <div
+              className="absolute flex items-center"
+              style={{ left: 100, top: 20294.05, gap: 8 }}
+            >
+              {TOOLS.map((tool) => (
+                <div
+                  key={tool.alt}
+                  className="relative flex size-[200px] shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-[#292621]"
+                >
+                  {tool.parts ? (
+                    // GitHub ships as a mark and a wordmark on one 147x42 board.
+                    <div className="relative" style={{ width: 147, height: 42 }}>
+                      {tool.parts.map((part) => (
+                        // eslint-disable-next-line @next/next/no-img-element -- local SVG; next/image needs dangerouslyAllowSVG to serve these
+                        <img
+                          key={part.src}
+                          src={part.src}
+                          alt=""
+                          aria-hidden
+                          className="absolute max-w-none"
+                          style={part.box}
+                        />
+                      ))}
+                      <span className="sr-only">{tool.alt}</span>
+                    </div>
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element -- local SVG; next/image needs dangerouslyAllowSVG to serve these
+                    <img
+                      src={tool.src}
+                      alt={tool.alt}
+                      className="max-w-none"
+                      style={{ width: tool.width, height: tool.height }}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* 6657:13355 — "Thanks" at 400, trimmed to cap height, which is why
+                Figma calls the box 291 rather than the 520 the line box takes.
+                Cap sits 114.6 below the line box top at this size, so the
+                negative margin pulls it back to Figma's y 20704.05. */}
+            <p
+              aria-hidden
+              className="absolute whitespace-nowrap text-[400px] font-semibold text-[#1d1d1c]"
+              style={{
+                left: 48,
+                top: 20704.05,
+                marginTop: -114.6,
+                fontFamily: "var(--font-inter-tight)",
+                lineHeight: 1.3,
+              }}
+            >
+              Thanks
+            </p>
+
+            {/* 6657:13356 — asterisk over two lines, 353.74 wide, centred. */}
+            <div
+              className="absolute flex flex-col items-center"
+              style={{ left: 543.129, top: 20867.05, width: 353.742, gap: 24 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- local SVG */}
+              <img
+                src="/mockups/mentora/tools/asterisk.svg"
+                alt=""
+                aria-hidden
+                className="size-6"
+              />
+              <p
+                className="text-center text-[16px]"
+                style={{ fontFamily: "var(--font-inter)", lineHeight: "24px" }}
+              >
+                <span className="text-white/60">
+                  Thanks for reading through the process, not just the pixels.{" "}
+                </span>
+                <span className="text-white">Let&apos;s build something together.</span>
+              </p>
+            </div>
           </section>
 
 
