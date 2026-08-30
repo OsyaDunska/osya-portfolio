@@ -283,10 +283,9 @@ export default function MentoraCase() {
         <div
           className="relative"
           style={{
-            // The page ends on the "Thanks" baseline — 20614.05 plus its cap
-            // height, which is 0.727 of the type and so 20.19vw once the word
-            // starts scaling. No empty frame below it.
-            height: "max(20904.85px, calc(20614.05px + 20.194vw))",
+            // The page ends on the "Thanks" baseline: 20614.05 plus the 290.8
+            // cap height of 400px type. No empty frame below it.
+            height: 20904.85,
           }}>
           {/* Background light for sections 8-9 — under everything else, as in
               the file. */}
@@ -1521,22 +1520,18 @@ export default function MentoraCase() {
               ))}
             </div>
 
-            {/* 6657:13355 — "Thanks" is centred in the frame: 1343 wide inside
-                1440 leaves the 48 Figma reports on each side. Centring it here
-                too means the margins stay proportional as the type grows, with
-                no viewport arithmetic — the canvas is centred in the viewport,
-                so its middle is the screen's middle.
-                  400 on a 1440 frame is 27.78vw, which is what makes the word
-                scale with the screen; below 1440 it holds the Figma size.
+            {/* 6657:13355 — "Thanks" at 400, x 48, 1343 wide: the Figma values,
+                held on every screen rather than scaled to the viewport.
                   line-height 0.727 is the cap height Figma trims the box to, so
-                the box *is* the cap box: the glyphs sit on the given y with no
-                nudge, and nothing hangs below the baseline to stretch the page. */}
+                the box *is* the cap box — the glyphs sit on the given y with no
+                nudge, and the page can end on their baseline. */}
             <p
               aria-hidden
-              className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap font-semibold text-[#1d1d1c]"
+              className="absolute whitespace-nowrap font-semibold text-[#1d1d1c]"
               style={{
+                left: 48,
                 top: 20614.05,
-                fontSize: "max(400px, 27.7778vw)",
+                fontSize: 400,
                 fontFamily: "var(--font-inter-tight)",
                 lineHeight: 0.727,
               }}
@@ -1549,12 +1544,8 @@ export default function MentoraCase() {
               className="absolute flex flex-col items-center"
               style={{
                 left: 543.129,
-                // Anchored to the foot of the page, not to a share of the word:
-                // Figma leaves 32 between this block and the bottom edge, and
-                // the page ends on the "Thanks" baseline. So it sits its own 96
-                // plus that 32 above the baseline, and the gap holds at 32 on
-                // any screen instead of opening up as the word scales.
-                top: "max(20777.05px, calc(20614.05px + 20.194vw - 128px))",
+                // 32 clear of the page's bottom edge, as Figma has it.
+                top: 20777.05,
                 width: 353.742,
                 gap: 24,
               }}
