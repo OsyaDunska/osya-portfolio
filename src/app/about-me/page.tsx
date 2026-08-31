@@ -253,7 +253,7 @@ export default function AboutMe() {
           style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
         >
           <p>
-            {"Hi, I'm Osya — a UI/UX & Product Designer with 2,5 years of hands-on experience across"}
+            {"Hi, I'm Osya — a UI/UX & Product Designer with 2 years of hands-on experience across"}
             <br />
             {"e-commerce, SaaS, and healthtech products."}
           </p>
