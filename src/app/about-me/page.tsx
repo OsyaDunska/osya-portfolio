@@ -23,6 +23,24 @@ const signoffMark = "/graphics/about-signoff.svg";
  */
 const SIGNOFF_GAP = 140;
 
+/**
+ * The heading, Figma 6832:6264.
+ *
+ * 36 over 40 at the 1440 canvas. It has been 40/44 and then 32/36 over the
+ * 31 August revisions — to go back, change the top of the clamp and the ratio
+ * beside it. The size slides to 24 on a phone rather than stepping at a
+ * breakpoint: four words of this do not fit a narrow screen at 36, and the
+ * file only specifies 1440.
+ */
+const HEADING = {
+  size: "clamp(24px, 2.5vw, 36px)",
+  /** 40/36 — the file's ratio, which holds at whatever the clamp resolves to. */
+  leading: 1.1111,
+};
+
+/** The gap under the heading. It has been 32, then 24, and is 32 again. */
+const HEADING_TO_TAGS = 32;
+
 const TAGS = [
   "# Design Systems",
   "# UX Research",
@@ -117,7 +135,7 @@ const TOOLS: { label: string; items: string[] }[] = [
 
 export default function AboutMe() {
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-6 pt-8 pb-[12.46px] md:px-11">
+    <main className="mx-auto w-full max-w-[1440px] px-6 pt-8 pb-[20.46px] md:px-11">
       <div className="mb-[88px] flex items-center justify-between">
         <Link
           href="/"
@@ -165,8 +183,8 @@ export default function AboutMe() {
           </div>
         </div>
 
-        {/* Figma 6832:6264 — Inter Semi Bold 40/44, -1.2 of tracking, centred,
-            32 below the photo. Three lines, broken where the file breaks them.
+        {/* Figma 6832:6264 — Inter Semi Bold, -1.2 of tracking, centred, 32
+            below the photo; see HEADING for the size. Three lines, broken where the file breaks them.
             The first carries the node's own 40% grey; the other two override it
             to #292621, and only "first" leans, with the space inside the
             leaning run rather than around it.
@@ -175,12 +193,15 @@ export default function AboutMe() {
             installed — its render sets this line's ink 31 tall where the drawn
             italic sets it 38, an f with a descender being the difference. The
             drawn letter is the one kept, by the owner's decision.
-              Below 768 the size drops to 28 and the leading with it, in the
-            file's own 1.1 ratio; three lines of this at 40 do not fit a
-            phone. */}
+*/}
         <h1
-          className="mt-8 text-[28px] font-semibold leading-[32px] md:text-[40px] md:leading-[44px]"
-          style={{ letterSpacing: "-1.2px", fontFamily: "var(--font-inter)" }}
+          className="mt-8 font-semibold"
+          style={{
+            fontSize: HEADING.size,
+            lineHeight: HEADING.leading,
+            letterSpacing: "-1.2px",
+            fontFamily: "var(--font-inter)",
+          }}
         >
           <span className="block text-[rgba(41,38,33,0.4)]">I own the full design process</span>
           <span className="block text-[#292621]">
@@ -191,15 +212,15 @@ export default function AboutMe() {
           <span className="block text-[#292621]">a dev-ready screen</span>
         </h1>
 
-        {/* Figma 6832:6253 — five pills in a row 702 wide, 32 below the
-            heading, 8 apart. Each is 33 tall: 8 of padding over a 17 line over
+        {/* Figma 6832:6253 — five pills in a row 706 wide, 8 apart; see
+            HEADING_TO_TAGS for the distance above them. Each is 33 tall: 8 of padding over a 17 line over
             8 again, on 12 of side padding, so the widths fall out at 143, 122,
             114, 148 and 143.
               The hash is part of the label rather than added in the markup,
             so a tag can carry its own spacing if it ever needs to. The file has
             the last one set without a space; here all five are spaced alike, by
             the owner's decision. */}
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-2" style={{ marginTop: HEADING_TO_TAGS }}>
           {TAGS.map((tag) => (
             <span
               key={tag}
@@ -371,13 +392,12 @@ export default function AboutMe() {
         {/* Figma 6832:6334 — its label is 16, not the 18 the sections above
             use — every section heading is 16 now — and it sits on the
             file's own 19 rather than the 24 the others take.
-              84 above it, where the file reads 64. The four headings above
-            are set on 19 of leading by the owner's decision while the file
-            still has them on 24, which takes 5 off each and 20 off the column;
-            the 20 goes back here so this block, and everything below it, lands
-            on the file's own coordinates. If those headings ever go to 19 in
-            the file too, this returns to 64. */}
-        <div className="mt-[84px] flex flex-col gap-6 text-[16px]">
+              64 above it, the file's own number. It read 84 for a while: the
+            headings above were set on 19 of leading before the file was, which
+            took 5 off each of four sections and 20 off the column, and the 20
+            had to go back here. The file now sets them auto, which is 19, and
+            the two agree — so the compensation is gone. */}
+        <div className="mt-16 flex flex-col gap-6 text-[16px]">
           <h2
             className="font-semibold uppercase leading-[19px] text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
