@@ -10,9 +10,16 @@ import {
 } from "next/font/google";
 import "./globals.css";
 
+// With the italic face, by the owner's decision. Figma labels the About Me
+// heading's one leaning word Semi Bold Italic but draws a slanted upright,
+// having no italic Inter to hand — its render sets that line's ink 31 tall
+// where the real italic sets it 38, the difference being an f redrawn with a
+// descender. The site takes the drawn italic rather than the slant: it is the
+// letter the design asks for by name, and the better one.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  style: ["normal", "italic"],
 });
 
 const interTight = Inter_Tight({
