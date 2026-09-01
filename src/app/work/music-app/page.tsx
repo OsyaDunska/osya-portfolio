@@ -56,7 +56,7 @@ const heroMockup = "/mockups/music-app-v2/hero.webp";
 // washing out the middle of the personas block. It also explains the numbers
 // that never resolved: the x and y in the MCP's metadata are the translation of
 // the turned frame, not a corner of the bounding box.
-const heroGlow = "/glows/music-app-v2/hero-glow.svg";
+const heroGlow = "/glows/music-app-v2/hero-glow.webp";
 const sectionGlow = "/glows/music-app-v2/problem-solution-glow.svg";
 
 // Figma 6659:11883 — ten 64 buttons, two rows of five, 16 apart both ways, in
@@ -179,10 +179,35 @@ export default function MusicAppCase() {
   if (!SHOW_MUSIC_APP_CASE) return <ComingSoon />;
 
   return (
-    <div className="min-h-screen overflow-clip bg-[#000208] text-white">
+    <div className="relative min-h-screen overflow-clip bg-[#000208] text-white">
+      {/* Figma 6900:15665 "button back case" — 155 x 48 at x 80, y 36, corner
+          50. Pinned the way Mentora's is, and for the same reason it has to sit
+          here rather than in the hero: the layer has to span the whole page, or
+          the button comes unstuck the moment the hero scrolls past. It rides
+          the content down, then holds at 36 for the rest of the case.
+            pointer-events-none on the layer keeps the page clickable through
+          it; the button takes them back for itself.
+            The pill is drawn, not exported — an image cannot cross-fade to its
+          hover. The file no longer asks for glass here: it is a solid #01091c,
+          and the hover is Variant2, a straight inversion to white with a
+          #000208 label. */}
+      <div className="pointer-events-none absolute inset-0 z-30">
+        {/* h-full is load-bearing: a sticky element can only travel inside its
+            own containing block, so this column has to be as tall as the page
+            or the button comes unstuck the moment it is scrolled past. */}
+        <div className="mx-auto h-full w-[1440px]">
+          <Link
+            href="/"
+            className="pointer-events-auto sticky flex h-12 w-fit items-center justify-center rounded-[50px] bg-[#01091c] px-5 text-[15px] text-white transition-colors duration-200 hover:bg-white hover:text-[#000208] motion-reduce:transition-none"
+            style={{ top: 36, marginTop: 36, marginLeft: 80, fontFamily: "var(--font-inter-tight)", fontWeight: 500 }}
+          >
+            Back to All Works
+          </Link>
+        </div>
+      </div>
       {/* The canvas: 1440 of content, centred, with everything positioned
           against it. The glow below is the one thing that escapes it. */}
-      <div className="relative mx-auto w-[1440px]" style={{ height: 700 }}>
+      <div id="about-project" className="relative mx-auto w-[1440px]" style={{ height: 700 }}>
         {/* Figma 6659:11859. Fixed inside the column, not scaled with the
             window: this glow sits inside the 1440 and belongs to the mockup it
             lights, so stretching it would move the light off the phone.
@@ -191,8 +216,18 @@ export default function MusicAppCase() {
             at 1%, then #01163F at 60% at the far end — under a 185.62 layer
             blur. Blend mode Normal, layer at 100%. The rotation is baked into
             the exported path.
-              The export is drawn at its own size, 862.143 x 971.495, and not
-            stretched. Figma's own markup wraps it in a box inset -37.81% and
+              The source is Figma's own PNG render of the node, not the SVG
+            export, and it is drawn at its own size, 993 x 886, unstretched.
+            The SVG export bakes the 92.81 sigma into a filter region clipped
+            to the canvas, so the blur never reaches zero: it leaves a flat
+            wash about one level below the page across the whole box and cuts
+            it off on a line at the edge. Measured against the file's own
+            render, the page read (0, 1.09, 7.09) at y 750 where the file
+            reads a clean (0, 2, 8), and stepped back to background at the
+            canvas edge — the seam that showed under the ramp, which paints a
+            true #000208 and so read lighter than the darkened ground around
+            it. The PNG's alpha falls to exactly 0 on all four sides and
+            composites to (0, 2, 8), so there is no edge to see. Figma's own markup wraps it in a box inset -37.81% and
             -30.92% of the bounding box, which works out to 1175 x 1187 — but
             stretching the file inflates the blur with it, 92.81 of sigma
             becoming 126, and the light comes out a third too wide and burning
@@ -216,18 +251,6 @@ export default function MusicAppCase() {
         >
           <Image src={heroGlow} alt="" fill unoptimized className="max-w-none" />
         </div>
-
-        {/* Figma 6659:12458 — 155 x 48 at x 80, y 36. */}
-        <Link href="/" className="absolute block" style={{ left: 80, top: 36 }} aria-label="Back to all works">
-          <Image
-            src={GLASS_BUTTONS.back.src}
-            alt=""
-            width={GLASS_BUTTONS.back.w * 2}
-            height={GLASS_BUTTONS.back.h * 2}
-            unoptimized
-            style={{ width: GLASS_BUTTONS.back.w, height: GLASS_BUTTONS.back.h }}
-          />
-        </Link>
 
         {/* Figma 6659:11863 — 249 x 56 at x 595.5, y 32. */}
         <div className="absolute flex items-center gap-2" style={{ left: 595.5, top: 32 }}>
@@ -1307,7 +1330,7 @@ export default function MusicAppCase() {
         >
           <div className="relative mx-auto h-full w-[1440px]">
             <p
-              className="absolute whitespace-nowrap text-[400px] font-bold text-[#2e4496]"
+              className="absolute whitespace-nowrap text-[400px] font-bold text-[#203bca]"
               style={{ left: 29.5, top: -70, lineHeight: "520px", fontFamily: "var(--font-inter-tight)" }}
             >
               Thanks
@@ -1336,7 +1359,7 @@ export default function MusicAppCase() {
               className="absolute text-center text-[16px]"
               style={{
                 left: 542.97,
-                top: 260,
+                top: 270,
                 width: 353,
                 lineHeight: "22px",
                 letterSpacing: "-0.176px",
