@@ -60,10 +60,34 @@ const mulish = Mulish({
   weight: ["400", "500", "600"],
 });
 
+// metadataBase is what turns the relative image path into the absolute URL a
+// scraper needs: LinkedIn, Slack and the rest will not follow a relative
+// og:image, and without this Next has no origin to build one from.
+//
+// The picture itself is opengraph-image.png beside this file. Next finds it by
+// name, hashes the URL so a new one is never served from an old cache, and
+// writes og:image with its type and its 1200x630 — so the size is not restated
+// here, where it could drift away from the file.
+const DESCRIPTION =
+  "Product Designer based in Kyiv, Ukraine. UI/UX, design systems, and AI-first workflows.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://osya-portfolio.vercel.app"),
   title: "Osya Dunska — Product Designer",
-  description:
-    "Product Designer based in Kyiv, Ukraine. UI/UX, design systems, and AI-first workflows.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Osya Dunska — Product Designer",
+    description: DESCRIPTION,
+    url: "https://osya-portfolio.vercel.app",
+    siteName: "Osya Dunska Portfolio",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Osya Dunska — Product Designer",
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
