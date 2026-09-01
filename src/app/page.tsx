@@ -216,13 +216,16 @@ export default function Home() {
             description="Idea to create a music app that simplifies access to content and reduces the time to the first play. The goal was to make interaction as effortless as possible: with minimal steps, adaptive recommendations, and a clear, intuitive structure."
           />
 
-          {/* Row 3: Aura text + Coming soon (hover on description reveals pill on cover) */}
-          <div className="group contents">
+          {/* Row 3: Aura text card + its cover */}
+          <div className="contents">
             {/* Aura is its own component set in Figma (6643:12017): no arrow,
                 and the whole hover is the badge below fading in. The card
                 ground stays #292621 in both variants — an earlier revision
-                darkened it to #171716 and that is gone. */}
-            <div className="relative aspect-square squircle bg-[#292621] overflow-hidden">
+                darkened it to #171716 and that is gone.
+                  `group` belongs on this card and not on a wrapper around the
+                pair: the badge answers to the text card alone, and hovering the
+                cover beside it is not what brings it out. */}
+            <div className="group relative aspect-square squircle bg-[#292621] overflow-hidden">
               <div className="absolute left-8 right-[54px] top-[100px] flex flex-col gap-6">
                 <div className="flex items-center gap-2">
                   <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>Aura</span>
