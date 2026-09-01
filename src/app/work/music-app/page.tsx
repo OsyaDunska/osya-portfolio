@@ -8,8 +8,6 @@ import EfficiencyBlock from "./EfficiencyBlock";
 import { MULISH_SPECIMEN, SF_PRO_SPECIMEN, SpecimenBlock } from "./TypographyColors";
 import ScrollToTop from "@/components/ScrollToTop";
 
-import ComingSoon from "./ComingSoon";
-import { SHOW_MUSIC_APP_CASE } from "@/lib/featureFlags";
 import { MUSIC_APP_SKIN } from "@/components/scrollToTopSkins";
 
 // Figma 6659:11844 — the Music App case, laid out again from the current file.
@@ -174,10 +172,6 @@ const ICONS = [
 ];
 
 export default function MusicAppCase() {
-  // Development renders the case; a production build renders the placeholder.
-  // See SHOW_MUSIC_APP_CASE. Nothing below this line has been touched.
-  if (!SHOW_MUSIC_APP_CASE) return <ComingSoon />;
-
   return (
     <div className="relative min-h-screen overflow-clip bg-[#000208] text-white">
       {/* Figma 6900:15665 "button back case" — 155 x 48 at x 80, y 36, corner
