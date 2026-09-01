@@ -26,6 +26,9 @@ const ART = {
 // with a little room for the cover crop (the source is 4:3, the card is wider,
 // so it fills on width and crops top and bottom).
 const MELLOW_ACOUSTIC_VIDEO = "/videos/card-mellow-acoustic.mp4";
+// Its own first frame, so the card is the artwork rather than a grey box while
+// the clip arrives.
+const MELLOW_ACOUSTIC_POSTER = "/mockups/music-app-v2/mellow-acoustic-poster.webp";
 
 // Every card in this set is rounded to 20 with corner smoothing at 59% — the
 // iOS radius, and what the design has. Sizes are fixed per card, and the path is
@@ -217,6 +220,7 @@ export default function CardsBlock() {
         >
           <LazyAutoplayVideo
             src={MELLOW_ACOUSTIC_VIDEO}
+            poster={MELLOW_ACOUSTIC_POSTER}
             className="absolute inset-0 size-full object-cover"
           />
           {/* Knocks the footage back so the title panel over it reads. Sits

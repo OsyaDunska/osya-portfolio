@@ -22,8 +22,26 @@ import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 //
 // So the narrow one is right at the design width and the wide one on a large
 // screen, and the page picks between them.
-const NARROW = "/videos/mentora-benchmarking-board-v1.mp4";
-const WIDE = "/videos/mentora-benchmarking-board.mp4";
+// Each clip carries its own first frame as a poster. Without one the block sat
+// empty while tens of megabytes arrived — the recording is the section, so an
+// empty box reads as a page that has broken rather than one that is loading.
+// The stills are 1200 wide against a box that can be three times that, which is
+// deliberate: a poster has to arrive before the video it stands in for, and 50KB
+// that is briefly soft beats 200KB that is sharp and late.
+const NARROW = {
+  src: "/videos/mentora-benchmarking-board-v1.mp4",
+  poster: "/mockups/mentora/benchmarking-poster-narrow.webp",
+};
+const WIDE = {
+  src: "/videos/mentora-benchmarking-board.mp4",
+  poster: "/mockups/mentora/benchmarking-poster-wide.webp",
+};
+
+// How early to start fetching. The default 300 is a screen's worth of warning
+// for a file this size, which is not enough: at reading speed the block arrives
+// before the first frame does. A section and a half of lead time lets it buffer
+// out of sight.
+const LEAD_PX = 1400;
 
 // Where to swap. 1440 is the design width and the obvious line to draw, though
 // the two clips actually break even nearer 1604: between 1441 and there, the
@@ -55,7 +73,9 @@ export default function BenchmarkingBoard() {
     >
       {wide !== null && (
         <LazyAutoplayVideo
-          src={wide ? WIDE : NARROW}
+          src={wide ? WIDE.src : NARROW.src}
+          poster={wide ? WIDE.poster : NARROW.poster}
+          marginPx={LEAD_PX}
           className="size-full"
           style={{ objectFit: "cover" }}
         />

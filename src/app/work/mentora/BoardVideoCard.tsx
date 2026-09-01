@@ -12,10 +12,14 @@ import LazyAutoplayVideo from "@/components/LazyAutoplayVideo";
 
 const VIDEO = "/videos/mentora-stakeholders-interview.mp4";
 
+// The clip's own first frame, so the card shows the board straight away rather
+// than a bare #292621 square while seven megabytes arrive.
+const POSTER = "/mockups/mentora/stakeholders-poster.webp";
+
 export default function BoardVideoCard() {
   return (
     <div className="size-full overflow-clip rounded-[20px] bg-[#292621]">
-      <LazyAutoplayVideo src={VIDEO} className="size-full object-cover" />
+      <LazyAutoplayVideo src={VIDEO} poster={POSTER} className="size-full object-cover" />
     </div>
   );
 }
