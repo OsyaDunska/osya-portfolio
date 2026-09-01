@@ -321,9 +321,18 @@ export default function MentoraCase() {
               933.8 down. Nine tenths of a pixel of margin, so it cannot move.
               Growing therefore lifts the top, and the cap is set by the header
               label at y 37.5-56.5: at 1.10 the box top is 70.6 and still clear
-              of it, at 1.15 it is 31.4 and no longer is. Room to spare on
-              sharpness — the file is 1803 CSS wide against the 1174 it is drawn
-              at, so it has 1.54x the pixels it needs.
+              of it, at 1.15 it is 31.4 and no longer is.
+                The file stays at its full 3606, and the width to measure that
+              against is 1291.87 and not the 1174.43 it rests at — this box
+              grows with the window. Sizing it off the resting width gives 2349,
+              which at the cap is off by 0.9 of a level on average with 8.5% of
+              the picture past two levels: soft on any window wider than the
+              canvas, and it was noticed. Twice the cap, 2584, measures clean at
+              the cap and no wider — but the browser is not the only thing that
+              scales this. Page zoom and a 3x screen both ask for more, and this
+              is the first thing anyone sees of the case, so it keeps its
+              headroom rather than being cut to the minimum that survives one
+              measurement.
                 This replaces a feathered mask on the right edge; that version
               is commit d3c908a, one revert away.
                 Served as the PNG: the optimizer's WebP re-encode bands across
