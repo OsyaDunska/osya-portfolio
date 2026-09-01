@@ -20,6 +20,15 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
+/* The Music App case carries a menu of anchors down its own sections, and a
+   plain anchor jump lands with no sense of how far it travelled. Held back from
+   anyone who has asked their system for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* The 20px corner Figma puts on every card on this page. Corner smoothing is
    off — SquircleCorners is where that call is written down, and why.
      This used to be an objectBoundingBox clip-path whose corner was 6.5% of the

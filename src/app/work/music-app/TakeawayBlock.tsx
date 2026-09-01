@@ -4,8 +4,12 @@
 import Image from "next/image";
 import { fadeGradientSolid } from "./fadeStyles";
 
-// The Takeaway. Offsets are Figma frame coordinates minus the section's
-// origin — the title at y 14973.
+// The Takeaway. Offsets are this component's original Figma coordinates minus
+// an origin — the title, which was at 14973.
+//   The page has moved 234.55 up since, evenly: the tile was at 15275.93 and is
+// now 15040.45, the hand 15223 and now 14988.4, the closing frame 16261.93 and
+// now 16027.4. So the origin stays what it was and the section under it starts
+// at 14738.45 — every offset then lands within a pixel of the file.
 const ORIGIN = 14973;
 
 const TIGHT = "var(--font-inter-tight)";
@@ -18,8 +22,11 @@ const ASTERISK = "/icons/music-app/takeaway-asterisk.svg";
 // 6460:23440, a 573.36x1060.18 rounded rectangle whose fill is this shot, and
 // 6460:23450 "Container", 310 square with the screen inside it already clipped.
 // Both exported at 2x — 1147x2121 and 620x620 — with the background cut out.
-const HAND = "/mockups/music-app/takeaway-hand-2x.png";
-const CONTAINER = "/mockups/music-app/takeaway-container-2x.png";
+// Re-exported from the current file: the screens inside the phone changed.
+// The container beside it did not — its old asset and the new render are 0.31
+// of a level apart with nothing over 16 — but both come from the same place now.
+const HAND = "/mockups/music-app-v2/takeaway-hand.webp";
+const CONTAINER = "/mockups/music-app-v2/takeaway-container.webp";
 
 export default function TakeawayBlock() {
   return (

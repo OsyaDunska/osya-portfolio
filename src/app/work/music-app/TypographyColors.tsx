@@ -5,7 +5,16 @@ import { squircleClip } from "./squircle";
 
 // Typography & Colors. Offsets are Figma frame coordinates minus the section's
 // origin — the title at y 9168.
-const ORIGIN = 9168;
+// The specimens below are re-anchored to the current file. Their numbers are
+// this component's originals, which were read off the previous revision, and
+// the whole page has since moved 202 up: the Mulish column was at 10214.997 and
+// is now 10013, its wordmark 10282.996 and now 10081, and the SF Pro pair the
+// same 202. So ORIGIN is the specimen block's own top in those old
+// coordinates — 9982 on the page plus that 202 — and every top here comes out
+// relative to the section it sits in.
+//   Only SpecimenBlock is used now; the heading, the wheel and the swatches are
+// built in page.tsx against the current file.
+const ORIGIN = 10184;
 
 const MULISH = "var(--font-mulish)";
 const TIGHT = "var(--font-inter-tight)";
@@ -66,7 +75,7 @@ type Specimen = {
 };
 
 // Group 1597880847 — 6460:23090, the Mulish specimen.
-const MULISH_SPECIMEN: Specimen = {
+export const MULISH_SPECIMEN: Specimen = {
   letter: { left: 80, top: 10123.996, width: 149, leading: 251, weight: 600 },
   word: { text: "Mulish", left: 252.95, top: 10282.996, scaleX: 0.675 },
   column: { left: 380, top: 10214.997, width: 346 },
@@ -81,7 +90,7 @@ const MULISH_SPECIMEN: Specimen = {
 
 // Group 1597880846 — 6460:23110, the SF Pro specimen. Same construction, but
 // SF Pro's cap height is shorter, so Figma trims its lines to 21 rather than 23.
-const SF_PRO_SPECIMEN: Specimen = {
+export const SF_PRO_SPECIMEN: Specimen = {
   letter: { left: 732, top: 10595, width: 134.997, leading: 238, weight: 590 },
   word: { text: "SF Pro", left: 890.996, top: 10744, scaleX: 0.6636 },
   column: { left: 1014.009, top: 10676, width: 345.991 },
@@ -94,7 +103,7 @@ const SF_PRO_SPECIMEN: Specimen = {
   labelWeight: 510,
 };
 
-function SpecimenBlock({ s }: { s: Specimen }) {
+export function SpecimenBlock({ s }: { s: Specimen }) {
   return (
     <>
       {/* The letter and the wordmark share a baseline in the design, and getting

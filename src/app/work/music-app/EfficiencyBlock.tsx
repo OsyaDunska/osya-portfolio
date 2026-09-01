@@ -4,9 +4,14 @@
 import Image from "next/image";
 import { squircleClip } from "./squircle";
 
-// Efficiency & Consistency. Offsets are Figma frame coordinates minus the
-// section's origin — the app icon at y 11874.
-const ORIGIN = 11874;
+// Efficiency & Consistency. Offsets are this component's original Figma
+// coordinates, read off the previous revision, minus an origin.
+//   The page has moved 241 up since: the heading was at 12004 and is now 11763,
+// the cards 12278 and now 12037. The section this sits in starts at 10956, so
+// the origin is that plus the 241 — every top then comes out relative to it.
+//   The app icon is the one exception. It alone moved 243, not 241, so its own
+// line carries 11872 rather than the 11874 the rest is measured from.
+const ORIGIN = 11197;
 
 const TIGHT = "var(--font-inter-tight)";
 const INTER = "var(--font-inter)";
@@ -43,7 +48,7 @@ export default function EfficiencyBlock() {
     <>
       {/* Button — 6460:23321, x 676 y 11874, 88x88. The app icon sits on a 5px
           bar with a light cone spilling down from it. */}
-      <div className="absolute" style={{ left: 676, top: 11874 - ORIGIN, width: 88, height: 88 }}>
+      <div className="absolute" style={{ left: 676, top: 11872 - ORIGIN, width: 88, height: 88 }}>
         <div className="absolute left-1/2 top-0 h-[5px] w-16 -translate-x-1/2 rounded-[20px] bg-[#4460f6]" />
         <img
           src={ICON_CONE}
@@ -86,35 +91,43 @@ export default function EfficiencyBlock() {
           className="w-full text-[48px] font-semibold leading-[1.15] text-white"
           style={{ fontFamily: TIGHT }}
         >
+          {/* Inter Tight Medium Italic on the ampersand, as in every heading
+              of this case that has one. The file's run takes the sign and the
+              space after it. */}
           Efficiency
-          <br />& Consistency
+          <br />
+          <span className="font-medium italic">&amp; </span>Consistency
         </h2>
-        {/* Figma trims this to cap-height and baseline, so its three 22 lines
-            measure 56 rather than 66. The trim is margins on the <p> inside a
-            flow-root wrapper: on the flex item itself they would eat the 44
-            gap, and without the wrapper's own formatting context they would
-            collapse through it. Inter Tight at 16px has ascent 15.9, descent
-            3.5 and cap 11.6, so with a 22 line box the half-leading is 1.3 and
-            the trims are 1.3 + (15.9 - 11.6) on top, 3.5 + 1.3 underneath.
-               The breaks are Figma's own: the text node carries a newline after
-            "screen," and after "where", so all three lines are set, not
-            wrapped. */}
+        {/* Figma trims this to cap and baseline, so its three 22 lines measure
+            56 rather than 66. Margins on the <p> inside a flow-root wrapper: on
+            the flex item they would eat the 44 gap, and without the wrapper's
+            own formatting context they would collapse through it. Inter at 16
+            has ascent 16, descent 4 and cap 11.64, so with a 22 box the
+            half-leading is 1 and the trims are 1 + (16 - 11.64) on top, 4 + 1
+            underneath.
+              Inter, not Inter Tight: the file sets this line in the plain face
+            where the heading over it is Tight.
+              The breaks are set by hand off the file's own render, which gives
+            lines of 295.0, 304.5 and 217.5 wide; these words measure back to
+            297.5, 305.3 and 219.5. The file breaks once itself, after
+            "predictable", and lets the rest wrap — but that wrap falls a word
+            early here, so all three are pinned. */}
         <div style={{ display: "flow-root", width: "100%" }}>
           <p
-            className="text-[16px] text-white/60"
+            className="whitespace-nowrap text-[16px] text-white/60"
             style={{
-              fontFamily: TIGHT,
+              fontFamily: INTER,
               lineHeight: "22px",
               letterSpacing: "-0.176px",
-              marginTop: -5.6,
-              marginBottom: -4.8,
+              marginTop: -5.36,
+              marginBottom: -5,
             }}
           >
-            One modular system runs through every screen,
+            {"One modular system runs through every"}
             <br />
-            so the interface stays predictable no matter where
+            {"screen, so the interface stays predictable"}
             <br />
-            a user lands.
+            {"no matter where a user lands."}
           </p>
         </div>
       </div>

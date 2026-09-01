@@ -370,19 +370,27 @@ export default function CardsBlock() {
                 "linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 52.062%)",
             }}
           >
+            {/* Both lines here need what the first card's panel already got.
+                The title at `normal` renders 30 where Figma sets 24, and the
+                two lines under it come to 40 against the file's 30 — it trims
+                them to cap and baseline the same way. Same face, same size,
+                so the same margins: 5.31 off the top, 4.5 off the bottom.
+                Together they had the panel at 118 instead of 102. */}
             <div className="flex w-[184px] flex-col gap-3">
               <p
-                className="whitespace-nowrap text-[20px] font-extrabold leading-normal text-white"
+                className="whitespace-nowrap text-[20px] font-extrabold leading-[24px] text-white"
                 style={{ fontFamily: FONT_INTER }}
               >
                 Mellow Vibes
               </p>
-              <p
-                className="text-[14px] leading-5 text-white/80"
-                style={{ fontFamily: FONT_TIGHT }}
-              >
-                Lana Del Rey, Lord Huron, Bon Iver, Fleet Foxes
-              </p>
+              <div style={{ display: "flow-root" }}>
+                <p
+                  className="text-[14px] leading-5 text-white/80"
+                  style={{ fontFamily: FONT_TIGHT, marginTop: -5.31, marginBottom: -4.5 }}
+                >
+                  Lana Del Rey, Lord Huron, Bon Iver, Fleet Foxes
+                </p>
+              </div>
             </div>
           </div>
           {/* 6460:23085. The stroke went from the near-black rgba(10,17,54,0.8)
