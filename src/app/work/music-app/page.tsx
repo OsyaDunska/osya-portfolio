@@ -221,7 +221,19 @@ export default function MusicAppCase() {
             canvas edge — the seam that showed under the ramp, which paints a
             true #000208 and so read lighter than the darkened ground around
             it. The PNG's alpha falls to exactly 0 on all four sides and
-            composites to (0, 2, 8), so there is no edge to see. Figma's own markup wraps it in a box inset -37.81% and
+            composites to (0, 2, 8), so there is no edge to see.
+              It is dithered, and that is deliberate. A glow this faint spends
+            its whole range inside a handful of levels above a near-black page,
+            so 8 bits quantise it into rings — colouring each level of the blue
+            channel separately draws them plainly. The file's own render is
+            speckled rather than ringed, because Figma dithers its output; the
+            browser compositing a transparent PNG does not. So the 2x export is
+            averaged down to 993 x 886 in floating point, where 57 per cent of
+            pixels land between levels, and half a level of noise is added
+            before rounding. The mean is unmoved (-0.004 of a level over the
+            whole field), no pixel shifts by more than 3, and the rings break
+            into grain. Noise costs entropy: 432KB became 629KB.
+              Figma's own markup wraps it in a box inset -37.81% and
             -30.92% of the bounding box, which works out to 1175 x 1187 — but
             stretching the file inflates the blur with it, 92.81 of sigma
             becoming 126, and the light comes out a third too wide and burning

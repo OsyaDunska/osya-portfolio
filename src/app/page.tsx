@@ -4,9 +4,13 @@ import SocialButtons from "@/components/SocialButtons";
 
 // The Mentora cover is two layers in Figma (6647:11889 "Cover Saas-case"), and
 // its hover moves them in opposite directions — so it cannot be one flattened
-// image. Both files are byte-identical to the sources in that component.
-const mentoraCoverBack = "/mockups/mentora-cover-back.png";
-const mentoraCoverMonitor = "/mockups/mentora-cover-monitor.png";
+// image.
+//   Both carry the same pixels as the sources in that component, repacked from
+// PNG into lossless WebP: 4634KB became 2811KB with a measured difference of
+// zero across every channel. They are the two heaviest things on the page and
+// they load unoptimised, so the container was the only place left to win.
+const mentoraCoverBack = "/mockups/mentora-cover-back.webp";
+const mentoraCoverMonitor = "/mockups/mentora-cover-monitor.webp";
 const musicAppHero = "/mockups/music-app-hero.png";
 const auraHero = "/mockups/aura-hero.png";
 
