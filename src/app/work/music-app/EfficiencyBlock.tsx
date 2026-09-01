@@ -31,9 +31,12 @@ const CARD_GLOW_1 = "/glows/music-app/efficiency-card-glow-1.svg";
 const CARD_GLOW_2 = "/glows/music-app/efficiency-card-glow-2.svg";
 const CARD_GRADIENT = "/mockups/music-app/efficiency-card-gradient.svg";
 
-// Figma 6460:23329's fill, straight out of the file at 1223x1286 — the card
-// shows it at 493x518, so this is 2.48x.
-const PHOTO = "/mockups/music-app/afterglow-photo.png";
+// Figma 6460:23329's fill. The file exports it at 1223x1286 and the card shows
+// it at 493x518, which is 2.48x — half again as many pixels in each direction
+// as a 2x screen can use. At 986 the browser resamples nothing and the result
+// is the ideal downscale of the export: measured against it, a difference of
+// zero. Lossless WebP with it, so nothing is given up twice: 2324KB to 973KB.
+const PHOTO = "/mockups/music-app/afterglow-photo.webp";
 
 // Both cards are 450 square at radius 56 with corner smoothing at 60%.
 const CARD_CLIP = squircleClip(450, 450, 56, 0.6);
