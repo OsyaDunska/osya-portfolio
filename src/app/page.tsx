@@ -236,14 +236,14 @@ export default function Home() {
                 </p>
               </div>
               {/* Figma 6643:11989 — left 32, top 32, h 40, px 12, radius 12.
-                  #5d5a54, a step lighter than the card, which is what makes it
+                  #413c34, a step lighter than the card, which is what makes it
                   read against the unchanged ground; it is the only thing that
                   moves on hover here.
                   No arrow button on this card — rendering the node in Figma
                   leaves that corner as flat background, unlike Mentora's. */}
               <span
                 data-corner-smooth
-                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#5d5a54] px-3 text-[14px] font-semibold text-white opacity-0 transition-opacity duration-[250ms] group-hover:opacity-100 motion-reduce:transition-none"
+                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#413c34] px-3 text-[14px] font-semibold text-white opacity-0 transition-opacity duration-[250ms] group-hover:opacity-100 motion-reduce:transition-none"
               >
                 # Coming soon
               </span>
