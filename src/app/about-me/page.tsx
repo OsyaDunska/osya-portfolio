@@ -38,9 +38,6 @@ const HEADING = {
   leading: 1.1111,
 };
 
-/** The gap under the heading. It has been 32, then 24, and is 32 again. */
-const HEADING_TO_TAGS = 32;
-
 const TAGS = [
   "# Design Systems",
   "# UX Research",
@@ -61,10 +58,24 @@ const TAGS = [
 // and 32 between entries. The body lines are the file's own hard breaks — Figma
 // exports one paragraph per break, and these come back split where the text
 // still had room, so the breaks are the designer's.
-const EXPERIENCE: { period: string; role: string; body: string[][] }[] = [
+// The phone draft, 6946:14846, sets each entry out differently: the position
+// joins the period on the first line — "Product Designer/2026" — and the
+// project takes the second on its own, where the wide page leads with the
+// period and then names position and project together. Same two type styles
+// either way, so only the words move: position and project are the phone's
+// halves of role, kept beside it rather than parsed out of it.
+const EXPERIENCE: {
+  period: string;
+  role: string;
+  position: string;
+  project: string;
+  body: string[][];
+}[] = [
   {
     period: "2026",
     role: "Product Designer — Learning Platform (SaaS)",
+    position: "Product Designer",
+    project: "Learning Platform (SaaS)",
     body: [
       [
         "Designed the MVP for an AI-powered online learning platform — from stakeholder and user interviews and competitor benchmarking to user personas, wireframes, usability testing in Maze, and a token-based design system. Validated priorities with a 63-student survey. Core feature:",
@@ -75,6 +86,8 @@ const EXPERIENCE: { period: string; role: string; body: string[][] }[] = [
   {
     period: "Jan 2026 — Aug 2026",
     role: "UI/UX Designer at an Eyewear E-commerce Brand (NDA)",
+    position: "UI/UX Designer",
+    project: "Eyewear E-commerce Brand (NDA)",
     body: [
       [
         "Built a prescription lens configurator guiding customers step-by-step through lens selection. Designed the landing page driving paid traffic straight into the configurator. Built admin panels",
@@ -85,6 +98,8 @@ const EXPERIENCE: { period: string; role: string; body: string[][] }[] = [
   {
     period: "Jan 2025 — Sep 2025",
     role: "UI/UX Designer at a Medical Cannabis Marketplace (NDA, Agency)",
+    position: "UI/UX Designer",
+    project: "Medical Cannabis Marketplace (NDA, AG)",
     body: [
       [
         "Led a full redesign of the homepage, marketplace, and checkout flow. Simplified the onboarding quiz for new patients, cutting completion time from 12 minutes to 6. Redesigned the shopping cart with a progress bar tracking the 100g legal limit, showing which pharmacy would fulfill each order",
@@ -95,6 +110,8 @@ const EXPERIENCE: { period: string; role: string; body: string[][] }[] = [
   {
     period: "2025",
     role: "E-commerce Designer — Online Gallery & Diamond Retail Site",
+    position: "UI/UX Designer",
+    project: "E-commerce Online Gallery & Diamond Retail Site",
     body: [
       [
         "Designed the e-commerce experience for an online art gallery selling a private collection of",
@@ -136,15 +153,20 @@ const TOOLS: { label: string; items: string[] }[] = [
 export default function AboutMe() {
   return (
     <main className="mx-auto w-full max-w-[1440px] px-6 pt-8 pb-[20.46px] md:px-11">
-      <div className="mb-[88px] flex items-center justify-between">
+      {/* 6943:14662 keeps only the button up here on a phone — the social row
+          goes to the foot, past the quote — and the button carries the file's
+          Variant2, which is the grey the desktop one only takes on hover. The
+          button ends at 88 and the portrait starts at 120, so 32 under it
+          rather than the 88 the wide page leaves. */}
+      <div className="mb-8 flex items-center justify-between md:mb-[88px]">
         <Link
           href="/"
-          className="flex h-12 w-12 items-center justify-center rounded-[28px] bg-transparent transition-colors hover:bg-[#f5f5f5]"
+          className="flex h-12 w-12 items-center justify-center rounded-[28px] bg-[#f5f5f5] transition-colors md:bg-transparent md:hover:bg-[#f5f5f5]"
           aria-label="Back to all works"
         >
           <Image src={backArrowIcon} alt="" width={24} height={24} unoptimized />
         </Link>
-        <SocialButtons />
+        <SocialButtons className="hidden md:flex" />
       </div>
 
       {/* Figma 6832:6251 and 6832:6252 — the portrait with the script hanging
@@ -175,9 +197,11 @@ export default function AboutMe() {
               style={{ left: "-188.53%", top: "-180.34%", width: "377.06%", height: "523.38%" }}
             />
           </div>
+          {/* 108/138 at the design width; the phone draft hangs it at 111.9
+              and 134.4 off the same corner. */}
           <div
-            className="absolute"
-            style={{ left: 108, top: 138, width: 112.2476, height: 48 }}
+            className="absolute left-[112px] top-[134px] md:left-[108px] md:top-[138px]"
+            style={{ width: 112.2476, height: 48 }}
           >
             <Image src={osyaScript} alt="Osya" fill unoptimized />
           </div>
@@ -195,13 +219,14 @@ export default function AboutMe() {
             drawn letter is the one kept, by the owner's decision.
 */}
         <h1
-          className="mt-8 font-semibold"
-          style={{
-            fontSize: HEADING.size,
-            lineHeight: HEADING.leading,
-            letterSpacing: "-1.2px",
-            fontFamily: "var(--font-inter)",
-          }}
+          className="mt-8 text-[26px] leading-[32px] font-semibold md:text-[length:var(--heading-size)] md:leading-[1.1111]"
+          style={
+            {
+              "--heading-size": HEADING.size,
+              letterSpacing: "-1.2px",
+              fontFamily: "var(--font-inter)",
+            } as React.CSSProperties
+          }
         >
           <span className="block text-[rgba(41,38,33,0.4)]">I own the full design process</span>
           <span className="block text-[#292621]">
@@ -220,7 +245,7 @@ export default function AboutMe() {
             so a tag can carry its own spacing if it ever needs to. The file has
             the last one set without a space; here all five are spaced alike, by
             the owner's decision. */}
-        <div className="flex flex-wrap justify-center gap-2" style={{ marginTop: HEADING_TO_TAGS }}>
+        <div className="mt-6 flex flex-wrap justify-center gap-3 md:mt-8 md:gap-2">
           {TAGS.map((tag) => (
             <span
               key={tag}
@@ -247,7 +272,7 @@ export default function AboutMe() {
           left to the wrap. Below 740 each half still wraps on its own.
             The emphasised runs are Inter Semi Bold Italic on #171716 — a real
           italic face, and the same one the heading uses. */}
-      <div className="mx-auto mt-12 flex w-full max-w-[740px] flex-col">
+      <div className="mx-auto mt-10 flex w-full max-w-[740px] flex-col md:mt-12">
         <div
           className="flex flex-col gap-6 text-[16px] leading-[24px] text-[#292621]"
           style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
@@ -277,7 +302,7 @@ export default function AboutMe() {
 
         <div className="mt-14 flex flex-col gap-6">
           <h2
-            className="text-[16px] font-semibold uppercase leading-[19px] text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             How I Work
@@ -298,19 +323,22 @@ export default function AboutMe() {
             them in Inter Tight and the set at 80%, and both are gone. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[16px] font-semibold uppercase leading-[19px] text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Experience
           </h2>
 
-          <div className="flex flex-col gap-8 text-[16px]">
-            {EXPERIENCE.map(({ period, role, body }) => (
-              <div key={role} className="flex flex-col gap-4">
+          {/* 40 between entries on a phone and 8 inside them, against the 32
+              and 16 the wide page uses. */}
+          <div className="flex flex-col gap-10 text-[16px] md:gap-8">
+            {EXPERIENCE.map(({ period, role, position, project, body }) => (
+              <div key={role} className="flex flex-col gap-2 md:gap-4">
                 <p
                   className="leading-[26px] text-[rgba(41,38,33,0.6)]"
                   style={{ fontFamily: "var(--font-inter)" }}
                 >
+                  <span className="md:hidden">{position}/</span>
                   {period}
                 </p>
                 <div className="flex flex-col gap-2">
@@ -318,7 +346,8 @@ export default function AboutMe() {
                     className="font-semibold leading-[19px] text-[#171716]"
                     style={{ fontFamily: "var(--font-inter)" }}
                   >
-                    {role}
+                    <span className="md:hidden">{project}</span>
+                    <span className="hidden md:inline">{role}</span>
                   </p>
                   <div
                     className="flex flex-col gap-6 leading-[24px] text-[#292621]"
@@ -345,7 +374,7 @@ export default function AboutMe() {
             between every section of this column from here down. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[16px] font-semibold uppercase leading-[19px] text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Tools I Use
@@ -376,7 +405,7 @@ export default function AboutMe() {
         {/* Figma 6832:6325 */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[16px] font-semibold uppercase leading-[19px] text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Languages:
@@ -399,7 +428,7 @@ export default function AboutMe() {
             the two agree — so the compensation is gone. */}
         <div className="mt-16 flex flex-col gap-6 text-[16px]">
           <h2
-            className="font-semibold uppercase leading-[19px] text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Beyond Design
@@ -437,7 +466,9 @@ export default function AboutMe() {
           it, and fills its 121.94 x 46.26 box rather than fitting inside: the
           export is 120.2 x 40.2 with preserveAspectRatio="none", so Figma
           stretches it too. */}
-      <div className="mt-[120px] flex flex-col items-center">
+      {/* 120 at the design width; 6943:14662 brings it to 64, the body ending
+          at 4130 against the photo's 4194. */}
+      <div className="mt-16 flex flex-col items-center md:mt-[120px]">
         <div className="relative w-[132px]">
           <div className="relative h-[150px] w-[132px] overflow-hidden rounded-[16px] bg-[#e9e9e9]">
             <Image
@@ -471,12 +502,25 @@ export default function AboutMe() {
 
       {/* Figma 6832:6328 — 24 below the photo. Inter Regular 14 with positive
           tracking, unlike everything above it. */}
+      {/* 6946:14937 sets it apart from the desktop node on three counts: 60
+          per cent of #292621 rather than the full colour, 20 of leading rather
+          than normal, and its own break after "changed." — the file writes the
+          two lines out rather than letting 241 of measure find them. All three
+          are held below md so the wide page keeps what it had. */}
       <p
-        className="mt-6 text-center text-[14px] leading-[normal] text-[#292621]"
+        className="mt-6 text-center text-[14px] leading-[20px] text-[rgba(41,38,33,0.6)] md:leading-[normal] md:text-[#292621]"
         style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.0128px" }}
       >
-        {"\u201cThe determination hasn\u2019t changed. Only the skill set has.\u201d"}
+        {"\u201cThe determination hasn\u2019t changed. "}
+        <br className="md:hidden" />
+        {"Only the skill set has.\u201d"}
       </p>
+
+      {/* 6947:14960 — on a phone the social row lands here, between the quote
+          and the sign-off: 192 across, three 56 circles on 12 of gap, centred,
+          96 under the quote. At the design width it is still up in the header,
+          so this only shows below md. */}
+      <SocialButtons className="mt-24 justify-center md:hidden" />
 
       {/* Figma 6832:6337 and 6832:6340 — the sign-off below the quote,
           then the mark 16 under it. See SIGNOFF_GAP for the distance. Cormorant Garamond SemiBold at 60% of
@@ -485,13 +529,15 @@ export default function AboutMe() {
           20 line box here, and that one pixel walks the mark below it and the
           page's own end along with it. */}
       <div
-        className="flex items-center justify-center gap-1.5 text-[16px] leading-[19px] text-[rgba(41,38,33,0.6)]"
-        style={{
-          marginTop: SIGNOFF_GAP,
-          fontFamily: "var(--font-cormorant)",
-          fontWeight: 600,
-          letterSpacing: "0.0128px",
-        }}
+        className="mt-8 flex items-center justify-center gap-1.5 text-[16px] leading-[19px] text-[rgba(41,38,33,0.6)] md:mt-[var(--signoff-gap)]"
+        style={
+          {
+            "--signoff-gap": `${SIGNOFF_GAP}px`,
+            fontFamily: "var(--font-cormorant)",
+            fontWeight: 600,
+            letterSpacing: "0.0128px",
+          } as React.CSSProperties
+        }
       >
         <span>Made with love by</span>
         <span className="underline decoration-solid [text-underline-position:from-font]">
@@ -499,7 +545,7 @@ export default function AboutMe() {
         </span>
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-6 flex justify-center md:mt-4">
         <Image
           src={signoffMark}
           alt=""
