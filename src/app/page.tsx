@@ -48,7 +48,10 @@ function ArrowButton() {
   return (
     <span
       aria-hidden
-      className="absolute top-6 right-6 size-14 overflow-hidden rounded-full bg-[#171716]"
+      // 56 on 24/24 at the design width. 6943:14374 draws it at 48 on 16/16
+      // against the 342 card, which puts its foot at 64 — 24 clear of the text
+      // block that starts at 88.
+      className="absolute top-4 right-4 size-12 overflow-hidden rounded-full bg-[#171716] md:top-6 md:right-6 md:size-14"
     >
       <span className="absolute inset-0 scale-0 rounded-full bg-white transition-transform duration-[250ms] ease-out group-hover:scale-100 motion-reduce:transition-none" />
       <svg
@@ -91,7 +94,7 @@ function CaseTextCard({
           207 the draft draws, and it clears the foot at both 375 and 390.
             The type is untouched — 24 on the name, 16 on the year, 16 on 22 on
           the text — because the measure was the problem, not the size. */}
-      <div className="absolute top-20 right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
+      <div className="absolute top-[88px] right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
         <div className="flex items-center gap-2">
           <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>
             {title}
@@ -111,12 +114,12 @@ function CaseTextCard({
 
 export default function Home() {
   return (
-    <main className="max-w-[1440px] w-full mx-auto px-6 md:px-11 pt-8 pb-16">
+    <main className="mx-auto w-full max-w-[1440px] px-6 pt-10 pb-16 md:px-11 md:pt-8">
       {/* Top strip: About Me (left, top-46.5) + social buttons (right, top-32).
-          6943:14332 keeps this row on a phone too — About Me on the left and
-          the buttons on the right, justify-between across the 342 the gutters
-          leave, 48 down and 24 clear of the name under it. */}
-      <div className="mb-6 flex items-center justify-between md:mb-8 md:items-start">
+          6943:14369 takes both out of it on a phone: About Me goes under the
+          name at 24pt, and the buttons to the foot of the page. So the strip
+          only exists at the design width. */}
+      <div className="mb-8 hidden items-start justify-between md:flex">
         <Link
           href="/about-me"
           className="text-[16px] text-[#292621]/60 hover:text-[#292621]"
@@ -140,6 +143,15 @@ export default function Home() {
             <br />
             Based in Kyiv, Ukraine
           </p>
+          {/* 6943:14403 — 24 rather than the strip's 16, and at full #292621
+              rather than 60 per cent of it. 24 under the two lines above. */}
+          <Link
+            href="/about-me"
+            className="mt-6 inline-block text-[24px] text-[#292621] md:hidden"
+            style={{ fontFamily: "var(--font-inter-tight)" }}
+          >
+            About Me
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 mt-8 md:mt-0">
@@ -261,7 +273,7 @@ export default function Home() {
                   CaseTextCard, so it needs the same three the card component
                   takes below md — 24, 32, 80 — or its description runs past the
                   foot the way the others did. */}
-              <div className="absolute top-20 right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
+              <div className="absolute top-[88px] right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
                 <div className="flex items-center gap-2">
                   <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>Aura</span>
                   <span className="text-white/60 text-base" style={{ letterSpacing: "-0.48px" }}>/ 2026</span>
@@ -284,7 +296,7 @@ export default function Home() {
                 // A touch screen has no hover to reveal it with, so below md it
                 // is simply there — which is how the mobile draft draws it,
                 // 6941:1249, same #413c34 and the same 14 semibold.
-                className="absolute top-6 left-5 flex h-8 items-center rounded-[10px] bg-[#413c34] px-3 text-[12px] font-semibold text-white opacity-100 transition-opacity duration-[250ms] motion-reduce:transition-none md:top-8 md:left-8 md:h-10 md:rounded-[12px] md:text-[14px] md:opacity-0 md:group-hover:opacity-100"
+                className="absolute top-6 left-6 flex h-[34px] items-center rounded-[10px] bg-[#413c34] px-3 text-[12px] font-semibold text-white opacity-100 transition-opacity duration-[250ms] motion-reduce:transition-none md:top-8 md:left-8 md:h-10 md:rounded-[12px] md:text-[14px] md:opacity-0 md:group-hover:opacity-100"
               >
                 # Coming soon
               </span>
@@ -305,9 +317,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* The last card ends at 2359 and this sits at 2401, so 40 below it on a
-          phone where the desktop page leaves 80. */}
-      <div className="mt-10 flex flex-col md:mt-20 md:flex-row">
+      {/* 6943:14468 — the row is back at the foot on a phone, centred: 168
+          across, three 48 circles on 12 of gap, 32 under the last card. */}
+      <SocialButtons className="mt-8 justify-center md:hidden" />
+
+      {/* 24 under the buttons on a phone, 80 under the cards at the design
+          width where the buttons are still up in the strip. */}
+      <div className="mt-6 flex flex-col md:mt-20 md:flex-row">
         <div className="hidden md:block md:w-[312px] shrink-0" />
         <p
           className="flex-1 text-center text-[16px] text-[rgba(41,38,33,0.6)] font-semibold"
