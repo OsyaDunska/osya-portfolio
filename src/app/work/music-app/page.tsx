@@ -7,6 +7,7 @@ import CardsBlock from "./CardsBlock";
 import EfficiencyBlock from "./EfficiencyBlock";
 import { MULISH_SPECIMEN, SF_PRO_SPECIMEN, SpecimenBlock } from "./TypographyColors";
 import ScrollToTop from "@/components/ScrollToTop";
+import DesktopOnlyCase from "@/components/DesktopOnlyCase";
 
 import { MUSIC_APP_SKIN } from "@/components/scrollToTopSkins";
 
@@ -173,7 +174,11 @@ const ICONS = [
 
 export default function MusicAppCase() {
   return (
-    <div className="relative min-h-screen overflow-clip bg-[#000208] text-white">
+    <>
+      {/* Below the design width the canvas below has nowhere to go, so a narrow
+          window gets the notice instead. Scaffolding — see DesktopOnlyCase. */}
+      <DesktopOnlyCase title="Music App" year="2025" background="#000208" muted="text-white/60" />
+      <div className="relative hidden min-h-screen overflow-clip bg-[#000208] text-white min-[1440px]:block">
       {/* Figma 6900:15665 "button back case" — 155 x 48 at x 80, y 36, corner
           50. Pinned the way Mentora's is, and for the same reason it has to sit
           here rather than in the hero: the layer has to span the whole page, or
@@ -1392,8 +1397,9 @@ export default function MusicAppCase() {
           behaviour: 56 across on a 28 corner, 16 around a 24 arrow, pinned and
           shown once you are a viewport down. Only the pair of colours differs —
           white with a #171716 arrow, turning #2a60e0 with a white one. */}
-      <ScrollToTop base={MUSIC_APP_SKIN.base} hover={MUSIC_APP_SKIN.hover} />
-    </div>
+        <ScrollToTop base={MUSIC_APP_SKIN.base} hover={MUSIC_APP_SKIN.hover} />
+      </div>
+    </>
   );
 }
 

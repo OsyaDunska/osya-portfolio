@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import CaseNav from "./CaseNav";
 import ScrollToTop from "@/components/ScrollToTop";
+import DesktopOnlyCase from "@/components/DesktopOnlyCase";
 import { MENTORA_SKIN } from "@/components/scrollToTopSkins";
 import InterviewCard from "./InterviewCard";
 import BoardVideoCard from "./BoardVideoCard";
@@ -258,7 +259,11 @@ export default function MentoraCase() {
   // baseline and would otherwise be scrollable page. Clipping here ends the
   // page on the word, and keeps the horizontal clip the glows already needed.
   return (
-    <div className="min-h-screen overflow-clip bg-[#171716] text-white">
+    <>
+      {/* Below the design width the canvas below has nowhere to go, so a narrow
+          window gets the notice instead. Scaffolding — see DesktopOnlyCase. */}
+      <DesktopOnlyCase title="Mentora" year="2026" background="#171716" muted="text-white/50" />
+      <div className="hidden min-h-screen overflow-clip bg-[#171716] text-white min-[1440px]:block">
       {/* The page is shorter than a viewport for now, so the backdrop is fixed
           rather than relying on the content to fill it. */}
       <div aria-hidden className="fixed inset-0 -z-10 bg-[#171716]" />
@@ -1655,8 +1660,9 @@ export default function MentoraCase() {
       {/* 6779:25369 — same button and behaviour as the Music App case, with
           the two colours the other way round: dark by default, going white
           under the cursor. */}
-      <ScrollToTop base={MENTORA_SKIN.base} hover={MENTORA_SKIN.hover} />
-    </div>
+        <ScrollToTop base={MENTORA_SKIN.base} hover={MENTORA_SKIN.hover} />
+      </div>
+    </>
   );
 }
 
