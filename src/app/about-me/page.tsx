@@ -46,6 +46,16 @@ const TAGS = [
   "# Usability Testing",
 ];
 
+// 6953:15118 sets them out in two rows of its own rather than letting five
+// wrap: three over two, in a different order, and "# AI-first" without the
+// word the wide page carries. The three across measure 344 against 342 of
+// column, so a wrap would put two on the first row and three on the second —
+// the rows are written out rather than left to fall.
+const TAGS_PHONE = [
+  ["# Design Systems", "# Prototyping", "# AI-first"],
+  ["# Usability Testing", "# UX Research"],
+];
+
 // Figma 6832:6250. Stripped back to the top bar on purpose — everything below
 // it is being rebuilt from the file block by block rather than corrected in
 // place, because what was here had drifted far enough that fixing it one
@@ -111,7 +121,7 @@ const EXPERIENCE: {
     period: "2025",
     role: "E-commerce Designer — Online Gallery & Diamond Retail Site",
     position: "UI/UX Designer",
-    project: "E-commerce Online Gallery & Diamond Retail Site",
+    project: "Diamond E-commerce & Art Store",
     body: [
       [
         "Designed the e-commerce experience for an online art gallery selling a private collection of",
@@ -219,7 +229,7 @@ export default function AboutMe() {
             drawn letter is the one kept, by the owner's decision.
 */}
         <h1
-          className="mt-8 text-[26px] leading-[32px] font-semibold md:text-[length:var(--heading-size)] md:leading-[1.1111]"
+          className="mt-6 text-[32px] leading-[36px] font-semibold md:mt-8 md:text-[length:var(--heading-size)] md:leading-[1.1111]"
           style={
             {
               "--heading-size": HEADING.size,
@@ -228,7 +238,13 @@ export default function AboutMe() {
             } as React.CSSProperties
           }
         >
-          <span className="block text-[rgba(41,38,33,0.4)]">I own the full design process</span>
+          {/* 6943:14769 breaks this one in two on a phone — "I own the full"
+              over "design process" — where the wide page keeps it whole. */}
+          <span className="block text-[rgba(41,38,33,0.4)]">
+            {"I own the full "}
+            <br className="md:hidden" />
+            {"design process"}
+          </span>
           <span className="block text-[#292621]">
             {"from the "}
             <span className="italic">{"first "}</span>
@@ -245,7 +261,26 @@ export default function AboutMe() {
             so a tag can carry its own spacing if it ever needs to. The file has
             the last one set without a space; here all five are spaced alike, by
             the owner's decision. */}
-        <div className="mt-6 flex flex-wrap justify-center gap-3 md:mt-8 md:gap-2">
+        {/* 6953:15118 — two rows, 8 apart across and 10 down, 32 clear of the
+            heading above and of the body below. 10 of side padding rather than
+            the 12 the wide page uses. */}
+        <div className="mt-8 flex flex-col items-center gap-2.5 md:hidden">
+          {TAGS_PHONE.map((row) => (
+            <div key={row[0]} className="flex items-center justify-center gap-2">
+              {row.map((tag) => (
+                <span
+                  key={tag}
+                  className="flex h-[34px] items-center rounded-full bg-[#f5f5f5] px-2.5 text-[14px] leading-[17px] whitespace-nowrap text-[#111]"
+                  style={{ fontFamily: "var(--font-inter)" }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden md:mt-8 md:flex md:flex-wrap md:justify-center md:gap-2">
           {TAGS.map((tag) => (
             <span
               key={tag}
@@ -272,7 +307,7 @@ export default function AboutMe() {
           left to the wrap. Below 740 each half still wraps on its own.
             The emphasised runs are Inter Semi Bold Italic on #171716 — a real
           italic face, and the same one the heading uses. */}
-      <div className="mx-auto mt-10 flex w-full max-w-[740px] flex-col md:mt-12">
+      <div className="mx-auto mt-8 flex w-full max-w-[740px] flex-col md:mt-12">
         <div
           className="flex flex-col gap-6 text-[16px] leading-[24px] text-[#292621]"
           style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
@@ -466,9 +501,9 @@ export default function AboutMe() {
           it, and fills its 121.94 x 46.26 box rather than fitting inside: the
           export is 120.2 x 40.2 with preserveAspectRatio="none", so Figma
           stretches it too. */}
-      {/* 120 at the design width; 6943:14662 brings it to 64, the body ending
-          at 4130 against the photo's 4194. */}
-      <div className="mt-16 flex flex-col items-center md:mt-[120px]">
+      {/* 120 at the design width; 6943:14662 sets 104, the body ending at
+          4031 against the photo's 4135. */}
+      <div className="mt-[104px] flex flex-col items-center md:mt-[120px]">
         <div className="relative w-[132px]">
           <div className="relative h-[150px] w-[132px] overflow-hidden rounded-[16px] bg-[#e9e9e9]">
             <Image
@@ -520,7 +555,7 @@ export default function AboutMe() {
           and the sign-off: 192 across, three 56 circles on 12 of gap, centred,
           96 under the quote. At the design width it is still up in the header,
           so this only shows below md. */}
-      <SocialButtons className="mt-24 justify-center md:hidden" />
+      <SocialButtons className="mt-[104px] justify-center md:hidden" />
 
       {/* Figma 6832:6337 and 6832:6340 — the sign-off below the quote,
           then the mark 16 under it. See SIGNOFF_GAP for the distance. Cormorant Garamond SemiBold at 60% of
