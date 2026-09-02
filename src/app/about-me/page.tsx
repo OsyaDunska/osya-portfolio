@@ -532,9 +532,11 @@ export default function AboutMe() {
           it, and fills its 121.94 x 46.26 box rather than fitting inside: the
           export is 120.2 x 40.2 with preserveAspectRatio="none", so Figma
           stretches it too. */}
-      {/* 120 at the design width; 6943:14662 sets 104, the body ending at
-          4031 against the photo's 4135. */}
-      <div className="mt-[104px] flex flex-col items-center md:mt-[114px]">
+      {/* 114 at the design width, 6943:14550 measuring the body's end at 3158
+          against the photo's 3272. The phone had 104 from 6943:14662 and now
+          takes 124: 6953:15088 moves the photo down 24, its column ending at
+          4109 against the photo's 4233. */}
+      <div className="mt-[124px] flex flex-col items-center md:mt-[114px]">
         <div className="relative w-[132px]">
           <div className="relative h-[150px] w-[132px] overflow-hidden rounded-[16px] bg-[#e9e9e9]">
             <Image
@@ -594,10 +596,11 @@ export default function AboutMe() {
       </p>
 
       {/* 6947:14960 — on a phone the social row lands here, between the quote
-          and the sign-off: 192 across, three 56 circles on 12 of gap, centred,
-          96 under the quote. At the design width it is still up in the header,
-          so this only shows below md. */}
-      <SocialButtons className="mt-[104px] justify-center md:hidden" />
+          and the sign-off: 192 across, three 56 circles on 12 of gap, centred.
+          It has sat 96 and then 104 under the quote; 6953:15099 now measures
+          114, the sign-off following it down to 4649. At the design width the
+          row is still up in the header, so this only shows below md. */}
+      <SocialButtons className="mt-[114px] justify-center md:hidden" />
 
       {/* Figma 6832:6337 and 6832:6340 — the sign-off below the quote,
           then the mark 16 under it. See SIGNOFF_GAP for the distance. Cormorant Garamond SemiBold at 60% of
