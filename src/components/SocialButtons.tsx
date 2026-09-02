@@ -24,7 +24,13 @@ export default function SocialButtons({ className = "" }: { className?: string }
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 h-12 px-5 rounded-full bg-[#292621] text-white text-[15px] font-medium hover:bg-[#171716] transition-colors"
+          // Three of these with their labels come to 424, and a 390 phone has
+          // 342 between the gutters — so the row pushed the document wider than
+          // the window and the whole page slid sideways. The mobile draft,
+          // 6942:5321, drops the labels and keeps everything else: 20 of
+          // padding either side of a 20 icon is 60, three of them on 10 of gap
+          // is 200, centred in the 390. So only the label moves.
+          className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#292621] px-5 text-[15px] font-medium text-white transition-colors hover:bg-[#171716]"
         >
           <span className="relative w-5 h-[31px] shrink-0">
             <span
@@ -39,7 +45,7 @@ export default function SocialButtons({ className = "" }: { className?: string }
               <Image src={icon} alt="" fill unoptimized />
             </span>
           </span>
-          {label}
+          <span className="hidden md:inline">{label}</span>
         </a>
       ))}
     </div>

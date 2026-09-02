@@ -66,21 +66,32 @@ function CaseTextCard({
   year,
   description,
   href,
+  className = "",
 }: {
   title: string;
   year: string;
   description: React.ReactNode;
   href: string;
+  /** For the mobile ordering — see the grid. */
+  className?: string;
 }) {
   return (
     <Link
       href={href}
-      className="group relative aspect-square squircle bg-[#292621] overflow-hidden block"
+      className={`group relative aspect-square squircle bg-[#292621] overflow-hidden block ${className}`}
     >
       {/* Figma 6643:2655 — left 32, w 426 inside the 512 card, gap 24.
           right-[54px] rather than a fixed width so the block still flexes when
-          the card is narrower than 512: 512 - 32 - 54 = 426 at design size. */}
-      <div className="absolute left-8 right-[54px] top-[100px] flex flex-col gap-6">
+          the card is narrower than 512: 512 - 32 - 54 = 426 at design size.
+            Below md the mobile draft 6941:1238 gives its own three against a
+          342 card — in 24, out 32, and 80 down — and they are what make the
+          text fit. At the desktop numbers the measure narrows to 256 and the
+          description runs to nine lines: 354 of block inside a 327 card at 375,
+          which the card clips. At 24/32/80 it is 286 wide and seven lines, the
+          207 the draft draws, and it clears the foot at both 375 and 390.
+            The type is untouched — 24 on the name, 16 on the year, 16 on 22 on
+          the text — because the measure was the problem, not the size. */}
+      <div className="absolute top-20 right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
         <div className="flex items-center gap-2">
           <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>
             {title}
@@ -101,8 +112,12 @@ function CaseTextCard({
 export default function Home() {
   return (
     <main className="max-w-[1440px] w-full mx-auto px-6 md:px-11 pt-8 pb-16">
-      {/* Top strip: About Me (left, top-46.5) + social buttons (right, top-32) */}
-      <div className="flex items-start justify-between mb-8">
+      {/* Top strip: About Me (left, top-46.5) + social buttons (right, top-32).
+          The mobile draft 6941:1238 keeps neither of these up here: About Me
+          goes to y159, under the name and its two lines, and the buttons go all
+          the way down past the last card, to y2370. So below md this strip is
+          empty and collapses, and both come back into it at the design width. */}
+      <div className="mb-8 hidden items-start justify-between md:flex">
         <Link
           href="/about-me"
           className="text-[16px] text-[#292621]/60 hover:text-[#292621]"
@@ -126,6 +141,13 @@ export default function Home() {
             <br />
             Based in Kyiv, Ukraine
           </p>
+          {/* 6941:1238 puts this at y159, 24 under the two lines above it. */}
+          <Link
+            href="/about-me"
+            className="mt-6 inline-block text-[16px] text-[#292621]/60 hover:text-[#292621] md:hidden"
+          >
+            About Me
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 mt-8 md:mt-0">
@@ -134,13 +156,17 @@ export default function Home() {
             title="Mentora"
             year="2026"
             href="/work/mentora"
+            className="order-1 md:order-none"
             // Figma I6643:2671;6643:2659 carries a newline after "to design",
-            // so the text node comes back as two runs rather than one.
+            // so the text node comes back as two runs rather than one. It is a
+            // break drawn for a 426 measure: at 286 it lands mid-paragraph and
+            // leaves a short line hanging under a full one. Below md it goes
+            // and the paragraph sets itself.
             description={
               <>
                 Idea to create a learning platform that keeps students consistent and
                 motivated. The goal was to design
-                <br />
+                <br className="hidden md:inline" />
                 a clear course structure, adaptive scheduling, and visible progress — so
                 learners always know where they are and what&apos;s next.
               </>
@@ -161,7 +187,7 @@ export default function Home() {
               a bare image — the crop is part of the composition. */}
           <Link
             href="/work/mentora"
-            className="group relative aspect-square squircle overflow-hidden bg-[#e9e9e9] block"
+            className="group relative order-2 aspect-square squircle overflow-hidden bg-[#e9e9e9] block md:order-none"
           >
             {/* 6647:11883 "Image (Papers Combined)" */}
             <div
@@ -192,7 +218,15 @@ export default function Home() {
             />
           </Link>
 
-          {/* Row 2: Music App phone-in-hand + Music App text */}
+          {/* Row 2: Music App phone-in-hand + Music App text. On the desktop
+              grid the picture leads and the text follows, which is what breaks
+              the alternation once the grid is one column: read down, it gives
+              picture, picture, text, text. The draft has it strictly text then
+              picture the whole way, so the pair swaps below md and only there.
+                Order has to be set on all six, not this pair alone: an item
+              left at the default 0 sorts before anything given a positive one,
+              so moving two would send them to the end instead of past each
+              other. */}
           {/* Figma 6643:2644, Default -> Variant2. Here it is one box, so the
               move is exact: the mockup goes 507.94 -> 574.692 wide, a uniform
               1.1314, and its centre shifts 189/318 -> 172/328. Solving those
@@ -200,7 +234,7 @@ export default function Home() {
               The resting 0.96 was already here, so the hover is 0.96 x 1.1314. */}
           <Link
             href="/work/music-app"
-            className="group relative aspect-square squircle overflow-hidden bg-[#f7f7f7] block"
+            className="group relative order-4 aspect-square squircle overflow-hidden bg-[#f7f7f7] block md:order-none"
           >
             <Image
               src={musicAppHero}
@@ -217,6 +251,7 @@ export default function Home() {
             title="Music App"
             year="2025"
             href="/work/music-app"
+            className="order-3 md:order-none"
             description="Idea to create a music app that simplifies access to content and reduces the time to the first play. The goal was to make interaction as effortless as possible: with minimal steps, adaptive recommendations, and a clear, intuitive structure."
           />
 
@@ -229,8 +264,12 @@ export default function Home() {
                   `group` belongs on this card and not on a wrapper around the
                 pair: the badge answers to the text card alone, and hovering the
                 cover beside it is not what brings it out. */}
-            <div className="group relative aspect-square squircle bg-[#292621] overflow-hidden">
-              <div className="absolute left-8 right-[54px] top-[100px] flex flex-col gap-6">
+            <div className="group relative order-5 aspect-square squircle bg-[#292621] overflow-hidden md:order-none">
+              {/* Aura's text is written out here rather than through
+                  CaseTextCard, so it needs the same three the card component
+                  takes below md — 24, 32, 80 — or its description runs past the
+                  foot the way the others did. */}
+              <div className="absolute top-20 right-8 left-6 flex flex-col gap-6 md:top-[100px] md:right-[54px] md:left-8">
                 <div className="flex items-center gap-2">
                   <span className="text-white text-2xl font-medium" style={{ letterSpacing: "-0.8992px" }}>Aura</span>
                   <span className="text-white/60 text-base" style={{ letterSpacing: "-0.48px" }}>/ 2026</span>
@@ -250,12 +289,15 @@ export default function Home() {
                   leaves that corner as flat background, unlike Mentora's. */}
               <span
                 data-corner-smooth
-                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#413c34] px-3 text-[14px] font-semibold text-white opacity-0 transition-opacity duration-[250ms] group-hover:opacity-100 motion-reduce:transition-none"
+                // A touch screen has no hover to reveal it with, so below md it
+                // is simply there — which is how the mobile draft draws it,
+                // 6941:1249, same #413c34 and the same 14 semibold.
+                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#413c34] px-3 text-[14px] font-semibold text-white opacity-100 transition-opacity duration-[250ms] motion-reduce:transition-none md:opacity-0 md:group-hover:opacity-100"
               >
                 # Coming soon
               </span>
             </div>
-            <div className="relative aspect-square squircle overflow-hidden bg-[#f7f7f7]">
+            <div className="relative order-6 aspect-square squircle overflow-hidden bg-[#f7f7f7] md:order-none">
               <Image
                 src={auraHero}
                 alt=""
@@ -271,7 +313,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row mt-20">
+      {/* 6941:1238 ends the mobile page with the buttons and then this line —
+          the buttons at y2370, icons only, and the line 31 under them. Above md
+          they are still up in the top strip, so this only shows below it. */}
+      <SocialButtons className="mt-8 justify-center md:hidden" />
+
+      {/* 6942:14300 groups the two: the row at y2370 and this at y2450, so 32
+          between them where the desktop page leaves 80. */}
+      <div className="mt-8 flex flex-col md:mt-20 md:flex-row">
         <div className="hidden md:block md:w-[312px] shrink-0" />
         <p
           className="flex-1 text-center text-[16px] text-[rgba(41,38,33,0.6)] font-semibold"
