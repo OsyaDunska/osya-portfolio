@@ -30,7 +30,7 @@ export default function SocialButtons({ className = "" }: { className?: string }
           // 6943:14313, drops the labels and closes each one to a 48 circle:
           // three of them on 10 of gap is the 164 it draws, which sits inside
           // the gutters with the row's other half, About Me, opposite it.
-          className="flex size-12 items-center justify-center gap-2 rounded-full bg-[#292621] text-[15px] font-medium text-white transition-colors hover:bg-[#171716] md:h-12 md:w-auto md:px-5"
+          className="flex size-14 items-center justify-center gap-2 rounded-full bg-[#292621] text-[15px] font-medium text-white transition-colors hover:bg-[#171716] md:h-12 md:w-auto md:px-5"
         >
           <span className="relative w-5 h-[31px] shrink-0">
             <span

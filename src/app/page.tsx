@@ -48,10 +48,9 @@ function ArrowButton() {
   return (
     <span
       aria-hidden
-      // 56 on 24/24 at the design width. 6943:14374 draws it at 48 on 16/16
-      // against the 342 card, which puts its foot at 64 — 24 clear of the text
-      // block that starts at 88.
-      className="absolute top-4 right-4 size-12 overflow-hidden rounded-full bg-[#171716] md:top-6 md:right-6 md:size-14"
+      // 24/24 at the design width; 6943:14374 keeps the 56 on a phone and
+      // brings it in to 16/16 against the 342 card.
+      className="absolute top-4 right-4 size-14 overflow-hidden rounded-full bg-[#171716] md:top-6 md:right-6"
     >
       <span className="absolute inset-0 scale-0 rounded-full bg-white transition-transform duration-[250ms] ease-out group-hover:scale-100 motion-reduce:transition-none" />
       <svg
@@ -131,7 +130,10 @@ export default function Home() {
 
       {/* Name column (312px, left-44) + case grid (1040px, left-356), both top-112 */}
       <div className="flex flex-col md:flex-row md:gap-0">
-        <div className="md:w-[312px] shrink-0">
+        {/* 6943:14370 and 6943:14403 sit at 48 on the phone draft where the
+              cards stay at 24, so the name and the link under it take another
+              24 of their own below md. */}
+          <div className="shrink-0 pl-6 md:w-[312px] md:pl-0">
           <p
             className="text-[32px] font-bold text-[#171716]"
             style={{ fontFamily: "var(--font-cormorant)" }}
