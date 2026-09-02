@@ -250,7 +250,11 @@ export default function Home() {
               sizes="(min-width: 768px) 512px, 100vw"
               alt="Music App preview"
               fill
-              className="origin-[62.8%_47.1%] scale-[0.96] object-cover transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.0862] motion-reduce:transition-none"
+              // The 0.96 is the resting half of a hover that a touch screen never
+              // plays, and on the smaller card it reads as the hand floating
+              // clear of the foot. 6943:14397 has it filling the frame, so
+              // below md it rests at 1 and the wrist meets the edge.
+              className="origin-[62.8%_47.1%] scale-100 object-cover transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none md:scale-[0.96] md:group-hover:scale-[1.0862]"
             />
           </Link>
           <CaseTextCard
