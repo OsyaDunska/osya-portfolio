@@ -113,11 +113,10 @@ export default function Home() {
   return (
     <main className="max-w-[1440px] w-full mx-auto px-6 md:px-11 pt-8 pb-16">
       {/* Top strip: About Me (left, top-46.5) + social buttons (right, top-32).
-          The mobile draft 6941:1238 keeps neither of these up here: About Me
-          goes to y159, under the name and its two lines, and the buttons go all
-          the way down past the last card, to y2370. So below md this strip is
-          empty and collapses, and both come back into it at the design width. */}
-      <div className="mb-8 hidden items-start justify-between md:flex">
+          6943:14332 keeps this row on a phone too — About Me on the left and
+          the buttons on the right, justify-between across the 342 the gutters
+          leave, 48 down and 24 clear of the name under it. */}
+      <div className="mb-6 flex items-center justify-between md:mb-8 md:items-start">
         <Link
           href="/about-me"
           className="text-[16px] text-[#292621]/60 hover:text-[#292621]"
@@ -141,13 +140,6 @@ export default function Home() {
             <br />
             Based in Kyiv, Ukraine
           </p>
-          {/* 6941:1238 puts this at y159, 24 under the two lines above it. */}
-          <Link
-            href="/about-me"
-            className="mt-6 inline-block text-[16px] text-[#292621]/60 hover:text-[#292621] md:hidden"
-          >
-            About Me
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 mt-8 md:mt-0">
@@ -292,7 +284,7 @@ export default function Home() {
                 // A touch screen has no hover to reveal it with, so below md it
                 // is simply there — which is how the mobile draft draws it,
                 // 6941:1249, same #413c34 and the same 14 semibold.
-                className="absolute left-8 top-8 flex h-10 items-center rounded-[12px] bg-[#413c34] px-3 text-[14px] font-semibold text-white opacity-100 transition-opacity duration-[250ms] motion-reduce:transition-none md:opacity-0 md:group-hover:opacity-100"
+                className="absolute top-6 left-5 flex h-8 items-center rounded-[10px] bg-[#413c34] px-3 text-[12px] font-semibold text-white opacity-100 transition-opacity duration-[250ms] motion-reduce:transition-none md:top-8 md:left-8 md:h-10 md:rounded-[12px] md:text-[14px] md:opacity-0 md:group-hover:opacity-100"
               >
                 # Coming soon
               </span>
@@ -313,14 +305,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 6941:1238 ends the mobile page with the buttons and then this line —
-          the buttons at y2370, icons only, and the line 31 under them. Above md
-          they are still up in the top strip, so this only shows below it. */}
-      <SocialButtons className="mt-8 justify-center md:hidden" />
-
-      {/* 6942:14300 groups the two: the row at y2370 and this at y2450, so 32
-          between them where the desktop page leaves 80. */}
-      <div className="mt-8 flex flex-col md:mt-20 md:flex-row">
+      {/* The last card ends at 2359 and this sits at 2401, so 40 below it on a
+          phone where the desktop page leaves 80. */}
+      <div className="mt-10 flex flex-col md:mt-20 md:flex-row">
         <div className="hidden md:block md:w-[312px] shrink-0" />
         <p
           className="flex-1 text-center text-[16px] text-[rgba(41,38,33,0.6)] font-semibold"
