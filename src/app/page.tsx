@@ -319,13 +319,15 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 6943:14468 — the row is back at the foot on a phone, centred: 168
-          across, three 48 circles on 12 of gap, 32 under the last card. */}
-      <SocialButtons className="mt-8 justify-center md:hidden" />
+      {/* 6942:5321 — the row sits at the foot on a phone, centred: 192 across,
+          three 56 circles on 12 of gap, and 56 under the last card, which ends
+          at 2360 against the row's 2416. */}
+      <SocialButtons className="mt-14 justify-center md:hidden" />
 
-      {/* 24 under the buttons on a phone, 80 under the cards at the design
-          width where the buttons are still up in the strip. */}
-      <div className="mt-6 flex flex-col md:mt-20 md:flex-row">
+      {/* 32 under the buttons on a phone — 6942:5321 ends at 2448 and
+          6943:14399 sits at 2480 — and 80 under the cards at the design width,
+          where the buttons are still up in the strip. */}
+      <div className="mt-8 flex flex-col md:mt-20 md:flex-row">
         <div className="hidden md:block md:w-[312px] shrink-0" />
         <p
           className="flex-1 text-center text-[16px] text-[rgba(41,38,33,0.6)] font-semibold"
