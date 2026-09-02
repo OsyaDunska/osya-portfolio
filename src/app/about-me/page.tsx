@@ -74,6 +74,10 @@ const TAGS_PHONE = [
 // period and then names position and project together. Same two type styles
 // either way, so only the words move: position and project are the phone's
 // halves of role, kept beside it rather than parsed out of it.
+// Hyphenated compounds here carry U+2011, a non-breaking hyphen, where a
+// plain one let the browser split them across lines at 342 — "e-" ending one
+// line and "commerce" starting the next. It draws the same glyph; only the
+// break opportunity is gone.
 const EXPERIENCE: {
   period: string;
   role: string;
@@ -113,7 +117,7 @@ const EXPERIENCE: {
     body: [
       [
         "Led a full redesign of the homepage, marketplace, and checkout flow. Simplified the onboarding quiz for new patients, cutting completion time from 12 minutes to 6. Redesigned the shopping cart with a progress bar tracking the 100g legal limit, showing which pharmacy would fulfill each order",
-        "in this multi-pharmacy marketplace, with quick links to switch pharmacies or add more products before checkout. Added a post-purchase feedback flow, rewarding reviews with a discount on the next order. Designed the patient personal account, including video-consultation scheduling and reorder flow.",
+        "in this multi-pharmacy marketplace, with quick links to switch pharmacies or add more products before checkout. Added a post‑purchase feedback flow, rewarding reviews with a discount on the next order. Designed the patient personal account, including video‑consultation scheduling and reorder flow.",
       ],
     ],
   },
@@ -125,7 +129,7 @@ const EXPERIENCE: {
     body: [
       [
         "Designed the e-commerce experience for an online art gallery selling a private collection of",
-        "Damien Hirst spin paintings. Built the catalog structure with category-based filtering by painting type, individual product pages for each artwork, and a \u201cHow to Buy\u201d flow addressing trust concerns typical for high-value art purchases.",
+        "Damien Hirst spin paintings. Built the catalog structure with category-based filtering by painting type, individual product pages for each artwork, and a \u201cHow to Buy\u201d flow addressing trust concerns typical for high‑value art purchases.",
       ],
       [
         "Redesigned a diamond e-commerce website — including the homepage, product catalog, and filtering system — helping customers navigate and compare diamonds by key specifications more intuitively.",
@@ -307,21 +311,27 @@ export default function AboutMe() {
           left to the wrap. Below 740 each half still wraps on its own.
             The emphasised runs are Inter Semi Bold Italic on #171716 — a real
           italic face, and the same one the heading uses. */}
-      <div className="mx-auto mt-8 flex w-full max-w-[740px] flex-col md:mt-12">
+      {/* text-wrap is inherited, so the whole column takes the file's own
+          setting in one place. Figma emits text-pretty on these paragraphs —
+          it keeps a last line from being one short word — and the wide page
+          goes back to plain wrap, where the breaks are written by hand anyway. */}
+      <div className="mx-auto mt-8 flex w-full max-w-[740px] flex-col text-pretty md:mt-12 md:text-wrap">
         <div
           className="flex flex-col gap-6 text-[16px] leading-[24px] text-[#292621]"
           style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
         >
           <p>
-            {"Hi, I'm Osya — a UI/UX & Product Designer with 2 years of hands-on experience across"}
-            <br />
-            {"e-commerce, SaaS, and healthtech products."}
+            {"Hi, I'm Osya — a UI/UX & Product Designer "}
+            <br className="md:hidden" />
+            {"with 2 years of hands-on experience across "}
+            <br className="hidden md:inline" />
+            {"e‑commerce, SaaS, and healthtech products."}
           </p>
           <p>
             {"I work primarily in Figma (component libraries, "}
             <span className="font-semibold italic text-[#171716]">design tokens</span>
-            {", Auto Layout, Variants), and I apply"}
-            <br />
+            {", Auto Layout, Variants), and I apply "}
+            <br className="hidden md:inline" />
             {"an "}
             <span className="font-semibold italic text-[#171716]">
               {"AI-first approach — Claude, Figma Make, Midjourney "}
@@ -329,8 +339,8 @@ export default function AboutMe() {
             {"— to move faster through research and prototyping without losing quality. I even built this very site myself, together with Claude — from structure to final details."}
           </p>
           <p>
-            {"I'm always open to learning and creating, and I love that about myself. Design is not just my"}
-            <br />
+            {"I'm always open to learning and creating, and I love that about myself. Design is not just my "}
+            <br className="hidden md:inline" />
             {"work — it's also my hobby and something I genuinely enjoy. I'm lucky to do what I love every day."}
           </p>
         </div>
@@ -343,7 +353,7 @@ export default function AboutMe() {
             How I Work
           </h2>
           <p
-            className="text-[16px] leading-[24px] text-[#292621]"
+            className="text-[16px] leading-[24px] text-balance text-[#292621] md:text-wrap"
             style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
           >
             {"I start every project by understanding the problem before touching a single pixel. I talk to stakeholders when possible, research users, and do my best to understand the needs of both business owners and users — to find the most beneficial solution for both sides. I also benchmark competitors, to make sure I'm solving the right problem, not just the obvious one."}
@@ -392,8 +402,8 @@ export default function AboutMe() {
                       <p key={lines[0].slice(0, 32)}>
                         {lines.map((line, i) => (
                           <span key={i}>
-                            {i > 0 && <br />}
-                            {line}
+                            {i > 0 && <br className="hidden md:inline" />}
+                            {`${line} `}
                           </span>
                         ))}
                       </p>
@@ -449,7 +459,9 @@ export default function AboutMe() {
             className="text-[16px] leading-[24px] text-[#292621]"
             style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
           >
-            {"Ukrainian & Russian (native), English (working proficiency)"}
+            {"Ukrainian & Russian (native), "}
+            <br className="md:hidden" />
+            {"English (working proficiency)"}
           </p>
         </div>
 
@@ -478,14 +490,14 @@ export default function AboutMe() {
             className="whitespace-pre-wrap leading-[24px] text-[#292621]"
             style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
           >
-            {"When I'm not designing, I'm probably planning my next trip — exploring new places inspires"}
-            <br />
-            {"me to create. Music has been a constant in my life for as long as I can remember, and dancing"}
-            <br />
-            {"is where I go to fully switch off — no screens, just movement. I started dancing when I was  six,"}
-            <br />
-            {"and it's stayed part of who I am ever since — probably why I feel music so deeply, even outside"}
-            <br />
+            {"When I'm not designing, I'm probably planning my next trip — exploring new places inspires "}
+            <br className="hidden md:inline" />
+            {"me to create. Music has been a constant in my life for as long as I can remember, and dancing "}
+            <br className="hidden md:inline" />
+            {"is where I go to fully switch off — no screens, just movement. I started dancing when I was  six, "}
+            <br className="hidden md:inline" />
+            {"and it's stayed part of who I am ever since — probably why I feel music so deeply, even outside "}
+            <br className="hidden md:inline" />
             {"the studio."}
           </p>
         </div>
