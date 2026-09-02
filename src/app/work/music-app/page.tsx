@@ -625,29 +625,10 @@ export default function MusicAppCase() {
           lines={FEARS}
         />
 
-        {/* Figma 6878:26375 — Daniel at x 1353.84, y 2065, 174.84 wide, so at
-            1440 the frame cuts him 86.16 in and the rest is off the edge. That
-            is the design. Osya's rule for wider screens is that he keeps that
-            same footing against the right of the window rather than against the
-            1440 column, so he hangs off a full-width band instead: 174.84 less
-            86.16 of him showing puts his right edge 88.68 past the window. */}
-        <div
-          className="absolute left-1/2 w-screen -translate-x-1/2"
-          style={{ top: 127, height: 225 }}
-        >
-          {/* Daniel is turned where Maya is straight: -5.86 in the file, which
-              is +5.86 here — Figma counts anticlockwise and CSS the other way.
-                Turned about the centre, which is where the file leaves it: his
-              vertical centre is 2178.5 before the turn and after it, so the
-              footing against the right of the window is unchanged. */}
-          <div
-            className="absolute flex flex-col gap-10"
-            style={{ right: -88.68, width: 174.84, transform: "rotate(5.86deg)" }}
-          >
-            <PersonaPortrait src="/personas/music-app-v2/daniel-card.webp" />
-            <PersonaName name="Daniel, 34" role="Manager at a Tech Company" />
-          </div>
-        </div>
+        {/* Daniel used to hang off the right edge here — Figma 6878:26375, half
+            of him past the window — and he is out at Osya's word. Maya carries
+            the section on her own now; the goals and fears beside her were never
+            his. */}
       </section>
 
       {/* ── Information Architecture ────────────────────────────────────
