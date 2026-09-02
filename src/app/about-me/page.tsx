@@ -17,26 +17,23 @@ const signoffMark = "/graphics/about-signoff.svg";
 /**
  * How far the sign-off sits below the quote, Figma 6832:6337.
  *
- * It has been moved twice: 89.48, then 104, now 140. Kept as a constant so
- * putting it back is one number and nothing else — the page's own end follows
- * from it, since the bottom padding below is measured to the frame's height.
+ * It has been moved three times: 89.48, then 104, then 140, and 6943:14550
+ * now measures 90. Kept as a constant so putting it back is one number and
+ * nothing else — the page's own end follows from it, since the bottom padding
+ * below is measured to the frame's height.
  */
-const SIGNOFF_GAP = 140;
+const SIGNOFF_GAP = 90;
 
 /**
- * The heading, Figma 6832:6264.
+ * The heading, Figma 6943:14564.
  *
- * 36 over 40 at the 1440 canvas. It has been 40/44 and then 32/36 over the
- * 31 August revisions — to go back, change the top of the clamp and the ratio
- * beside it. The size slides to 24 on a phone rather than stepping at a
- * breakpoint: four words of this do not fit a narrow screen at 36, and the
- * file only specifies 1440.
+ * A flat 36 over 40, where this used to slide on a clamp whose top was 36 —
+ * so it only ever reached the file's size at the design width and sat under
+ * it everywhere else. It has been 40/44 and then 32/36 over earlier revisions.
+ * The phone keeps its own 32/36 at the breakpoint: three lines of this do not
+ * fit 342 at 36.
  */
-const HEADING = {
-  size: "clamp(24px, 2.5vw, 36px)",
-  /** 40/36 — the file's ratio, which holds at whatever the clamp resolves to. */
-  leading: 1.1111,
-};
+const HEADING = { size: "36px", leading: "40px" };
 
 const TAGS = [
   "# Design Systems",
@@ -64,30 +61,33 @@ const TAGS_PHONE = [
 // The bar is 6832:6410: the back button at the left, the three contact buttons
 // at the right, 48 tall, sitting 44.5 in from the frame's edge and 32 down.
 // This part is signed off; nothing below it is.
-// Figma 6832:6277. Each entry is a period, a role and a body, 16 apart inside
-// and 32 between entries. The body lines are the file's own hard breaks — Figma
-// exports one paragraph per break, and these come back split where the text
-// still had room, so the breaks are the designer's.
-// The phone draft, 6946:14846, sets each entry out differently: the position
-// joins the period on the first line — "Product Designer/2026" — and the
-// project takes the second on its own, where the wide page leads with the
-// period and then names position and project together. Same two type styles
-// either way, so only the words move: position and project are the phone's
-// halves of role, kept beside it rather than parsed out of it.
+// Figma 6943:14577. Each entry is a position and period, the project, and a
+// body — 10 apart inside and 40 between entries. The body lines are the file's
+// own hard breaks: Figma exports one paragraph per break, and these come back
+// split where the text still had room, so the breaks are the designer's.
+// The wide page used to lead with the period alone and then name position and
+// project together on one line. 6943:14550 drops that for the phone's own
+// arrangement, 6946:14846, which the file now uses at both widths — the same
+// two type styles, only the words moved.
+// The phone draft writes the first line closed up — "Product Designer/2026" —
+// and the wide one spaced; both are spaced here, which is the later call.
+// What the two still disagree on is how much of a project's name fits: 342
+// takes "(NDA, AG)" and "Diamond E-commerce & Art Store" where 740 has room
+// for the full ones, so those two carry a projectWide beside them.
 // Hyphenated compounds here carry U+2011, a non-breaking hyphen, where a
 // plain one let the browser split them across lines at 342 — "e-" ending one
 // line and "commerce" starting the next. It draws the same glyph; only the
 // break opportunity is gone.
 const EXPERIENCE: {
   period: string;
-  role: string;
   position: string;
   project: string;
+  /** Only where the wide page names the project at more length than 342 holds. */
+  projectWide?: string;
   body: string[][];
 }[] = [
   {
     period: "2026",
-    role: "Product Designer — Learning Platform (SaaS)",
     position: "Product Designer",
     project: "Learning Platform (SaaS)",
     body: [
@@ -99,7 +99,6 @@ const EXPERIENCE: {
   },
   {
     period: "Jan 2026 — Aug 2026",
-    role: "UI/UX Designer at an Eyewear E-commerce Brand (NDA)",
     position: "UI/UX Designer",
     project: "Eyewear E-commerce Brand (NDA)",
     body: [
@@ -111,9 +110,9 @@ const EXPERIENCE: {
   },
   {
     period: "Jan 2025 — Sep 2025",
-    role: "UI/UX Designer at a Medical Cannabis Marketplace (NDA, Agency)",
     position: "UI/UX Designer",
     project: "Medical Cannabis Marketplace (NDA, AG)",
+    projectWide: "Medical Cannabis Marketplace (NDA, Agency)",
     body: [
       [
         "Led a full redesign of the homepage, marketplace, and checkout flow. Simplified the onboarding quiz for new patients, cutting completion time from 12 minutes to 6. Redesigned the shopping cart with a progress bar tracking the 100g legal limit, showing which pharmacy would fulfill each order",
@@ -123,9 +122,9 @@ const EXPERIENCE: {
   },
   {
     period: "2025",
-    role: "E-commerce Designer — Online Gallery & Diamond Retail Site",
     position: "UI/UX Designer",
     project: "Diamond E-commerce & Art Store",
+    projectWide: "Online Gallery & Diamond Retail Site",
     body: [
       [
         "Designed the e-commerce experience for an online art gallery selling a private collection of",
@@ -236,10 +235,11 @@ export default function AboutMe() {
             drawn letter is the one kept, by the owner's decision.
 */}
         <h1
-          className="mt-6 text-[32px] leading-[36px] font-semibold md:mt-8 md:text-[length:var(--heading-size)] md:leading-[1.1111]"
+          className="mt-6 text-[32px] leading-[36px] font-semibold md:mt-8 md:text-[length:var(--heading-size)] md:leading-[var(--heading-leading)]"
           style={
             {
               "--heading-size": HEADING.size,
+              "--heading-leading": HEADING.leading,
               letterSpacing: "-1.2px",
               fontFamily: "var(--font-inter)",
             } as React.CSSProperties
@@ -291,7 +291,7 @@ export default function AboutMe() {
           {TAGS.map((tag) => (
             <span
               key={tag}
-              className="rounded-full bg-[#f5f5f5] px-3 py-2 text-[14px] leading-[17px] text-[#111]"
+              className="flex h-[34px] items-center rounded-full bg-[#f5f5f5] px-3 text-[14px] leading-[17px] text-[#111]"
               style={{ fontFamily: "var(--font-inter)" }}
             >
               {tag}
@@ -320,7 +320,7 @@ export default function AboutMe() {
           goes back to plain wrap, where the breaks are written by hand anyway. */}
       <div className="mx-auto mt-8 flex w-full max-w-[740px] flex-col text-pretty md:mt-12 md:text-wrap">
         <div
-          className="flex flex-col gap-6 text-[16px] leading-[24px] text-[#292621]"
+          className="flex flex-col gap-6 text-[16px] leading-[24px] text-[#292621] md:gap-4"
           style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
         >
           <p>
@@ -350,7 +350,7 @@ export default function AboutMe() {
 
         <div className="mt-14 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             How I Work
@@ -365,37 +365,36 @@ export default function AboutMe() {
 
         {/* Figma 6832:6277 — 64 below the block above it, which is the gap the
             file puts between them. The period sits on 26 of leading against the
-            body's 24, and reads at 60% of #292621; the role is Semi Bold on
-            #171716 at the 19 the file measures rather than a named leading.
+            body's 24, and reads at 60% of #292621; the project is Semi Bold
+            on #171716 at the 19 the file measures rather than a named leading.
               All four periods are Inter at 60%; an earlier revision had one of
             them in Inter Tight and the set at 80%, and both are gone. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Experience
           </h2>
 
-          {/* 40 between entries on a phone and 8 inside them, against the 32
-              and 16 the wide page uses. */}
-          <div className="flex flex-col gap-10 text-[16px] md:gap-8">
-            {EXPERIENCE.map(({ period, role, position, project, body }) => (
-              <div key={role} className="flex flex-col gap-2 md:gap-4">
+          {/* 40 between entries at both widths; 8 inside them on a phone
+              against the 10 the wide page measures. */}
+          <div className="flex flex-col gap-10 text-[16px]">
+            {EXPERIENCE.map(({ period, position, project, projectWide, body }) => (
+              <div key={`${position} ${period}`} className="flex flex-col gap-2 md:gap-2.5">
                 <p
                   className="leading-[26px] text-[rgba(41,38,33,0.6)]"
                   style={{ fontFamily: "var(--font-inter)" }}
                 >
-                  <span className="md:hidden">{position}/</span>
-                  {period}
+                  {position} / {period}
                 </p>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 md:gap-2.5">
                   <p
                     className="font-semibold leading-[19px] text-[#171716]"
                     style={{ fontFamily: "var(--font-inter)" }}
                   >
                     <span className="md:hidden">{project}</span>
-                    <span className="hidden md:inline">{role}</span>
+                    <span className="hidden md:inline">{projectWide ?? project}</span>
                   </p>
                   <div
                     className="flex flex-col gap-6 leading-[24px] text-[#292621]"
@@ -422,7 +421,7 @@ export default function AboutMe() {
             between every section of this column from here down. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Tools I Use
@@ -467,7 +466,7 @@ export default function AboutMe() {
         {/* Figma 6832:6325 */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Languages:
@@ -495,7 +494,7 @@ export default function AboutMe() {
             the two agree — so the compensation is gone. */}
         <div className="mt-16 flex flex-col gap-6 text-[16px]">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716] md:text-[16px] md:leading-[19px]"
+            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Beyond Design
@@ -535,7 +534,7 @@ export default function AboutMe() {
           stretches it too. */}
       {/* 120 at the design width; 6943:14662 sets 104, the body ending at
           4031 against the photo's 4135. */}
-      <div className="mt-[104px] flex flex-col items-center md:mt-[120px]">
+      <div className="mt-[104px] flex flex-col items-center md:mt-[114px]">
         <div className="relative w-[132px]">
           <div className="relative h-[150px] w-[132px] overflow-hidden rounded-[16px] bg-[#e9e9e9]">
             <Image
@@ -569,18 +568,29 @@ export default function AboutMe() {
 
       {/* Figma 6832:6328 — 24 below the photo. Inter Regular 14 with positive
           tracking, unlike everything above it. */}
-      {/* 6946:14937 sets it apart from the desktop node on three counts: 60
-          per cent of #292621 rather than the full colour, 20 of leading rather
-          than normal, and its own break after "changed." — the file writes the
-          two lines out rather than letting 241 of measure find them. All three
-          are held below md so the wide page keeps what it had. */}
+      {/* 6946:14937 sets it apart from the wide node on three counts: 60 per
+          cent of #292621 rather than 80, 20 of leading rather than 22, and its
+          own break after "changed." — the file writes the two lines out rather
+          than letting 241 of measure find them. All three are held below md.
+            The wording differs too, and that is not from the file: the wide
+          page joins the halves with a dash where the phone keeps them as two
+          sentences, so it sets one line where the phone sets two. */}
       <p
-        className="mt-6 text-center text-[14px] leading-[20px] text-[rgba(41,38,33,0.6)] md:leading-[normal] md:text-[#292621]"
+        className="mt-6 text-center text-[14px] leading-[20px] text-[rgba(41,38,33,0.6)] md:leading-[22px] md:text-[rgba(41,38,33,0.8)]"
         style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.0128px" }}
       >
-        {"\u201cThe determination hasn\u2019t changed. "}
-        <br className="md:hidden" />
-        {"Only the skill set has.\u201d"}
+        {/* Two different sentences, not one text with a break in it: the wide
+            page reads "changed - only", the phone "changed. Only", so each
+            width carries its own rather than one being cut up to make the
+            other. */}
+        <span className="md:hidden">
+          {"\u201cThe determination hasn\u2019t changed. "}
+          <br />
+          {"Only the skill set has.\u201d"}
+        </span>
+        <span className="hidden md:inline">
+          {"\u201cThe determination hasn\u2019t changed - only the skill set has.\u201d"}
+        </span>
       </p>
 
       {/* 6947:14960 — on a phone the social row lands here, between the quote
