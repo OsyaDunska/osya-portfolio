@@ -11,6 +11,10 @@ import SocialButtons from "@/components/SocialButtons";
 // they load unoptimised, so the container was the only place left to win.
 const mentoraCoverBack = "/mockups/mentora-cover-back.webp";
 const mentoraCoverMonitor = "/mockups/mentora-cover-monitor.webp";
+// The same picture at the two sizes a phone actually draws it — see the
+// picture element below.
+const mentoraCoverMonitorSm = "/mockups/mentora-cover-monitor-sm.webp";
+const mentoraCoverMonitorMd = "/mockups/mentora-cover-monitor-md.webp";
 const musicAppHero = "/mockups/music-app-hero.png";
 const auraHero = "/mockups/aura-hero.png";
 
@@ -211,17 +215,36 @@ export default function Home() {
                 className="absolute left-[-4.37%] top-[-48.95%] h-[162.38%] w-[103.52%] max-w-none"
               />
             </div>
-            {/* 6647:11885 "Scene _2 4" */}
-            <Image
-              src={mentoraCoverMonitor}
-              alt="Mentora preview"
-              width={3680}
-              height={2760}
-              // the optimiser re-encodes at quality 75, which softens the small
-              // type in the calendar UI; the source is already large enough
-              unoptimized
-              className="absolute left-[-42.236%] top-[-10.830%] h-[121.659%] w-[162.212%] max-w-none origin-[126.7%_-0.3%] transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.1] motion-reduce:transition-none"
-            />
+            {/* 6647:11885 "Scene _2 4". It loads unoptimised — the optimiser
+                re-encodes at quality 75 and that softens the small type in the
+                calendar UI — so the 3680 file went to a phone whole: 2480KB
+                for a card drawn 700 wide, and 96 per cent of the page's weight
+                there.
+                  So the phone gets its own file instead. At the widest point
+                below 481 the layer draws 701 — 1402 device pixels on a 2x
+                screen and 2103 on a 3x one — and at exactly those widths the
+                browser resamples nothing, so each is a perfect match for the
+                screen it is picked for. Measured against the full file: 1402
+                is exactly zero at 2x, 2103 exactly zero at 3x, and neither is
+                zero at the other, which is why there are two rather than one.
+                2480KB becomes 419 or 937, and the desktop keeps its own.
+                  picture rather than two Images: a hidden Image is still
+                fetched, and the point is not to fetch it. The webkit prefix is
+                for Safari before 16, which has no min-resolution. */}
+            <picture>
+              <source media="(min-width: 481px)" srcSet={mentoraCoverMonitor} />
+              <source
+                media="(min-resolution: 2.5dppx), (-webkit-min-device-pixel-ratio: 2.5)"
+                srcSet={mentoraCoverMonitorMd}
+              />
+              <img
+                src={mentoraCoverMonitorSm}
+                alt="Mentora preview"
+                width={3680}
+                height={2760}
+                className="absolute left-[-42.236%] top-[-10.830%] h-[121.659%] w-[162.212%] max-w-none origin-[126.7%_-0.3%] transition-transform duration-[750ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.1] motion-reduce:transition-none"
+              />
+            </picture>
           </Link>
 
           {/* Row 2: Music App phone-in-hand + Music App text. On the desktop
