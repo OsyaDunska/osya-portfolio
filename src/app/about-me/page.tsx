@@ -17,12 +17,12 @@ const signoffMark = "/graphics/about-signoff.svg";
 /**
  * How far the sign-off sits below the quote, Figma 6832:6337.
  *
- * It has been moved three times: 89.48, then 104, then 140, and 6943:14550
- * now measures 90. Kept as a constant so putting it back is one number and
- * nothing else — the page's own end follows from it, since the bottom padding
- * below is measured to the frame's height.
+ * It has been moved four times: 89.48, then 104, then 140, then 90, and the
+ * file now measures 136 — the quote having become one line, the space under
+ * it grew to keep the sign-off where it sits. Kept as a constant so putting
+ * it back is one number and nothing else.
  */
-const SIGNOFF_GAP = 90;
+const SIGNOFF_GAP = 136;
 
 /**
  * The heading, Figma 6943:14564.
@@ -536,7 +536,7 @@ export default function AboutMe() {
           against the photo's 3272. The phone had 104 from 6943:14662 and now
           takes 124: 6953:15088 moves the photo down 24, its column ending at
           4109 against the photo's 4233. */}
-      <div className="mt-[124px] flex flex-col items-center md:mt-[114px]">
+      <div className="mt-[124px] flex flex-col items-center md:mt-[134px]">
         <div className="relative w-[132px]">
           <div className="relative h-[150px] w-[132px] overflow-hidden rounded-[16px] bg-[#e9e9e9]">
             <Image
@@ -578,7 +578,7 @@ export default function AboutMe() {
           page joins the halves with a dash where the phone keeps them as two
           sentences, so it sets one line where the phone sets two. */}
       <p
-        className="mt-6 text-center text-[14px] leading-[20px] text-[rgba(41,38,33,0.6)] md:leading-[22px] md:text-[rgba(41,38,33,0.8)]"
+        className="mt-6 text-center text-[14px] leading-[20px] text-[rgba(41,38,33,0.6)] md:mt-4 md:leading-[22px] md:text-[rgba(41,38,33,0.8)]"
         style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.0128px" }}
       >
         {/* Two different sentences, not one text with a break in it: the wide
