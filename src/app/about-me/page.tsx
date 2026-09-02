@@ -350,7 +350,7 @@ export default function AboutMe() {
 
         <div className="mt-14 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             How I Work
@@ -371,7 +371,7 @@ export default function AboutMe() {
             them in Inter Tight and the set at 80%, and both are gone. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Experience
@@ -421,7 +421,7 @@ export default function AboutMe() {
             between every section of this column from here down. */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Tools I Use
@@ -466,7 +466,7 @@ export default function AboutMe() {
         {/* Figma 6832:6325 */}
         <div className="mt-16 flex flex-col gap-6">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Languages:
@@ -494,7 +494,7 @@ export default function AboutMe() {
             the two agree — so the compensation is gone. */}
         <div className="mt-16 flex flex-col gap-6 text-[16px]">
           <h2
-            className="text-[24px] leading-[29px] font-semibold uppercase text-[#171716]"
+            className="text-[24px] leading-[29px] font-semibold text-[#171716]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Beyond Design
