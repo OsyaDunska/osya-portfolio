@@ -141,6 +141,9 @@ const EXPERIENCE: {
 // Figma 6832:6297. Three labelled lists, 24 apart, each label 16 above its
 // items and the items 6 apart. The bullets are the file's own: a disc at 24 of
 // indent, not a dash or a custom marker.
+/** The one phrase the phone draft drops from a tools line. */
+const DESKTOP_ONLY_TAIL = " — working knowledge";
+
 const TOOLS: { label: string; items: string[] }[] = [
   {
     label: "Design & Prototyping:",
@@ -438,9 +441,23 @@ export default function AboutMe() {
                   className="flex list-disc flex-col gap-1.5 ps-6 leading-[24px] text-[#292621]"
                   style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
                 >
-                  {items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
+                  {items.map((item) => {
+                    // 6946:14908 carries no "— working knowledge" on this one,
+                    // so the tail is held for the wide page and the phone
+                    // reads the file's shorter line.
+                    const [head, tail] = item.split(DESKTOP_ONLY_TAIL);
+                    return (
+                      <li key={item}>
+                        {head}
+                        {tail !== undefined && (
+                          <>
+                            <span className="hidden md:inline">{DESKTOP_ONLY_TAIL}</span>
+                            {tail}
+                          </>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
@@ -459,7 +476,10 @@ export default function AboutMe() {
             className="text-[16px] leading-[24px] text-[#292621]"
             style={{ fontFamily: "var(--font-inter)", letterSpacing: "-0.176px" }}
           >
-            {"Ukrainian & Russian (native), "}
+            {/* The comma joins the two on one line at the design width; on a
+                phone they are two lines and it goes. */}
+            {"Ukrainian & Russian (native)"}
+            <span className="hidden md:inline">{", "}</span>
             <br className="md:hidden" />
             {"English (working proficiency)"}
           </p>
