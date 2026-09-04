@@ -168,13 +168,21 @@ const TOOLS: { label: string; items: string[] }[] = [
 
 export default function AboutMe() {
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-6 pt-8 pb-[20.46px] md:px-11">
+    <main className="mx-auto w-full max-w-[1440px] px-6 pb-[20.46px] md:px-11">
       {/* 6943:14662 keeps only the button up here on a phone — the social row
           goes to the foot, past the quote — and the button carries the file's
           Variant2, which is the grey the desktop one only takes on hover. The
           button ends at 88 and the portrait starts at 120, so 32 under it
           rather than the 88 the wide page leaves. */}
-      <div className="mb-8 flex items-center justify-between md:mb-[88px]">
+      {/* The bar stays and the page runs under it, the way jobs.ashbyhq.com
+          does it: one sticky element at the top of the scroller, carrying the
+          page's own ground colour. That colour is the whole trick — with no
+          border, shadow or blur, and nothing to tell the bar from the page
+          behind it, text does not slide under a panel so much as dissolve at
+          its edge. It takes main's top padding with it so that the 32 above
+          the button is covered too, and reaches 44.5 in from the frame either
+          side, which is wider than anything the page draws. */}
+      <div className="sticky top-0 z-40 mb-8 flex items-center justify-between bg-[var(--background)] pt-8 md:mb-[88px]">
         <Link
           href="/"
           className="flex h-12 w-12 items-center justify-center rounded-[28px] bg-[#f5f5f5] transition-colors md:bg-transparent md:hover:bg-[#f5f5f5]"
