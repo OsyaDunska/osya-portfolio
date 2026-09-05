@@ -181,8 +181,11 @@ export default function AboutMe() {
           behind it, text does not slide under a panel so much as dissolve at
           its edge. It takes main's top padding with it so that the 32 above
           the button is covered too, and reaches 44.5 in from the frame either
-          side, which is wider than anything the page draws. */}
-      <div className="sticky top-0 z-40 mb-8 flex items-center justify-between bg-[var(--background)] pt-8 md:mb-[88px]">
+          side, which is wider than anything the page draws.
+            Wide page only. The phone keeps the bar in the flow, where it
+          scrolls away with everything else, because 80 of a 844 screen is a
+          lot to give up permanently. */}
+      <div className="mb-8 flex items-center justify-between pt-8 md:sticky md:top-0 md:z-40 md:mb-[88px] md:bg-[var(--background)]">
         <Link
           href="/"
           className="flex h-12 w-12 items-center justify-center rounded-[28px] bg-[#f5f5f5] transition-colors md:bg-transparent md:hover:bg-[#f5f5f5]"
