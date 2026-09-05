@@ -895,15 +895,66 @@ export default function MentoraCase() {
               info working together.
             </p>
 
-            <Image
-              src="/mockups/mentora/program-page-macbook.webp"
-              alt="The Mentora program page on a MacBook"
-              width={2376}
-              height={1450}
-              unoptimized
+            {/* 185:2313, the transparent MacBook. The frame stays a still and
+                the recording plays inside its display, laid over the screen the
+                export baked in — measured off the file rather than guessed:
+                the lit rectangle runs 213..2161 across and 31..1290 down of the
+                mockup's own 2376x1450, which is 1949x1260 with its top corners
+                rounded 20 and its bottom ones square, the way a MacBook's
+                display meets the body. Halved, because the mockup draws at
+                1188. How the clip is fitted to that rectangle is below. */}
+            <div
               className="absolute max-w-none"
               style={{ left: 126, top: 12064, width: 1188, height: 725 }}
-            />
+            >
+              <Image
+                src="/mockups/mentora/program-page-macbook.webp"
+                alt="The Mentora program page on a MacBook"
+                width={2376}
+                height={1450}
+                unoptimized
+                className="absolute max-w-none"
+                style={{ left: 0, top: 0, width: 1188, height: 725 }}
+              />
+              {/* The recording is not centred in its own frame: its content
+                  runs 13..2829 of 2878 across, so it carries 13 of empty page on
+                  the left and 48 on the right. Inset evenly, that lands as a wide
+                  margin in the mockup and reads as a gap down the right
+                  side.
+                    So the clip is placed by its content rather than by its
+                  edges: scaled until the 2816 between them measures the 958.5
+                  that leaves 8 either side, which is 0.340376 and puts it at
+                  979.6 wide, 3.58 across, running its right edge 8.7 past the
+                  screen, where the clip takes the empty page and nothing else.
+                  At that scale the frame stands 614 tall, which is the screen
+                  less the same 8 top and bottom, so all four margins measure 8
+                  to the interface — and one scale does both axes, so nothing is
+                  squashed to get there.
+                    The ring behind is #f6f6f6, which is what the app's own page
+                  measures around all four edges of the frame, so the 3.45 of
+                  ring and the 4.55 of the clip's own margin read as one 8. */}
+              <div
+                className="absolute overflow-hidden"
+                style={{
+                  left: 106.5,
+                  top: 15.5,
+                  width: 974.5,
+                  height: 630,
+                  backgroundColor: "#f6f6f6",
+                  borderRadius: "10px 10px 0 0",
+                }}
+              >
+                <LazyAutoplayVideo
+                  src="/videos/mentora-lesson-homework-v2.mp4"
+                  poster="/mockups/mentora/lesson-homework-poster-v2.webp"
+                  className="absolute max-w-none"
+                  style={{ left: 3.58, top: 8, width: 979.6, height: 614, objectFit: "fill" }}
+                  // 26MB, the heaviest thing the page carries. Two screens of
+                  // lead time, as the design system clip below it takes.
+                  marginPx={2400}
+                />
+              </div>
+            </div>
           </section>
 
           {/* --- Section 15, Moodboard -------------------------------------
