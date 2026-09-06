@@ -22,7 +22,7 @@ import { MUSIC_APP_SKIN } from "@/components/scrollToTopSkins";
 // own edges start reading as a rectangle drawn over the artwork.
 //   No seams. Checked at more than one width, not just 1440.
 
-const heroMockup = "/mockups/music-app-v2/hero.webp";
+const heroMockup = "/mockups/music-app-v2/hero-faded.webp";
 
 // Figma 6659:11859 "Vector 32", exactly as the file exports it.
 //
@@ -93,8 +93,8 @@ const ICON_SET = [
 // canvas corner is the shape's bounding box less 230 — and for the left one it
 // is the right edge that pins it, 590.15, since that side is uncut.
 const PERSONA_GLOWS = [
-  { src: "/glows/music-app-v2/personas-left.svg", left: -183.85, top: -178.25, w: 908, h: 970 },
-  { src: "/glows/music-app-v2/personas-right.svg", left: 572.62, top: -64.96, w: 990, h: 833 },
+  { src: "/glows/music-app-v2/personas-left.svg", left: -528.85, top: -523.25, w: 1598, h: 1660 },
+  { src: "/glows/music-app-v2/personas-right.svg", left: 227.62, top: -409.96, w: 1680, h: 1523 },
 ];
 
 // Figma 6874:26356 and 6874:26348. Four lines each, 20 apart, a hairline of
@@ -303,20 +303,18 @@ export default function MusicAppCase() {
           style={{ left: 482, top: 186, width: 476, height: 501 }}
         />
 
-        {/* Figma 6803:54602 — 511 x 48 at x 464.5, y 650.55: the ramp that
-            buries the bottom edge of the mockup. Its own stops, verbatim. */}
-        <div
-          aria-hidden
-          className="absolute"
-          style={{
-            left: 464.5,
-            top: 650.55,
-            width: 511,
-            height: 48,
-            background:
-              "linear-gradient(to bottom, rgba(0,2,8,0) 9.92%, #000208 80.2%)",
-          }}
-        />
+        {/* 6803:54602 was a 511 x 48 band of the page's own colour at x 464.5,
+            y 650.55, laid over the mockup to bury its bottom edge. It did that,
+            and it also erased a rectangle of the glow behind it — the same
+            colour over both — which left the glow with a straight edge down
+            each side and along the bottom. Chromium buried that in the noise;
+            Safari drew it.
+              So the fade moved into the mockup's own alpha instead. hero-faded
+            carries the same ramp the band described, 1 to 0 between its rows
+            938 and 1006, which is the 655.3 to 689 the band covered. Nothing
+            paints over the glow any more, and the mockup composites to the
+            same thing it did. Above row 938 the file is identical to the one
+            it replaces, checked pixel by pixel over every visible sample. */}
 
         {/* Figma 6659:12313 — MENU over its list, 30 apart, at x 80, y 288. One
             colour for the whole column, rgba(255,255,255,0.55), set on the nav
@@ -400,7 +398,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: 105.32, top: 46.04, width: 787, height: 716 }}
+          style={{ left: -173.68, top: -232.96, width: 1345, height: 1274 }}
         >
           <Image src={sectionGlow} alt="" fill unoptimized className="max-w-none" />
         </div>
@@ -471,7 +469,17 @@ export default function MusicAppCase() {
           {STATS.map(({ label, value, disc, blur, cx, cy }) => (
             <div
               key={label}
-              className="relative size-[288px] shrink-0 overflow-clip rounded-full bg-[#202124]"
+              // Safari clips the blurred disc to the border box and drops the
+              // radius doing it, so the glow comes out square — plainest on
+              // the third circle, where it reaches all four corners. Chromium
+              // draws it round. overflow-clip, overflow-hidden and isolate
+              // were each tried on a real Safari and each left it square;
+              // clip-path is what holds, because it clips the composited
+              // result rather than asking the paint step to respect a radius.
+              //   Same shape either way, so nothing moves in Chromium: a
+              // 50% circle on a 288 square is the radius it already had.
+              className="relative size-[288px] shrink-0 rounded-full bg-[#202124]"
+              style={{ clipPath: "circle(50%)" }}
             >
               <div
                 aria-hidden
@@ -656,7 +664,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: 124.2, top: 149.73, width: 1672, height: 1159 }}
+          style={{ left: -141.8, top: -116.27, width: 2204, height: 1691 }}
         >
           <Image
             src="/glows/music-app-v2/information-architecture-glow.svg"
@@ -673,7 +681,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -14.14, top: 937.94, width: 1211, height: 1278 }}
+          style={{ left: -239.14, top: 712.94, width: 1661, height: 1728 }}
         >
           <Image
             src="/glows/music-app-v2/information-architecture-glow-2.svg"
@@ -766,7 +774,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -221.93, top: 1354.48, width: 1239, height: 1384 }}
+          style={{ left: -521.93, top: 1054.48, width: 1839, height: 1984 }}
         >
           <Image src="/glows/music-app-v2/hand-glow.svg" alt="" fill unoptimized className="max-w-none" />
         </div>
@@ -855,7 +863,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -292.92, top: -307.16, width: 1634, height: 1631 }}
+          style={{ left: -653.92, top: -668.16, width: 2356, height: 2353 }}
         >
           <Image src="/glows/music-app-v2/icons-glow.svg" alt="" fill unoptimized className="max-w-none" />
         </div>
@@ -922,7 +930,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -563, top: -105.79, width: 2003, height: 1999 }}
+          style={{ left: -1071, top: -613.79, width: 3019, height: 3015 }}
         >
           <Image src="/glows/music-app-v2/cards-glow.svg" alt="" fill unoptimized className="max-w-none" />
         </div>
@@ -1009,8 +1017,8 @@ export default function MusicAppCase() {
       <section id="typography-colors" className="relative mx-auto w-[1440px]" style={{ height: 1159 }}>
         {/* Figma 6659:11857 and 6659:11858. */}
         {[
-          { src: "/glows/music-app-v2/type-glow-1.svg", left: 96.39, top: 224.11, w: 1759, h: 1313 },
-          { src: "/glows/music-app-v2/type-glow-2.svg", left: 24.77, top: 768.02, w: 1568, h: 1449 },
+          { src: "/glows/music-app-v2/type-glow-1.svg", left: -411.61, top: -283.89, w: 2775, h: 2329 },
+          { src: "/glows/music-app-v2/type-glow-2.svg", left: -314.23, top: 429.02, w: 2246, h: 2127 },
         ].map(({ src, left, top, w, h }) => (
           <div
             key={src}
@@ -1125,8 +1133,8 @@ export default function MusicAppCase() {
         {/* Figma 6659:11853 and 6659:11854. The second fills the frame edge to
             edge and loses 223 off its left. */}
         {[
-          { src: "/glows/music-app-v2/efficiency-glow-1.svg", left: 19.4, top: 383.35, w: 1255, h: 1463 },
-          { src: "/glows/music-app-v2/efficiency-glow-2.svg", left: -223, top: 1556.44, w: 1663, h: 2136 },
+          { src: "/glows/music-app-v2/efficiency-glow-1.svg", left: -409.6, top: -45.65, w: 2113, h: 2321 },
+          { src: "/glows/music-app-v2/efficiency-glow-2.svg", left: -543, top: 1236.44, w: 2303, h: 2776 },
         ].map(({ src, left, top, w, h }) => (
           <div key={src} aria-hidden className="pointer-events-none absolute" style={{ left, top, width: w, height: h }}>
             <Image src={src} alt="" fill unoptimized className="max-w-none" />
@@ -1172,7 +1180,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -7.78, top: 1604.56, width: 1309, height: 1736 }}
+          style={{ left: -480.78, top: 1131.56, width: 2255, height: 2682 }}
         >
           <Image src="/glows/music-app-v2/library-glow.svg" alt="" fill unoptimized className="max-w-none" />
         </div>
