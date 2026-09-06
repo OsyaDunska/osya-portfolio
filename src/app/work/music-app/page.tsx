@@ -646,10 +646,7 @@ export default function MusicAppCase() {
 
       {/* ── Information Architecture ────────────────────────────────────
           Page y 2568 to 3677, where the diagram ends. Offsets are that value
-          less 2568.
-            One element of this block is still missing: Figma 6659:12364, 806 x
-          105 at x 632.84, y 2534.55. The MCP hit its daily limit before it
-          could be read, and it is not among the exports on the desktop. */}
+          less 2568. */}
       <section
         id="information-architecture"
         className="relative mx-auto w-[1440px]"
@@ -691,24 +688,6 @@ export default function MusicAppCase() {
             className="max-w-none"
           />
         </div>
-
-        {/* Figma 6659:12364 — 806 x 105 at x 632.84, y 2534.55. Not a row of
-            buttons, whatever its name suggests: a fill of #000208 running from
-            nothing to solid, the same smoke that closes the hero. The file's
-            handles put the gradient at 80.2 per cent of the box, so it is opaque
-            for the last fifth. It sits over the foot of the personas block, and
-            over the glow behind it. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{
-            left: 632.846,
-            top: -33.449,
-            width: 806,
-            height: 105,
-            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
-          }}
-        />
 
         {/* Figma 6659:11875 — 314 wide at x 563, y 2748, centred. Its 110 is
             two lines of 55.2, which is what 314 makes of the two words. */}
@@ -781,7 +760,7 @@ export default function MusicAppCase() {
 
         {/* Figma 6659:12000 — 755 x 890 at x 197, y 3831. */}
         <Image
-          src="/mockups/music-app-v2/hand.webp"
+          src="/mockups/music-app-v2/hand-faded.webp"
           alt="The app running on a phone held in one hand"
           width={1510}
           height={1780}
@@ -790,35 +769,20 @@ export default function MusicAppCase() {
           style={{ left: 197, top: 154, width: 755, height: 890 }}
         />
 
-        {/* Figma 6659:12001 — 1445 x 360 at x 0, y 4421. Not content, so it
-            runs the width of the window rather than the column: the file
-            already draws it 5 wider than the frame, which says the same. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
-          style={{
-            top: 744,
-            height: 360,
-            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
-          }}
-        />
-
-        {/* Figma 6659:12003 — 685 x 341.88 turned 30.25, its bounding box
-            centred on 338.06, 4602.46. The frame cuts its left corner at x 0;
-            here it is left whole, so past 1440 the window shows what the frame
-            hides. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{
-            left: -4.44,
-            top: 754.52,
-            width: 685,
-            height: 341.88,
-            transform: "rotate(30.25deg)",
-            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
-          }}
-        />
+        {/* 6659:12001 and 6659:12003 were two bands of the page's own colour
+            over this mockup — one the width of the window from y 744, one 685
+            x 341.88 turned 30.25 about 338.06, 4602.46. Between them they sank
+            the hand into the ground, and between them they also erased their
+            own shapes out of the glow behind it: a straight edge across the
+            window where the first ended, and a slanted one where the second
+            did. Chromium lost both in the noise; Safari drew them.
+              Both now live in the mockup's alpha. hand-faded multiplies the
+            two ramps together per pixel, each solved in its own frame — the
+            second by rotating the point back through -30.25 about that centre
+            and reading its local y — so the fade is the one the bands drew,
+            without anything being painted over the glow. Above row 1180, where
+            the earlier of the two begins, the file is identical to the one it
+            replaces over every visible sample. */}
       </section>
 
       {/* ── The two screens ─────────────────────────────────────────────
@@ -1144,7 +1108,7 @@ export default function MusicAppCase() {
         {/* Figma 6659:12135 — 604 x 527 at x 418, y 10956, an image fill on a
             frame that clips it. */}
         <Image
-          src="/mockups/music-app-v2/efficiency.webp"
+          src="/mockups/music-app-v2/efficiency-faded.webp"
           alt="The app playing a track"
           width={1208}
           height={1054}
@@ -1153,22 +1117,16 @@ export default function MusicAppCase() {
           style={{ left: 418, top: 0, width: 604, height: 527 }}
         />
 
-        {/* Figma 6659:12136 — 520.88 x 123.29 at x 464.24, y 11371.66. It lies
-            over the last 111 of the mockup and runs 12 past its foot, which is
-            what takes the bottom edge into the page instead of ending it on a
-            line. Its own child sits below its box and is clipped away entirely,
-            so nothing of it shows. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{
-            left: 464.24,
-            top: 415.66,
-            width: 520.88,
-            height: 123.29,
-            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
-          }}
-        />
+        {/* 6659:12136 was 520.88 x 123.29 at x 464.24, y 11371.66, lying over
+            the last 111 of the mockup and running 12 past its foot to take the
+            bottom edge into the page rather than end it on a line. It did that
+            and also erased its own rectangle out of the glow behind — invisible
+            in Chromium, drawn in Safari.
+              The fade is in the mockup's alpha now: efficiency-faded runs 1 to
+            0 between its rows 831 and 1029, which is the 415.66 to 514.55 the
+            band covered. Nothing outside the band's width carries content in
+            that range, so a plain vertical ramp reproduces it. Above row 831
+            the file is identical to the one it replaces. */}
 
         <EfficiencyBlock />
       </section>
@@ -1316,7 +1274,12 @@ export default function MusicAppCase() {
           </p>
         </div>
 
-        {/* Figma 6659:12297 — 1440 x 598 at y 16027.38 on its own #000105, and
+        {/* Figma 6659:12297 — 1440 x 598 at y 16027.38. The file puts it on
+            its own #000105, three levels of blue under the page's #000208 —
+            near enough in Chromium to pass, far enough on a calibrated display
+            in Safari to read as a rectangle the width of the window. It takes
+            the page's colour here instead, so the block has no edge of its
+            own, and the smoke over it follows.
             it clips. "Thanks" is 400 on 520, which starts 70 above the frame's
             top: the frame cuts the word's own ascent, and that crop is the
             design. Full width, like the fade over it.
@@ -1325,7 +1288,7 @@ export default function MusicAppCase() {
             over the word rather than under it, and the screen sits clear of
             both. */}
         <div
-          className="absolute left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#000105]"
+          className="absolute left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#000208]"
           style={{ top: 1288.93, height: 598 }}
         >
           <div className="relative mx-auto h-full w-[1440px]">
@@ -1383,7 +1346,7 @@ export default function MusicAppCase() {
           style={{
             top: 1003.47,
             height: 356.25,
-            background: "linear-gradient(to bottom, rgba(1,2,9,0) 0%, #000105 80.2%)",
+            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
           }}
         />
 
@@ -1468,7 +1431,33 @@ function PersonaCard({
   lines: readonly string[];
 }) {
   return (
-    <div className="absolute flex flex-col gap-10" style={{ left, top: 291, width: 248 }}>
+    <div
+      className="absolute flex flex-col gap-10"
+      style={{
+        left,
+        top: 291,
+        width: 248,
+        // 6659:12364 drew this fade as an 806 x 105 fill of the page's colour
+        // laid over the block from y 2534.55 — which sank these two columns and
+        // also cut its own rectangle out of the glow behind them, since the
+        // fill covered both. Chromium lost the rectangle in the noise; Safari
+        // drew it plainly, a dark band from x 632 to the frame's edge.
+        //   The same fade, moved into the cards themselves. They start at 2229,
+        // so the fill's own stops land 305.55 and 389.76 down from their top,
+        // and a mask with those two numbers hides exactly what the fill hid.
+        // The card ends before the second one, at 38 per cent of the way, which
+        // is where the fill had got to as well. Nothing paints over the glow.
+        maskImage: "linear-gradient(to bottom, #000 305.55px, transparent 389.76px)",
+        WebkitMaskImage: "linear-gradient(to bottom, #000 305.55px, transparent 389.76px)",
+        // A mask tiles by default, and anything the card draws past its own box
+        // — a descender on the last line — would land on the next tile rather
+        // than on the ramp's tail.
+        maskRepeat: "no-repeat",
+        WebkitMaskRepeat: "no-repeat",
+        maskSize: "100% 100%",
+        WebkitMaskSize: "100% 100%",
+      }}
+    >
       <div className="flex items-center" style={{ width: 74.177 }}>
         <div style={{ transform: pillTransform }}>
           <div

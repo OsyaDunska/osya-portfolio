@@ -131,7 +131,8 @@ export default function TakeawayBlock() {
       />
 
       {/* Frame 2147237727 — 6460:23441, x -0.03 y 16261.93, 1440x598, on its
-          own #000105. It starts just under the mockup (which ends at 16283.18),
+          own #000105; it takes the page's #000208 instead, so the block has no
+          edge of its own in Safari. It starts just under the mockup (16283.18),
           so the fill closes the page off rather than covering anything.
              Its box is 598 tall but the page frame stops at 16736, so Figma
           clips the last 191.93 of it — and that clip cuts through the word: the
@@ -139,7 +140,7 @@ export default function TakeawayBlock() {
           is therefore the visible 406.07, with the children still placed from
           the box's real top so nothing inside shifts. */}
       <div
-        className="absolute overflow-hidden bg-[#000105]"
+        className="absolute overflow-hidden bg-[#000208]"
         style={{ left: -0.027, top: 16261.93 - ORIGIN, width: 1440, height: 406.07 }}
       >
         {/* 6460:23442 — 400px Inter Tight Bold at 1.3, which is the 520-tall
