@@ -1287,8 +1287,36 @@ export default function MusicAppCase() {
             is #36, the fade #37 and the small screen #38. So the fade falls
             over the word rather than under it, and the screen sits clear of
             both. */}
+
+        {/* Figma 6659:12303 — 1440 x 356.25 at y 15741.92, taking the foot of
+            the hand into the ground. Not content, so it runs the width of the
+            window rather than the column.
+              Three things differ from the file. It ends on the page's #000208
+            rather than the frame's own #000105, three levels of blue under it
+            — near enough in Chromium to pass, far enough on a calibrated
+            display in Safari to draw an edge.
+              It is painted before the closing frame instead of after, so it
+            passes under the word rather than over it. The file has it over
+            (frame #36, fade #37), and over is what laid a shadow across the
+            crown of the T and the h and pushed the word's visible top down to
+            wherever the fade happened to stop — a straight line across the
+            block, which is what Safari drew. Under, the letters keep their own
+            colour and start where the typeface puts them, on the cap line the
+            flat tops of T, h, n and k already share.
+              And the tail returns to transparent past 88% rather than holding
+            solid to the bottom, so none of it lands on the letters. */}
         <div
-          className="absolute left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#000208]"
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
+          style={{
+            top: 1003.47,
+            height: 356.25,
+            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%, #000208 88%, rgba(0,2,8,0) 100%)",
+          }}
+        />
+
+        <div
+          className="absolute left-1/2 w-screen -translate-x-1/2 overflow-hidden"
           style={{ top: 1288.93, height: 598 }}
         >
           <div className="relative mx-auto h-full w-[1440px]">
@@ -1336,19 +1364,6 @@ export default function MusicAppCase() {
             </p>
           </div>
         </div>
-        {/* Figma 6659:12303 — 1440 x 356.25 at y 15741.92, #010209 at nothing
-            through to #000105 solid at 80.2 per cent. It takes the foot of the
-            hand into the closing frame's own ground, which is that same
-            #000105. Not content, so it runs the width of the window. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 w-screen -translate-x-1/2"
-          style={{
-            top: 1003.47,
-            height: 356.25,
-            background: "linear-gradient(to bottom, rgba(0,2,8,0) 0%, #000208 80.2%)",
-          }}
-        />
 
         {/* Figma 6659:12306 — 310 square at x 1010.46, y 15903 on #e6e6e6, a
             phone screen inside it already clipped by the export. */}
