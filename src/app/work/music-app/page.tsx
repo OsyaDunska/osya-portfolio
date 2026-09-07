@@ -894,7 +894,7 @@ export default function MusicAppCase() {
         <div
           aria-hidden
           className="pointer-events-none absolute"
-          style={{ left: -1071, top: -613.79, width: 3019, height: 3015 }}
+          style={{ left: -563, top: -105.79, width: 2003, height: 1999 }}
         >
           <Image src="/glows/music-app-v2/cards-glow.svg" alt="" fill unoptimized className="max-w-none" />
         </div>
@@ -981,8 +981,8 @@ export default function MusicAppCase() {
       <section id="typography-colors" className="relative mx-auto w-[1440px]" style={{ height: 1159 }}>
         {/* Figma 6659:11857 and 6659:11858. */}
         {[
-          { src: "/glows/music-app-v2/type-glow-1.svg", left: -411.61, top: -283.89, w: 2775, h: 2329 },
-          { src: "/glows/music-app-v2/type-glow-2.svg", left: -314.23, top: 429.02, w: 2246, h: 2127 },
+          { src: "/glows/music-app-v2/type-glow-1.svg", left: 96.39, top: 224.11, w: 1759, h: 1313 },
+          { src: "/glows/music-app-v2/type-glow-2.svg", left: 24.77, top: 768.02, w: 1568, h: 1449 },
         ].map(({ src, left, top, w, h }) => (
           <div
             key={src}
